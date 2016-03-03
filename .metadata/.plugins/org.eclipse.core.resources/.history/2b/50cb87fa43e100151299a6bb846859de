@@ -1,0 +1,13 @@
+package distribully.model;
+
+public enum CardSuit {
+	
+	HEARTS (1),
+	DIAMONDS (2);
+		
+	private int v;
+	
+	CardSuit(int val) {
+		v = val;
+	}
+}

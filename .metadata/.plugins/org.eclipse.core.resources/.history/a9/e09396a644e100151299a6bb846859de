@@ -1,0 +1,24 @@
+package distribully.model;
+
+public enum CardSuit {
+	
+	HEARTS (2),
+	DIAMONDS (3),
+	CLUBS (4),
+	SPADES (5);
+		
+	private int v;
+	
+	CardSuit(int val) {
+		v = val;
+	}
+	
+	public static boolean areSameColor(CardSuit first, CardSuit second) {
+		return ((first.v & 2) && (second.v & 2))
+			|| ((first.v & 4) && (second.v & 4));
+	}
+	
+	public int getV() {
+		return this.v;
+	}
+}

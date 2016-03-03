@@ -1,0 +1,9 @@
+package distribully.view;
+
+import javax.swing.JFrame;
+
+public class DistribullyWindow extends JFrame {
+
+	private static final long serialVersionUID = -6180030798589552918L;
+
+}

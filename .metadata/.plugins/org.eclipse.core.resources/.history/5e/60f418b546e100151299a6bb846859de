@@ -1,0 +1,9 @@
+package distribully.view;
+
+import javax.swing.JMenu;
+
+public class DistribullyMenu extends JMenu {
+
+	private static final long serialVersionUID = -5124367571594222448L;
+
+}

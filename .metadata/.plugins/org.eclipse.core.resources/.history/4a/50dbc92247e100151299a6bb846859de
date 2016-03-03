@@ -1,0 +1,10 @@
+package distribully.view;
+
+import javax.swing.JMenuItem;
+
+public class StartGameButton extends JMenuItem {
+	
+	public StartGameButton() {
+		
+	}
+}

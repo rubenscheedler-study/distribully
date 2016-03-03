@@ -1,0 +1,15 @@
+package distribully.view;
+
+import javax.swing.JMenuBar;
+
+public class DistribullyMenu extends JMenuBar {
+
+	private static final long serialVersionUID = -5124367571594222448L;
+
+	public DistribullyMenu() {
+		//1) start game button
+		this.add(new StartGameButton());
+		//2) add player button
+		
+	}
+}

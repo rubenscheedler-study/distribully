@@ -1,0 +1,16 @@
+package distribully.view;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JMenuItem;
+
+public class StartGameButton extends JMenuItem implements MouseListener {
+
+	private static final long serialVersionUID = -3732106117892923335L;
+
+	public StartGameButton() {
+		this.setText("start game");
+	}
+
+}

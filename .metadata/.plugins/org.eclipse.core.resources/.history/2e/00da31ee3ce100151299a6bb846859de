@@ -1,0 +1,33 @@
+package distribully.view;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+public class ConsolePanel extends JPanel {
+
+	private static final long serialVersionUID = 1L;
+	private JLabel console;
+	
+	public ConsolePanel() {
+		this.console = new JLabel("wefwefwefwef\nqfwefwefwef");
+		console.setMinimumSize(new Dimension(800,390));
+		console.setPreferredSize(new Dimension(800, 390));
+		console.setMaximumSize(new Dimension(800, 390));
+		
+		this.setMinimumSize(new Dimension(800, 400));
+		this.setPreferredSize(new Dimension(800, 400));
+		this.setMaximumSize(new Dimension(800, 400));
+		this.setBackground(new Color(100,0,0));
+		this.add(console);
+	}
+	
+	protected void paintComponent(Graphics g) {
+		
+	}
+}

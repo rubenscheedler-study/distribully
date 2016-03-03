@@ -1,0 +1,14 @@
+package distribully.view;
+
+import java.awt.Dimension;
+
+import javax.swing.JPanel;
+
+public class ConsolePanel extends JPanel {
+
+	private static final long serialVersionUID = 1L;
+	
+	public ConsolePanel() {
+		this.setPreferredSize(new Dimension(800, 400));
+	}
+}

@@ -1,0 +1,10 @@
+package distribully.model;
+
+public class Card {
+	private int number;
+	private CardSuit suit;
+	
+	public Card(int number, CardSuit suit) {
+		
+	}
+}

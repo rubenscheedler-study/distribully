@@ -1,0 +1,7 @@
+package distribully.model;
+
+import java.util.Observable;
+
+public class Console extends Observable {
+
+}
