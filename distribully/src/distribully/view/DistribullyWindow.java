@@ -17,7 +17,7 @@ public class DistribullyWindow extends JFrame {
 	
 	public DistribullyWindow() {
 		//window properties
-		this.setSize(800, 600);
+		this.setSize(900, 600);
 		this.setVisible(true);
 		this.setTitle("Distribully v0.1");
 		
@@ -29,7 +29,7 @@ public class DistribullyWindow extends JFrame {
 		this.add(mainPanel);
 		mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.PAGE_AXIS));
 		mainPanel.add(consolePanel);
-		
+		mainPanel.add(new PlayerOverviewPanel());
 		
 		this.revalidate();
 		this.repaint();

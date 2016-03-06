@@ -7,42 +7,19 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JMenuItem;
 
-public class StartGameButton extends JMenuItem implements MouseListener {
+public class StartGameButton extends JMenuItem{
 
 	private static final long serialVersionUID = -3732106117892923335L;
 
 	public StartGameButton() {
 		this.setText("start game");
-		this.addMouseListener(this);
-	}
 
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		System.out.println("mand");
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		this.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent actionEvent) {
+		      System.out.println("click");
+		    }
+		});
 	}
 
 }
