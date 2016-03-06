@@ -2,17 +2,22 @@ package distribully.view;
 
 import static spark.Spark.*;
 
+import javax.servlet.http.HttpServlet;
+
 import spark.Route;
 import spark.Spark;
 import spark.servlet.SparkApplication;
 
 public class YoMomma implements SparkApplication {
 	
-	public YoMomma(){
-		init();
-	}
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2201449631605696139L;
+
 	
-	@Override
+	
+	
 	public  void init() {
 		
 		get("/", (request, response) -> {

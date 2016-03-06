@@ -26,4 +26,5 @@
             <version>2.3</version>
         </dependency>
     </dependencies>
+    <packaging>war</packaging>
 </project>
