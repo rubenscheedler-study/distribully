@@ -1,7 +1,0 @@
-package distribully.view;
-
-import javax.swing.JPanel;
-
-public class PlayerOverviewPanel extends JPanel {
-
-}
