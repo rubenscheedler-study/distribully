@@ -1,7 +1,0 @@
-package distribully.view;
-
-import javax.swing.jpanel;
-
-public class ConsolePanel extends jpanel {
-
-}

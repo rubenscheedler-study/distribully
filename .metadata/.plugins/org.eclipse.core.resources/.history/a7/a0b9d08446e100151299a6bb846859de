@@ -1,7 +1,0 @@
-package distribully.view;
-
-import javax.swing.JMenu;
-
-public class DistribullyMenu extends JMenu {
-
-}
