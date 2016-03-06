@@ -10,14 +10,6 @@ import spark.servlet.SparkApplication;
 
 public class YoMomma implements SparkApplication {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2201449631605696139L;
-
-	
-	
-	
 	public  void init() {
 		
 		get("/", (request, response) -> {
