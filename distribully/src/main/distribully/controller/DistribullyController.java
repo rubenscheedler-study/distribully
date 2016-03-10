@@ -12,7 +12,7 @@ public class DistribullyController {
 		try {
 		    System.out.println("starting Jetty...");
 
-		    Server server = new Server(8080); //set port here
+		    Server server = new Server(4567); //set port here
 		    WebAppContext webAppContext = new WebAppContext();
 		    webAppContext.setContextPath("/");
 
