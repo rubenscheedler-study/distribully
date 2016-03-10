@@ -8,6 +8,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.eclipse.jetty.client.HttpClient;
+
 public class PlayerAddRowPanel extends JPanel {
 
 	private static final long serialVersionUID = -7697775796287265986L;
@@ -57,5 +59,6 @@ public class PlayerAddRowPanel extends JPanel {
 		this.add(addressField);
 		this.add(nameLabel);
 		this.add(nameField);
+		
 	}
 }

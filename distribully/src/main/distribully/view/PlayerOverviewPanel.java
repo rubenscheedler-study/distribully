@@ -10,6 +10,9 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.http.HttpMethod;
+
 public class PlayerOverviewPanel extends JPanel {
 
 	private static final long serialVersionUID = -2882716648466999779L;
@@ -44,6 +47,7 @@ public class PlayerOverviewPanel extends JPanel {
 	protected void addPlayerRow() {
 		playerRows.add(new PlayerAddRowPanel());
 		render();
+		
 	}
 	
 	protected void removePlayerRow() {

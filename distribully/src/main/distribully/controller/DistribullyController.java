@@ -1,14 +1,9 @@
 package distribully.controller;
 import distribully.view.*;
-import static spark.Spark.*;
 
-import java.net.URL;
-import java.security.ProtectionDomain;
-
-import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.ContextHandlerCollection;
-import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 public class DistribullyController {
@@ -17,7 +12,7 @@ public class DistribullyController {
 		try {
 		    System.out.println("starting Jetty...");
 
-		    Server server = new Server(8080);
+		    Server server = new Server(8080); //set port here
 		    WebAppContext webAppContext = new WebAppContext();
 		    webAppContext.setContextPath("/");
 
@@ -34,15 +29,27 @@ public class DistribullyController {
 		    server.setHandler(webAppContext);
 
 		    server.start();
+		    System.out.println("Server has started.");
 		    server.join();
+		    
+		    
 			
+		} catch (Exception e) {
+			System.out.println("Something went wrong while starting the server.");
+			e.printStackTrace();
+			System.exit(0);
+		}
+		//This is never reached
+		
+		HttpClient client = new HttpClient();
+	    try {
+			client.start();
+			client.newRequest("http://localhost:8080/invite/x").method(HttpMethod.GET).send();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Started!");
-
-		
+	    
+	    
 	}
-
 }

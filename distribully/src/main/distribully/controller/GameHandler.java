@@ -14,10 +14,13 @@ public class GameHandler implements SparkApplication {
 	
 	private String handleCard(spark.Request request, spark.Response response){
 
+		System.out.println("Received card: cardID");
 		//get card ID
 		//get stackId
 		//If stack = yours:
 		//Handle card
+		System.out.println("The action with this card is: action");
+		System.out.println("The next player is: PlayerId");
 		//end if
 		
 		//Update view
@@ -25,26 +28,29 @@ public class GameHandler implements SparkApplication {
 		//return new player or broadcast new player?
 		
 		response.status(200);
+		
 		return "card";
 	}
 	
 	private String handleTurn(spark.Request request, spark.Response response){
 
 		//if playerId = you:
+		System.out.println("I am the next player.");
 		//Play turn
 		//Else:
 		//Update view
 
 		response.status(200);
-		return "WIN";
+		return "I shall play";
 	}
 	
 	
 	private String handleCompletion(spark.Request request, spark.Response response){
 
 		//get winner
-		//Display x has won
+		//Display x (name by id) has won
 		//Return to main screen
+		System.out.println(":PlayerName has won.");
 
 		response.status(200);
 		return "WIN";
