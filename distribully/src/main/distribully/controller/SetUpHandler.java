@@ -2,23 +2,24 @@ package distribully.controller;
 
 import static spark.Spark.*;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import spark.servlet.SparkApplication;
 
 public class SetUpHandler implements SparkApplication {
-
+	Gson gson = new Gson();
 	public  void init() {
+		post("/invite/:name", "application/json" , (request, response) -> handleInvite(request, response), gson::toJson);
+		get("/invite/:name", "application/json" , (request, response) -> handleInvite(request, response), gson::toJson); //testing feature
 
-
-		get("/invite/:name" , (request, response) -> handleInvite(request, response)); //get??
-
-		put("/startRules", (request, response) -> startRulesSelect(request, response));
-		put("/accept/:name", (request, response) -> handleAccept(request, response));
-		put("/reject", (request, response) -> handleReject(request, response));
+		put("/startRules", "application/json", (request, response) -> startRulesSelect(request, response), gson::toJson);
+		put("/accept/:name", "application/json", (request, response) -> handleAccept(request, response), gson::toJson);
+		put("/reject", "application/json", (request, response) -> handleReject(request, response), gson::toJson);
 		
-		delete("/leave", (request, response) -> handleGameLeave(request, response));
+		delete("/leave", "application/json", (request, response) -> handleGameLeave(request, response), gson::toJson);
 
-		post("/users/", (request, response) -> setPlayerList(request, response));
-		post("/rules/:playerId", (request, response) -> setRulesForPlayer(request, response));
+		post("/users/", "application/json", (request, response) -> setPlayerList(request, response), gson::toJson);
+		post("/rules/:playerId", "application/json", (request, response) -> setRulesForPlayer(request, response), gson::toJson);
 	}
 
 	private String handleInvite(spark.Request request, spark.Response response){
@@ -27,8 +28,10 @@ public class SetUpHandler implements SparkApplication {
 		//Kies naam
 		//Stuur bericht terug
 		System.out.println(":hostName has invited.");
-		response.status(200);
+		response.status(204);
 		return "Received invite";
+		
+		//Is in game?
 	}
 	private String handleAccept(spark.Request request, spark.Response response){
 

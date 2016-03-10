@@ -2,14 +2,16 @@ package distribully.controller;
 
 import static spark.Spark.*;
 
+import com.google.gson.Gson;
+
 import spark.servlet.SparkApplication;
 
 public class GameHandler implements SparkApplication {
-
+	Gson gson = new Gson();
 	public  void init() {
-		put("/card/:stackId/:cardId", (request, response) -> handleCard(request, response));
-		put("/nextTurn/:playerId", (request, response) -> handleTurn(request, response));
-		delete("/finishedGame", (request, response) -> handleCompletion(request, response));
+		put("/card/:stackId/:cardId", "application/json", (request, response) -> handleCard(request, response), gson::toJson);
+		put("/nextTurn/:playerId", "application/json", (request, response) -> handleTurn(request, response), gson::toJson);
+		delete("/finishedGame", "application/json", (request, response) -> handleCompletion(request, response), gson::toJson);
 	}
 	
 	private String handleCard(spark.Request request, spark.Response response){
