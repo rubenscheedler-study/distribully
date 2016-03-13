@@ -1,13 +1,27 @@
 package distribully.model;
 
+import java.util.Observable;
+
 import distribully.controller.GameState;
 
-public class DistribullyModel {
+public class DistribullyModel extends Observable {
 	private ClientList clientList;//contains the current list of available players copied from the server
 	private String serverAddress = "http://82.72.30.166";
 	private int serverPort = 4567;
 	private String myIP;
 	private int myPort = 4567;
+
+
+
+
+	private String nickname;
+	
+	
+	public DistribullyModel() {
+		this.clientList = new ClientList();
+	}
+	
+	
 	
 	private GameState GAME_STATE;
 	
@@ -35,10 +49,6 @@ public class DistribullyModel {
 		GAME_STATE = gAME_STATE;
 	}
 
-	public DistribullyModel() {
-		this.clientList = new ClientList();
-	}
-
 	public ClientList getClientList() {
 		return clientList;
 	}
@@ -61,5 +71,15 @@ public class DistribullyModel {
 
 	public void setServerPort(int serverPort) {
 		this.serverPort = serverPort;
+	}
+	
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+		this.setChanged();
+		this.notifyObservers();
 	}
 }

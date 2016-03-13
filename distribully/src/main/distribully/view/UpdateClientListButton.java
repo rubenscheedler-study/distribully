@@ -15,6 +15,7 @@ public class UpdateClientListButton extends JMenuItem {
 	public UpdateClientListButton(DistribullyWindow c) {
 		this.container = c;
 		
+		this.setText("Refresh Available Player List");
 		this.addActionListener(new ActionListener() {
 
 			@Override

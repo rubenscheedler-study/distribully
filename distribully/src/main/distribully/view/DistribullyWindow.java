@@ -30,7 +30,8 @@ public class DistribullyWindow extends JFrame {
 		//init of menu
 		this.setJMenuBar(new DistribullyMenu(this));
 		
-		mainPanel = new JPanel();
+		mainPanel = new PlayerOverviewPanel(this.model);
+		
 		this.add(mainPanel);
 		mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.PAGE_AXIS));
 		

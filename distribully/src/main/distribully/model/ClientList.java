@@ -20,7 +20,8 @@ public class ClientList extends Observable {
 	 */
 	public void addPlayer(Player p) {
 		this.players.add(p);
-		this.notifyObservers(this);
+		this.setChanged();
+		this.notifyObservers();
 	}
 	
 	/**
@@ -29,7 +30,8 @@ public class ClientList extends Observable {
 	 */
 	public void removePlayer(Player p) {
 		this.players.remove(p);
-		this.notifyObservers(this);
+		this.setChanged();
+		this.notifyObservers();
 	}
 
 	/**
@@ -37,8 +39,11 @@ public class ClientList extends Observable {
 	 * @param playerList
 	 */
 	public void setPlayers(ArrayList<Player> playerList) {
-		this.players = playerList;
-		this.notifyObservers(this);
+		this.players.removeAll(players);
+		playerList.forEach(player -> this.players.add(player));
+		System.out.println("updated list of players:" + playerList.size() + "," + this.countObservers());
+		this.setChanged();
+		this.notifyObservers();
 	}
 	
 }

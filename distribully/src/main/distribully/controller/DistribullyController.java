@@ -9,6 +9,7 @@ public class DistribullyController {
 	
 	public DistribullyController() {
 		model = new DistribullyModel();
+		model.setGAME_STATE(GameState.INVITING_USERS);
 		view = new DistribullyWindow(model);
 		
 	}
