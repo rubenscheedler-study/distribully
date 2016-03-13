@@ -1,6 +1,5 @@
 package distribully.view;
 
-import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
@@ -8,15 +7,14 @@ public class DistribullyMenu extends JMenuBar {
 
 	private static final long serialVersionUID = -5124367571594222448L;
 
-	JMenu gameMenu;
-	
-	public DistribullyMenu() {
-		gameMenu = new JMenu("Game");
+	public DistribullyMenu(DistribullyWindow container) {
+		//gameMenu = new JMenu("Start Game");
 		//1) start game button
-		JMenuItem startGameItem = new StartGameButton();
-		gameMenu.add(startGameItem);
+		JMenuItem startGameItem = new StartGameButton(container);
+		JMenuItem joinClientListButton = new JoinClientListButton(container);
 		
-		this.add(gameMenu);
+		this.add(startGameItem);
+		this.add(joinClientListButton);
 		
 	}
 }

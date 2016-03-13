@@ -14,7 +14,7 @@ public class TaskPlayCard implements Task<Boolean>, Serializable {
 	@Override
 	public Boolean execute() {
 		System.out.println("invite task!");
-		stack.apply(cardBeingPlayed);
+		//stack.apply(cardBeingPlayed);
 		return true;
 	}
 
