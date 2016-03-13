@@ -7,20 +7,26 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 
 public class StartGameButton extends JMenuItem{
 
 	private static final long serialVersionUID = -3732106117892923335L;
 
-	public StartGameButton() {
+	DistribullyWindow container;
+	
+	public StartGameButton(DistribullyWindow container) {
+		this.container = container;
+		
 		this.setText("start game");
-
+		
 		this.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent actionEvent) {
-		      System.out.println("click");
+		      container.setMainPanel(new JPanel());
 		    }
 		});
+		
 	}
 
 }

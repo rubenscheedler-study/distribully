@@ -13,7 +13,6 @@ public class DistribullyWindow extends JFrame {
 	private static final long serialVersionUID = -6180030798589552918L;
 	Logger logger = Logger.getLogger("DistribullyWindow");
 	JPanel mainPanel;
-	JPanel consolePanel;
 	
 	public DistribullyWindow() {
 		//window properties
@@ -22,15 +21,19 @@ public class DistribullyWindow extends JFrame {
 		this.setTitle("Distribully v0.1");
 		
 		//init of menu
-		this.setJMenuBar(new DistribullyMenu());
+		this.setJMenuBar(new DistribullyMenu(this));
 		
 		mainPanel = new JPanel();
-		consolePanel = new ConsolePanel(new Console());
 		this.add(mainPanel);
 		mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.PAGE_AXIS));
-		mainPanel.add(consolePanel);
 		mainPanel.add(new PlayerOverviewPanel());
 		
+		this.revalidate();
+		this.repaint();
+	}
+	
+	public void setMainPanel(JPanel content) {
+		this.mainPanel = content;
 		this.revalidate();
 		this.repaint();
 	}

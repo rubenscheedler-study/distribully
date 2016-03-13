@@ -8,15 +8,18 @@ public class DistribullyMenu extends JMenuBar {
 
 	private static final long serialVersionUID = -5124367571594222448L;
 
-	JMenu gameMenu;
+	private DistribullyWindow container;
+	private JMenu gameMenu;
 	
-	public DistribullyMenu() {
-		gameMenu = new JMenu("Game");
+	public DistribullyMenu(DistribullyWindow container) {
+		//gameMenu = new JMenu("Start Game");
 		//1) start game button
-		JMenuItem startGameItem = new StartGameButton();
-		gameMenu.add(startGameItem);
+		this.container = container;
+		JMenuItem startGameItem = new StartGameButton(container);
+		JMenuItem joinClientListButton = new JoinClientListButton(container);
 		
-		this.add(gameMenu);
+		this.add(startGameItem);
+		this.add(joinClientListButton);
 		
 	}
 }
