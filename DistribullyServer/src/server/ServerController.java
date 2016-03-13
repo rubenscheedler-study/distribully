@@ -45,9 +45,9 @@ public class ServerController {
 			return returnObject;
 		}
 		
-		int port = 44; //TODO: NOT HARDCODE
+		int port;
 		try{
-			//port = Integer.valueOf(request.queryParams("port"));
+			port = Integer.valueOf(request.queryParams("port"));
 		} catch (NumberFormatException e){
 			//Port was unable to be cast to a number
 			System.out.println("Port is NaN.");
