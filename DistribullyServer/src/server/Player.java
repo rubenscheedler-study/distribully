@@ -1,4 +1,4 @@
-package distribully.model;
+package server;
 
 public class Player {
 	private String name;
@@ -11,4 +11,13 @@ public class Player {
 		this.port = port;
 		available = true;
 	}
+	
+	public void setAvailable(boolean available){
+		this.available = available;
+	}
+	
+	public String getAdress(){
+		return ip+ ":" + port;
+	}
+	
 }
