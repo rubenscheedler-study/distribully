@@ -5,6 +5,8 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -13,68 +15,42 @@ import javax.swing.JPanel;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.http.HttpMethod;
 
-public class PlayerOverviewPanel extends JPanel {
+import distribully.model.ClientList;
+import distribully.model.Player;
+
+public class PlayerOverviewPanel extends JPanel implements Observer {
 
 	private static final long serialVersionUID = -2882716648466999779L;
-	private ArrayList<PlayerAddRowPanel> playerRows = new ArrayList<PlayerAddRowPanel>();
-	private JButton addPlayerButton = new JButton("add player");
-	private JButton removePlayerButton = new JButton("remove player");
+	//private ArrayList<Player> playerRows = new ArrayList<Player>();
+	private ClientList clientList;
 	
-	public PlayerOverviewPanel() {
-		
-		//at least enter info of 1 other player
-		playerRows.add(new PlayerAddRowPanel());
-		
-		
-		addPlayerButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				addPlayerRow();
-			}
-		});
-		
-		removePlayerButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				removePlayerRow();
-			}
-		});
-		
+	public PlayerOverviewPanel(ClientList cl) {
+		this.clientList = cl;
+		cl.addObserver(this);
 		this.render();
 	}
 	
-	
-	protected void addPlayerRow() {
-		playerRows.add(new PlayerAddRowPanel());
-		render();
-		
-	}
-	
-	protected void removePlayerRow() {
-		playerRows.remove(playerRows.size()-1);
-		render();
-	}
+
 	
 	protected void render() {
 		this.removeAll();
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		this.setMinimumSize(new Dimension(800, playerRows.size()*40+80));
-		this.setPreferredSize(new Dimension(800, playerRows.size()*40+80));
-		this.setMaximumSize(new Dimension(800, playerRows.size()*40+80));
-		playerRows.forEach(row -> this.add(row));
+		this.setMinimumSize(new Dimension(800, clientList.getPlayers().size()*40+80));
+		this.setPreferredSize(new Dimension(800, clientList.getPlayers().size()*40+80));
+		this.setMaximumSize(new Dimension(800, clientList.getPlayers().size()*40+80));
+		//playerRows.forEach(row -> this.add(row));
 
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		buttonPanel.setMinimumSize(new Dimension(800,40));
-		buttonPanel.setPreferredSize(new Dimension(800,40));
-		buttonPanel.setMaximumSize(new Dimension(800,40));
-		buttonPanel.add(addPlayerButton);
-		buttonPanel.add(removePlayerButton);
-		
-		this.add(buttonPanel);
 		this.revalidate();
 		this.repaint();
+		
+	}
+
+
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		// TODO Auto-generated method stub
 		
 	}
 }
