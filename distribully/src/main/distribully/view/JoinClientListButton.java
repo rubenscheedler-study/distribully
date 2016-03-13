@@ -9,7 +9,13 @@ public class JoinClientListButton extends JMenuItem {
 
 	private static final long serialVersionUID = 648404151872534455L;
 
-	private DistribullyWindow container;
+	protected DistribullyWindow container;
+	
+
+	public void setContainer(DistribullyWindow c) {
+		this.container = c;
+	}
+
 	public JoinClientListButton(DistribullyWindow container) {
 		this.container = container;
 		this.setText("Join Client List");
@@ -18,7 +24,7 @@ public class JoinClientListButton extends JMenuItem {
 		    @Override
 		    public void actionPerformed(ActionEvent actionEvent) {
 		    	System.out.println("mand");
-		      container.setMainPanel(new PlayerOverviewPanel(container.getClientList()));
+		      container.setMainPanel(new PlayerOverviewPanel(container.getModel()));
 		    }
 		});
 	}

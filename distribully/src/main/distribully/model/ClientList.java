@@ -31,5 +31,14 @@ public class ClientList extends Observable {
 		this.players.remove(p);
 		this.notifyObservers(this);
 	}
+
+	/**
+	 * overwrites the current player list with the received playerList
+	 * @param playerList
+	 */
+	public void setPlayers(ArrayList<Player> playerList) {
+		this.players = playerList;
+		this.notifyObservers(this);
+	}
 	
 }

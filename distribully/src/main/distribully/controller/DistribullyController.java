@@ -1,24 +1,23 @@
 package distribully.controller;
-import distribully.model.ClientList;
+import distribully.model.DistribullyModel;
 import distribully.view.*;
 
-import org.eclipse.jetty.client.HttpClient;
-import org.eclipse.jetty.http.HttpMethod;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.webapp.WebAppContext;
-
 public class DistribullyController {
-	public static GameState GAME_STATE;
+	
 	DistribullyWindow view;
-	ClientList clientList;
+	DistribullyModel model;
 	
 	public DistribullyController() {
-		view = new DistribullyWindow();
-		clientList = new ClientList();
-		view.setClientList(clientList);
+		model = new DistribullyModel();
+		view = new DistribullyWindow(model);
+		
 	}
 	
 	public static void main(String[] args) {
 		new DistribullyController();
+	}
+	
+	public void updatePlayerList() {
+		
 	}
 }

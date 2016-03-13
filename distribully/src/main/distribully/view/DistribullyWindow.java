@@ -6,20 +6,22 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import distribully.model.ClientList;
+import distribully.model.DistribullyModel;
 
 public class DistribullyWindow extends JFrame {
 
 	private static final long serialVersionUID = -6180030798589552918L;
 	Logger logger = Logger.getLogger("DistribullyWindow");
 	
-	//model components (that might be observed by this class)
-	ClientList clientList;
+	//model
+	DistribullyModel model;
 	
 	//view components
 	JPanel mainPanel;
 	
-	public DistribullyWindow() {
+	public DistribullyWindow(DistribullyModel model) {
+		this.model = model;
+		
 		//window properties
 		this.setSize(900, 600);
 		this.setVisible(true);
@@ -42,11 +44,7 @@ public class DistribullyWindow extends JFrame {
 		this.repaint();
 	}
 	
-	public ClientList getClientList() {
-		return this.clientList;
-	}
-	
-	public void setClientList(ClientList cl) {
-		this.clientList = cl;
+	public DistribullyModel getModel() {
+		return this.model;
 	}
 }
