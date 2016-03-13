@@ -20,4 +20,8 @@ public class Player {
 		return ip+ ":" + port;
 	}
 	
+	public String getName(){
+		return name;
+	}
+	
 }
