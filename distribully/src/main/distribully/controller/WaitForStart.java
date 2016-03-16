@@ -50,7 +50,7 @@ public class WaitForStart extends Thread {
 			try {
 				String queueName = in.readUTF();
 				System.out.println("client>" + queueName);
-				//Check/update gamestate?
+				//TODO: Check/update gamestate?
 				String reversed = new StringBuffer(queueName).reverse().toString();
 				out.writeUTF(reversed);
 				listen = false;

@@ -51,8 +51,8 @@ public class WaitForInvite extends Thread {
 				String hostName = in.readUTF();
 				System.out.println("client>" + hostName); 
 				
-				//Check gamestate. If not waiting, return no.
-				//show popUp
+				//TODO: Check gamestate. If not waiting, return no.
+				//TODO: show popUp
 				
 				
 				
@@ -60,8 +60,8 @@ public class WaitForInvite extends Thread {
 				out.writeUTF(reversed);
 				if(reversed.equals("yes")){
 					listen = false;
-					//notify server of unavailability
-					//Go to users overview of this game
+					//TODO: notify server of unavailability
+					//TODO: Go to users overview of this game
 				}
 			} catch (IOException ioException) {
 				ioException.printStackTrace();
