@@ -9,6 +9,7 @@ import java.net.Socket;
 public class WaitForInvite extends Thread {
 	private int port;
 	private boolean listen = false;
+	ServerSocket serverSocket;
 	public WaitForInvite(int port) {
 		this.port = port;
 		listen = true;
@@ -16,9 +17,8 @@ public class WaitForInvite extends Thread {
 	}
 	public void run() {
 		try {
-			ServerSocket serverSocket = new ServerSocket(port);
+			serverSocket = new ServerSocket(port);
 			System.out.println("Server is listening for invites...");
-			serverSocket.setSoTimeout(1000);
 			while (listen) {
 				Socket clientSocket = serverSocket.accept();
 				new Connection(clientSocket);
@@ -32,6 +32,14 @@ public class WaitForInvite extends Thread {
 	}
 	public void setListen(boolean listen){
 		this.listen = listen;
+	}
+	
+	public void closeServer(){
+		try{
+			serverSocket.close();
+		}catch(Exception e){
+			//Will always throw exception. Ignore.
+		}
 	}
 	
 	class Connection{
