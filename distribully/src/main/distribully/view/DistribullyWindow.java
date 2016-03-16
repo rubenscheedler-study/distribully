@@ -1,11 +1,8 @@
 package distribully.view;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
@@ -69,4 +66,5 @@ public class DistribullyWindow extends JFrame {
 	}
 	
 	
+
 }

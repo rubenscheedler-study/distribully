@@ -3,6 +3,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JOptionPane;
 
+import spark.ModelAndView;
 import distribully.model.DistribullyModel;
 import distribully.view.*;
 
@@ -10,7 +11,7 @@ public class DistribullyController {
 	
 	DistribullyWindow view;
 	DistribullyModel model;
-	
+	public static WaitForInvite waitForInviteThread = null;
 	
 	public DistribullyController() {
 		model = new DistribullyModel();
@@ -50,10 +51,4 @@ public class DistribullyController {
 		
 	}
 	
-	/**
-	 * Starts the wait for invite thread. 
-	 */
-	public static void StartWaitForInvite() {
-		System.out.println("Started the wait for invite thread");
-	}
 }
