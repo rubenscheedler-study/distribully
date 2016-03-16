@@ -36,6 +36,9 @@ public class PlayerOverviewPanel extends DistribullyPanel implements Observer {
 		this.removeAll();
 		ArrayList<Player> players = model.getClientList().getPlayers();
 		
+		//remove self from the list of available players
+		players.removeIf(player -> player.getName().equals(model.getNickname()));
+				
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setMinimumSize(size);
 		this.setPreferredSize(size);

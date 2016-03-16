@@ -25,6 +25,14 @@ public class DistribullyModel extends Observable {
 	
 	private GameState GAME_STATE;
 	
+	/**
+	 * finds the player object corresponding with the user.
+	 * @return
+	 */
+	public Player getMe() {
+		return this.clientList.getPlayerByNickname(nickname);
+	}
+	
 	public String getMyIP() {
 		return myIP;
 	}

@@ -33,11 +33,21 @@ public class ClientList extends Observable {
 	 * @param playerList
 	 */
 	public void setPlayers(ArrayList<Player> playerList) {
-		this.players.removeAll(players);
+		//this.players.removeAll(players);
 		playerList.forEach(player -> this.players.add(player));
-		System.out.println("updated list of players:" + playerList.size() + "," + this.countObservers());
+		System.out.println("updated list of players:" + players.size() + "," + this.countObservers());
 		this.setChanged();
 		this.notifyObservers();
+	}
+	
+	public Player getPlayerByNickname(String nickname) {
+		for (Player p : this.players) {
+			if (p.getName().equals(nickname)) {
+				return p;
+			}
+		}
+		System.out.println(nickname);
+		return null;
 	}
 	
 }
