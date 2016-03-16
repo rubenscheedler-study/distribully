@@ -51,7 +51,7 @@ public class WaitForInvite extends Thread {
 				String hostName = in.readUTF();
 				System.out.println("client>" + hostName); 
 				
-				
+				//Check gamestate. If not waiting, return no.
 				//show popUp
 				
 				

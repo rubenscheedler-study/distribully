@@ -45,6 +45,7 @@ public class ServerController {
 		if(players.stream().anyMatch(x -> x.getName().equals(playerName))){
 			response.status(403);
 			returnObject.addProperty("Message", "Username already exists");
+			System.out.println("Username "+ playerName + " was already taken.");
 			return returnObject;
 		}
 		

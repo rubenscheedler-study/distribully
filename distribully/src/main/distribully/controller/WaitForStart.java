@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import distribully.controller.WaitForInvite.Connection;
-
 public class WaitForStart extends Thread {
 	private int port;
 	private boolean listen = false;
@@ -52,6 +50,7 @@ public class WaitForStart extends Thread {
 			try {
 				String queueName = in.readUTF();
 				System.out.println("client>" + queueName);
+				//Check/update gamestate?
 				String reversed = new StringBuffer(queueName).reverse().toString();
 				out.writeUTF(reversed);
 				listen = false;
