@@ -61,6 +61,7 @@ public class WaitForInvite extends Thread {
 				if(reversed.equals("yes")){
 					listen = false;
 					//notify server of unavailability
+					//Go to users overview of this game
 				}
 			} catch (IOException ioException) {
 				ioException.printStackTrace();
