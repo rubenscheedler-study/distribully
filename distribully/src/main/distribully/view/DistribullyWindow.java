@@ -1,11 +1,16 @@
 package distribully.view;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Toolkit;
 import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import distribully.controller.ClientListUpdateHandler;
 import distribully.model.DistribullyModel;
 
 public class DistribullyWindow extends JFrame {
@@ -14,23 +19,27 @@ public class DistribullyWindow extends JFrame {
 	Logger logger = Logger.getLogger("DistribullyWindow");
 	
 	//model
-	DistribullyModel model;
+	private DistribullyModel model;
 	
 	//view components
-	JPanel mainPanel;
+	private JPanel mainPanel;
+	private Font font;
 	
 	public DistribullyWindow(DistribullyModel model) {
 		this.model = model;
 		
+		//get the size of the monitor
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		
 		//window properties
-		this.setSize(900, 600);
+		this.setSize(screenSize.width, screenSize.height);
 		this.setVisible(true);
 		this.setTitle("Distribully v0.1");
 		
 		//init of menu
 		this.setJMenuBar(new DistribullyMenu(this));
-		
-		mainPanel = new PlayerOverviewPanel(this.model);
+		new ClientListUpdateHandler(this.model);
+		mainPanel = new PlayerOverviewPanel(this.model, this.getSize());
 		
 		this.add(mainPanel);
 		mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.PAGE_AXIS));

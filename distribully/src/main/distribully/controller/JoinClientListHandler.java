@@ -1,6 +1,8 @@
 package distribully.controller;
 
 
+import java.awt.event.WindowEvent;
+
 import javax.swing.JOptionPane;
 
 import org.eclipse.jetty.client.HttpClient;
@@ -16,18 +18,30 @@ import distribully.view.DistribullyWindow;
 public class JoinClientListHandler {
 	
 	DistribullyWindow frame;
+	
 	public JoinClientListHandler(DistribullyWindow frame) {
 		this.frame = frame;
-		String choosenNickName = "";
-		boolean nickNameIsUnique = false;
+		String choosenNickname = "";
+
 		do {
-			choosenNickName = askUserForName();
-			tryToClaimNickName(choosenNickName);
+			choosenNickname = askUserForName();
+			
+			if (choosenNickname == null) { //user does not want to pick a username => close application
+				frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+				return;
+			}
+			
+			if (choosenNickname.contains(" ") || !nicknameAvailable(choosenNickname)) {
+				choosenNickname = "";
+			}
 			
 		}
-		while (choosenNickName.equals(""));
+		while (choosenNickname.equals(""));
+		
 		//check if name is unique
-		frame.getModel().setNickname(choosenNickName);
+		System.out.println("setting model nickname:" + choosenNickname);
+		frame.getModel().setNickname(choosenNickname);
+		DistribullyController.StartWaitForInvite();
 	}
 
 	
@@ -35,7 +49,7 @@ public class JoinClientListHandler {
 		return JOptionPane.showInputDialog(frame, "Please enter your nickname");
 	}
 	
-	public boolean tryToClaimNickName(String nickname) {
+	public boolean nicknameAvailable(String nickname) {
 		HttpClient client = new HttpClient();
 		ContentResponse response = null;
 		try {
@@ -48,11 +62,16 @@ public class JoinClientListHandler {
 			e.printStackTrace();
 		}
 		
-		JsonParser jsonParser = new JsonParser();
-		System.out.println(response.getContentAsString());
-		JsonElement jsonElement = jsonParser.parse(response.getContentAsString());
-		JsonObject jsonObject = jsonElement.getAsJsonObject();
-		String myAddress = jsonObject.get("ip").getAsString();
-		return true;
+		if (response.getStatus() == 201) {
+			JsonParser jsonParser = new JsonParser();
+			System.out.println(response.getContentAsString());
+			JsonElement jsonElement = jsonParser.parse(response.getContentAsString());
+			JsonObject jsonObject = jsonElement.getAsJsonObject();
+			String myAddress = jsonObject.get("ip").getAsString();
+			frame.getModel().setMyIP(myAddress);
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

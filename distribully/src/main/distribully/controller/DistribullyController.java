@@ -11,6 +11,7 @@ public class DistribullyController {
 	DistribullyWindow view;
 	DistribullyModel model;
 	
+	
 	public DistribullyController() {
 		model = new DistribullyModel();
 		model.setGAME_STATE(GameState.INVITING_USERS);
@@ -47,5 +48,12 @@ public class DistribullyController {
 		
 		model.setMyPort(Integer.parseInt(portString));
 		
+	}
+	
+	/**
+	 * Starts the wait for invite thread. 
+	 */
+	public static void StartWaitForInvite() {
+		System.out.println("Started the wait for invite thread");
 	}
 }

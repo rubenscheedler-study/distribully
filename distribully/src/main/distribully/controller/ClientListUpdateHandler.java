@@ -37,7 +37,7 @@ public class ClientListUpdateHandler {
 		ArrayList<Player> playerList  = new ArrayList<Player>(Arrays.asList(players));
 		
 		//remove self from the list of available players
-		
+		playerList.removeIf(player -> player.getName().equals(model.getNickname()));
 		
 		model.getClientList().setPlayers(playerList);
 	}

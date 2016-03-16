@@ -24,7 +24,7 @@ public class JoinClientListButton extends JMenuItem {
 		    @Override
 		    public void actionPerformed(ActionEvent actionEvent) {
 		    	System.out.println("mand");
-		      container.setMainPanel(new PlayerOverviewPanel(container.getModel()));
+		      container.setMainPanel(new PlayerOverviewPanel(container.getModel(),container.getSize()));
 		    }
 		});
 	}
