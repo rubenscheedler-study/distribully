@@ -64,7 +64,7 @@ public class PlayerOverviewPanel extends DistribullyPanel implements Observer {
 			//define an invite button with behavior
 			if (player.isAvailable()) {
 				JButton inviteButton = new JButton("Invite");
-				inviteButton.addActionListener(new InviteUserHandler(player.getName()));
+				inviteButton.addActionListener(new InviteUserHandler(player.getName(), model));
 				
 				playerPanel.add(inviteButton);
 			} else {
