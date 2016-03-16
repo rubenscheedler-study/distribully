@@ -57,15 +57,21 @@ public class PlayerOverviewPanel extends DistribullyPanel implements Observer {
 		playerPanel.setMaximumSize(new Dimension(this.size.width, 40));
 		
 		playerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		JLabel nameLabel = new JLabel(player.getName());
+		DistribullyTextLabel nameLabel = new DistribullyTextLabel(player.getName());
 		nameLabel.setPreferredSize(new Dimension(400,40));
 		playerPanel.add(nameLabel);
 		if (model.getGAME_STATE() == GameState.INVITING_USERS) {
 			//define an invite button with behavior
-			JButton inviteButton = new JButton("Invite");
-			inviteButton.addActionListener(new InviteUserHandler(player.getName()));
+			if (player.isAvailable()) {
+				JButton inviteButton = new JButton("Invite");
+				inviteButton.addActionListener(new InviteUserHandler(player.getName()));
+				
+				playerPanel.add(inviteButton);
+			} else {
+				DistribullyTextLabel unavailableLabel = new DistribullyTextLabel("unavailable");
+				playerPanel.add(unavailableLabel);
+			}
 			
-			playerPanel.add(inviteButton);
 		}
 		this.add(playerPanel);
 	}

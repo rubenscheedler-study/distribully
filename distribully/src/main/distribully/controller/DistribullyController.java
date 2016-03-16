@@ -14,7 +14,7 @@ public class DistribullyController {
 	
 	public DistribullyController() {
 		model = new DistribullyModel();
-		model.setGAME_STATE(GameState.INVITING_USERS);
+		model.setGAME_STATE(GameState.NOT_PLAYING);
 		view = new DistribullyWindow(model);
 		askUserForPort();
 		new JoinClientListHandler(view);

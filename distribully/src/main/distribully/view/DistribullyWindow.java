@@ -49,7 +49,11 @@ public class DistribullyWindow extends JFrame {
 	}
 	
 	public void setMainPanel(JPanel content) {
+		System.out.println(this.getComponentCount());
+		this.remove(mainPanel);
 		this.mainPanel = content;
+		this.add(mainPanel);
+		System.out.println("updated main panel");
 		this.revalidate();
 		this.repaint();
 	}
