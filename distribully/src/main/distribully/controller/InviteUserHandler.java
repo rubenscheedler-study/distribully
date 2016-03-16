@@ -21,6 +21,7 @@ public class InviteUserHandler implements ActionListener {
 		if(player == null){
 			//TODO: afvangen bitch
 		}else{
+			System.out.println("creating invite thread...");
 			new InviteThread(player.getIp(),player.getPort());
 		}
 		
