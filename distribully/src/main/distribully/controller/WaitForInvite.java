@@ -23,6 +23,7 @@ public class WaitForInvite extends Thread {
 				Socket clientSocket = serverSocket.accept();
 				new Connection(clientSocket);
 			}
+			System.out.println("Job's done.");
 			serverSocket.close();
 		}
 		catch (IOException ioException) {
