@@ -61,4 +61,5 @@ public class DistribullyWindow extends JFrame {
 	public DistribullyModel getModel() {
 		return this.model;
 	}
+
 }

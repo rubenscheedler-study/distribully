@@ -41,7 +41,7 @@ public class JoinClientListHandler {
 		//check if name is unique
 		System.out.println("setting model nickname:" + choosenNickname);
 		frame.getModel().setNickname(choosenNickname);
-		DistribullyController.StartWaitForInvite();
+		DistribullyController.waitForInviteThread = new WaitForInvite(frame.getModel());
 	}
 
 	

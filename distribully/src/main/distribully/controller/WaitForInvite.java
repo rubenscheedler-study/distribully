@@ -5,13 +5,21 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
+
+import javax.swing.JOptionPane;
+
+import distribully.model.DistribullyModel;
 
 public class WaitForInvite extends Thread {
 	private int port;
 	private boolean listen = false;
 	ServerSocket serverSocket;
-	public WaitForInvite(int port) {
-		this.port = port;
+	DistribullyModel model;
+	
+	public WaitForInvite(DistribullyModel model) {
+		this.model = model;
+		this.port = model.getMyPort();
 		listen = true;
 		this.start();
 	}
@@ -20,8 +28,14 @@ public class WaitForInvite extends Thread {
 			serverSocket = new ServerSocket(port);
 			System.out.println("Server is listening for invites...");
 			while (listen) {
-				Socket clientSocket = serverSocket.accept();
-				new Connection(clientSocket);
+				Socket clientSocket;
+				try {
+					clientSocket = serverSocket.accept();
+					new Connection(clientSocket);
+				} catch (SocketException e) {
+					//TODO: ooit hier iets mee doen
+				}
+				
 			}
 			System.out.println("Job's done.");
 			serverSocket.close();
@@ -40,6 +54,7 @@ public class WaitForInvite extends Thread {
 		}catch(Exception e){
 			//Will always throw exception. Ignore.
 		}
+		
 	}
 	
 	class Connection{
@@ -61,7 +76,16 @@ public class WaitForInvite extends Thread {
 				String hostName = in.readUTF();
 				System.out.println("client>" + hostName); 
 				
-				//TODO: Check gamestate. If not waiting, return no.
+				//only when the user is not playing/setting up a game: show the received invite
+				if (model.getGAME_STATE() == GameState.NOT_PLAYING) {
+					int acceptedInvite = JOptionPane.showConfirmDialog (null, "You received a game invitation from " + hostName + ". Would you like to accept?", "Game Invitation",JOptionPane.YES_NO_OPTION);
+					if (acceptedInvite == JOptionPane.YES_OPTION) {
+						//TODO send unavailable
+						//TODO update view
+					} else {
+						//TODO sent requested
+					}
+				}
 				//TODO: show popUp
 				
 				

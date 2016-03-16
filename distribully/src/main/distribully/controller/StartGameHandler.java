@@ -15,7 +15,15 @@ public class StartGameHandler implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		System.out.println("starting a game...");
+		
+		//no longer available for invitations
+		if (DistribullyController.waitForInviteThread != null) {
+			DistribullyController.waitForInviteThread.setListen(false);
+			DistribullyController.waitForInviteThread.closeServer();
+		}
+		
 		frame.getModel().setGAME_STATE(GameState.INVITING_USERS);
+		
 		new ClientListUpdateHandler(frame.getModel());
 	}
 
