@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
@@ -11,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import distribully.controller.ClientListUpdateHandler;
+import distribully.controller.CloseWindowHandler;
 import distribully.model.DistribullyModel;
 
 public class DistribullyWindow extends JFrame {
@@ -43,6 +46,9 @@ public class DistribullyWindow extends JFrame {
 		
 		this.add(mainPanel);
 		mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.PAGE_AXIS));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		this.addWindowListener(new CloseWindowHandler(model));
 		
 		this.revalidate();
 		this.repaint();
@@ -61,4 +67,6 @@ public class DistribullyWindow extends JFrame {
 	public DistribullyModel getModel() {
 		return this.model;
 	}
+	
+	
 }

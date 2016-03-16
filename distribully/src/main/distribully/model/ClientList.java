@@ -3,6 +3,10 @@ package distribully.model;
 import java.util.ArrayList;
 import java.util.Observable;
 
+import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.client.api.ContentResponse;
+import org.eclipse.jetty.http.HttpMethod;
+
 public class ClientList extends Observable {
 	ArrayList<Player> players;
 	
@@ -14,24 +18,14 @@ public class ClientList extends Observable {
 		return this.players;
 	}
 	
-	/**
-	 * adds p to the list of players and notifies the observing view.
-	 * @param p Player to add
-	 */
-	public void addPlayer(Player p) {
-		this.players.add(p);
-		this.setChanged();
-		this.notifyObservers();
-	}
-	
-	/**
-	 * removes p from the list of players and notifies the observing view.
-	 * @param p Player object to remove
-	 */
-	public void removePlayer(Player p) {
-		this.players.remove(p);
-		this.setChanged();
-		this.notifyObservers();
+	public void deleteFromServer(String playerName){
+		HttpClient client = new HttpClient();
+		try {
+			client.start();
+			client.newRequest("http://82.72.30.166:4567" + "/players/" + playerName).method(HttpMethod.DELETE).send(); //TODO: fix hardcode
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

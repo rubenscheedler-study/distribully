@@ -3,17 +3,22 @@ package distribully.controller;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
+import distribully.model.DistribullyModel;
 
 public class InviteThread extends Thread{
 	private String address;
 	private int port;
 	private boolean started;
-	public InviteThread(String targetAddress, int targetPort){
+	DistribullyModel model;
+	public InviteThread(String targetAddress, int targetPort, DistribullyModel model){
 		address = targetAddress;
 		port = targetPort;
 		started = false;
+		this.model = model;
 		this.start();
 	}
 	
@@ -21,18 +26,18 @@ public class InviteThread extends Thread{
 		this.started = started;
 	}
 	
-	public void run(String args[]) {
+	public void run() {
 		Socket s = null;
 		DataOutputStream out;
 		DataInputStream in;
-		try { //TODO: als geen connectie kan maken -> rejected
+		try {
 			s = new Socket(address, port);
 			in = new DataInputStream(s.getInputStream());
 			out = new DataOutputStream(s.getOutputStream());
-			out.writeUTF("HostName"); //TODO: hostname
+			out.writeUTF(model.getNickname());
 			String data = in.readUTF();
-			System.out.println("From server: " + data);
-			if(data.equals("yes")){ //TODO: gamestate check?
+			System.out.println("From "+ address+": " + data);
+			if(data.equals("Accepted")){ //TODO: gamestate check?
 				//TODO: setStatus joined
 				while(!started){} //TODO: timeout?
 				out.writeUTF("QueueName");
@@ -45,6 +50,8 @@ public class InviteThread extends Thread{
 			}
 		} catch (UnknownHostException e) {
 			System.err.println(e);
+		} catch (ConnectException e){ //Receiver has no open socket
+			//TODO: set status rejected
 		} catch (IOException e) {
 			System.err.println(e);
 		} finally {
