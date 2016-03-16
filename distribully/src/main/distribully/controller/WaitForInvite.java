@@ -18,6 +18,7 @@ public class WaitForInvite extends Thread {
 		try {
 			ServerSocket serverSocket = new ServerSocket(port);
 			System.out.println("Server is listening for invites...");
+			serverSocket.setSoTimeout(1000);
 			while (listen) {
 				Socket clientSocket = serverSocket.accept();
 				new Connection(clientSocket);
