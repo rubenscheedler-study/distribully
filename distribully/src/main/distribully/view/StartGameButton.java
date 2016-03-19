@@ -1,5 +1,6 @@
 package distribully.view;
 
+
 import javax.swing.JButton;
 
 import distribully.model.DistribullyModel;
