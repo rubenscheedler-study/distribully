@@ -135,6 +135,23 @@ public class DistribullyModel implements IObservable {
 		this.inviteStates.put(key, inviteState);
 		this.notifyObservers();
 	}
+	
+	/**
+	 * checks for all entries in the hashmap if the server still contains it in the game players. Drops it, if not.
+	 * @param gamePlayers
+	 */
+	public void updateInviteStatesByListState(ClientList gamePlayers) {
+		ArrayList<String> toRemove = new ArrayList<String>();
+		//check which players left
+		for (String name : this.inviteStates.keySet()) {
+			if (gamePlayers.getPlayerByNickname(name) == null) {
+				toRemove.add(name);
+			}
+		}
+		//remove the them from the invitation states
+		toRemove.forEach(name -> this.inviteStates.remove(name));
+		this.notifyObservers();
+	}
 
 	public String getCurrentHostName() {
 		return currentHostName;
