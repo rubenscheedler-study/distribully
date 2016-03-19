@@ -144,7 +144,7 @@ public class DistribullyModel implements IObservable {
 		ArrayList<String> toRemove = new ArrayList<String>();
 		//check which players left
 		for (String name : this.inviteStates.keySet()) {
-			if (this.inviteStates.get(name).equals("accepted") && gamePlayers.getPlayerByNickname(name) == null) {
+			if (this.inviteStates.get(name).equals("Accepted") && gamePlayers.getPlayerByNickname(name) == null) {
 				toRemove.add(name);
 			}
 		}
