@@ -14,14 +14,20 @@ import spark.Request;
 import spark.Response;
 
 
-public class ServerController {
+public class GeneralServerController {
 	
 	Gson gson;
 	ArrayList<Player> players;
 	JsonParser parser;
 	
 	public static void main(String[] args) {
-		(new ServerController()).init();
+		new GeneralServerController();
+		new PlayerServerController();
+		
+	}
+	
+	public GeneralServerController(){
+		this.init();
 	}
 	
 	private void init() {
@@ -37,12 +43,12 @@ public class ServerController {
 
 		put("/players/:name", "application/json", (request, response) -> setAvailable(request, response));
 		
-		delete("/players/:name", "application/json", (request, response) -> removeFromPlayerList(request, response));
+		delete("/players/:name", "application/json", (request, response) -> removeFromUserList(request, response));
 
-		post("/players/:name", "application/json", (request, response) -> addToPlayerList(request, response));
+		post("/players/:name", "application/json", (request, response) -> addToUserList(request, response));
 	}
 	
-	private JsonObject addToPlayerList(Request request, Response response){
+	private JsonObject addToUserList(Request request, Response response){
 		String playerName = request.params(":name");
 		JsonObject returnObject = new JsonObject();
 		if(players.stream().anyMatch(x -> x.getName().equals(playerName))){
@@ -106,7 +112,7 @@ public class ServerController {
 		return returnObject;
 	}
 	
-	private JsonObject removeFromPlayerList(Request request, Response response){
+	private JsonObject removeFromUserList(Request request, Response response){
 		String playerName = request.params(":name");
 		JsonObject returnObject = new JsonObject();
 		if(!players.stream().anyMatch(x -> x.getName().equals(playerName))){
