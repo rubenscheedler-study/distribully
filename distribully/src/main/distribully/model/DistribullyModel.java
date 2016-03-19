@@ -2,7 +2,6 @@ package distribully.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Observable;
 
 import distribully.controller.GameState;
 
