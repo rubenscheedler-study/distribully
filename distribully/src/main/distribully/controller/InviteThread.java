@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import distribully.model.DistribullyModel;
@@ -50,14 +51,15 @@ public class InviteThread extends Thread{
 			}else{
 				model.putInviteState(player.getName(), "Rejected");
 			}
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
+		} catch (UnknownHostException e) { //Host does not exist (invalid IP/no internet connection)
 			model.putInviteState(player.getName(), "Unreachable");
 		} catch (ConnectException e){ //Receiver has no open socket
-			//TODO: set status rejected
+			model.putInviteState(player.getName(), "Rejected");
+		} catch (SocketException e) {//Socked closed from the outside, don't update the view.
+			//TODO: wat moet hier
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
+		}finally {
 			DistribullyController.InviteThreadList.remove(this);
 			if (s != null){
 				try {
