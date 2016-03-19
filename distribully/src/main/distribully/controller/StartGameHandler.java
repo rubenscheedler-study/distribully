@@ -21,10 +21,16 @@ public class StartGameHandler implements ActionListener {
 			DistribullyController.waitForInviteThread.setListen(false);
 			DistribullyController.waitForInviteThread.closeServer();
 		}
-		
 		frame.getModel().setGAME_STATE(GameState.INVITING_USERS);
 		
+		//this update is required to fetch the current user from the server as well:
 		new ClientListUpdateHandler(frame.getModel());
+		
+		frame.getModel().getMe().setAvailable(false);
+		
+		
+		
+		
 	}
 
 }

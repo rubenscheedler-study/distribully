@@ -51,6 +51,7 @@ public class Player extends ConnectingComponent {
 	public boolean isAvailable() {
 		return available;
 	}
+	
 	public void setAvailable(boolean available) {
 		this.available = available;
 		HttpClient client = new HttpClient();
@@ -59,19 +60,10 @@ public class Player extends ConnectingComponent {
 			client.start();
 			response = client.newRequest(this.serverAddress + ":" + this.serverPort + "/players/" + this.name)
 					.method(HttpMethod.POST)
-					.param("port", this.port+"")//TODO at available
+					.param("available", available+"")
 					.send();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		
-		if (response.getStatus() == 201) {
-			JsonParser jsonParser = new JsonParser();
-			System.out.println(response.getContentAsString());
-			JsonElement jsonElement = jsonParser.parse(response.getContentAsString());
-			JsonObject jsonObject = jsonElement.getAsJsonObject();
-			String myAddress = jsonObject.get("ip").getAsString();
-			//TODO set avail
 		}
 	}
 }

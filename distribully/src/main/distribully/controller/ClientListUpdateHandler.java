@@ -36,8 +36,8 @@ public class ClientListUpdateHandler {
 		Player[] players = gson.fromJson(ja, Player[].class);
 		ArrayList<Player> playerList  = new ArrayList<Player>(Arrays.asList(players));
 		
-		//remove self from the list of available players
-		playerList.removeIf(player -> player.getName().equals(model.getNickname()));
+		playerList.forEach(player -> player.setServerAddress(model.getServerAddress()));
+		playerList.forEach(player -> player.setServerPort(model.getServerPort()));
 		
 		model.getClientList().setPlayers(playerList);
 	}
