@@ -11,7 +11,7 @@ public class DistribullyController {
 	
 	DistribullyWindow view;
 	DistribullyModel model;
-	public static WaitForInvite waitForInviteThread = null;
+	public static WaitForInviteThread waitForInviteThread = null;
 	public static LobbyThread lobbyThread = null;
 	
 	public DistribullyController() {

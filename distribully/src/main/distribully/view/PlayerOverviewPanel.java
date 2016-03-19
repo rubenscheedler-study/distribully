@@ -87,10 +87,10 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		headerPanel.setMaximumSize(new Dimension(this.size.width, 40));
 		if (model.getGAME_STATE() == GameState.INVITING_USERS) {
 			//add a button to actually start the game
-			headerPanel.add(new StartGameButton());
+			headerPanel.add(new StartGameButton(model));
 		} else if (model.getGAME_STATE() == GameState.IN_LOBBY) {
 			//add a button to leave the lobby, that is: remove yourself from the game player list
-			headerPanel.add(new LeaveLobbyButton());
+			headerPanel.add(new LeaveLobbyButton(model));
 		}
 		
 		return headerPanel;

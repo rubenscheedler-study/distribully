@@ -43,7 +43,7 @@ public class JoinClientListHandler {
 		frame.getModel().setNickname(choosenNickname);
 		//this update is required to fetch the current user from the server as well:
 		new ClientListUpdateHandler(frame.getModel());
-		DistribullyController.waitForInviteThread = new WaitForInvite(frame.getModel());
+		DistribullyController.waitForInviteThread = new WaitForInviteThread(frame.getModel());
 	}
 
 	
