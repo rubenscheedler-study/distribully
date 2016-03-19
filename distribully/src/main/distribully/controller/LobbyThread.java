@@ -1,19 +1,11 @@
 package distribully.controller;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
 
-import javax.swing.JOptionPane;
-
-import distribully.controller.WaitForInvite.Connection;
 import distribully.model.DistribullyModel;
 
 public class LobbyThread extends Thread {
-	private boolean inLobby = false;
+	private volatile boolean inLobby = false;
 	ServerSocket serverSocket;
 	DistribullyModel model;
 

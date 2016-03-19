@@ -12,18 +12,12 @@ import distribully.model.DistribullyModel;
 public class InviteThread extends Thread{
 	private String address;
 	private int port;
-	private boolean started;
 	DistribullyModel model;
 	public InviteThread(String targetAddress, int targetPort, DistribullyModel model){
 		address = targetAddress;
 		port = targetPort;
-		started = false;
 		this.model = model;
 		this.start();
-	}
-	
-	public void setStarted(boolean started){
-		this.started = started;
 	}
 	
 	public void run() {

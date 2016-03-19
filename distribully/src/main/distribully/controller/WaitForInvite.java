@@ -13,7 +13,7 @@ import distribully.model.DistribullyModel;
 
 public class WaitForInvite extends Thread {
 	private int port;
-	private boolean listen = false;
+	private volatile boolean listen = false;
 	ServerSocket serverSocket;
 	DistribullyModel model;
 	
