@@ -73,6 +73,7 @@ public class ServerController {
 	
 	private JsonObject setAvailable(Request request, Response response){
 		String playerName = request.params(":name");
+		System.out.println(playerName + " is updating his availability to: " + request.queryParams("available"));
 		JsonObject returnObject = new JsonObject();
 		if(!players.stream().anyMatch(x -> x.getName().equals(playerName))){
 			response.status(403);
