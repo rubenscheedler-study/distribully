@@ -13,6 +13,7 @@ public class InviteUserHandler implements ActionListener {
 	public InviteUserHandler(String username, DistribullyModel model) {
 		this.model = model;
 		name = username;
+		
 	}
 	
 	@Override
@@ -23,6 +24,7 @@ public class InviteUserHandler implements ActionListener {
 		}else{
 			System.out.println("creating invite thread...");
 			new InviteThread(player.getIp(),player.getPort(), model);
+			model.putInviteState(name, "waiting for response...");
 		}
 		
 	}

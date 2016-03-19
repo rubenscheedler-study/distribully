@@ -1,6 +1,7 @@
 package distribully.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Observable;
 
 import distribully.controller.GameState;
@@ -13,7 +14,7 @@ public class DistribullyModel implements IObservable {
 	private int myPort = 4567;
 
 	private ArrayList<IObserver> observers;
-
+	private HashMap<String,String> inviteStates;
 
 	private String nickname;
 	
@@ -21,6 +22,7 @@ public class DistribullyModel implements IObservable {
 	public DistribullyModel() {
 		this.clientList = new ClientList(serverAddress,serverPort);
 		observers = new ArrayList<IObserver>();
+		inviteStates = new HashMap<String,String>();
 	}
 	
 	
@@ -107,5 +109,18 @@ public class DistribullyModel implements IObservable {
 	public void notifyObservers() {
 		System.out.println("notifying model observers (count=" + this.observers.size() + ")");
 		this.observers.forEach(observer -> observer.update(this));
+	}
+	
+	public HashMap<String, String> getInviteStates() {
+		return inviteStates;
+	}
+
+	public void setInviteStates(HashMap<String, String> inviteStates) {
+		this.inviteStates = inviteStates;
+	}
+	
+	public void putInviteState(String key, String inviteState) {
+		this.inviteStates.put(key, inviteState);
+		this.notifyObservers();
 	}
 }
