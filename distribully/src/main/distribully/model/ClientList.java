@@ -26,7 +26,7 @@ public class ClientList extends ConnectingComponent implements IObservable {
 		return this.players;
 	}
 	
-	public void deleteFromServer(String playerName){//TODO moet naar player
+	public void deleteFromServer(String playerName){//TODO moet naar player?
 		HttpClient client = new HttpClient();
 		try {
 			client.start();
@@ -133,6 +133,18 @@ public class ClientList extends ConnectingComponent implements IObservable {
 	@Override
 	public void notifyObservers() {
 		this.observers.forEach(observer -> observer.update(this));
+	}
+
+	public void deleteFromGame(String hostName) {//TODO moet naar player?
+		HttpClient client = new HttpClient();
+		try {
+			client.start();
+			client.newRequest(this.serverAddress + ":" + this.serverPort + "/game/" + hostName).method(HttpMethod.DELETE).send();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//TODO: Handle response?
+		
 	}
 	
 }

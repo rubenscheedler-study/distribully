@@ -23,16 +23,15 @@ public class LobbyThread extends Thread {
 	DistribullyModel model;
 	String hostName;
 	
-	public LobbyThread(DistribullyModel model, String hostName) {
+	public LobbyThread(DistribullyModel model) {
 		this.model = model;
-		this.hostName = hostName;
 		inLobby = true;
 		this.start();
 	}
 	public void run() {
 		System.out.println("Starting lobby...");
 		while (inLobby) {
-			model.getGamePlayerList().fillWithGamePlayers(hostName);
+			model.getGamePlayerList().fillWithGamePlayers(model.getCurrentHostName());
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {

@@ -14,6 +14,7 @@ public class DistribullyModel implements IObservable {
 	private String serverAddress = "http://82.73.233.237";
 	private int serverPort = 4567;
 	private String myIP;
+	private String currentHostName;
 	private int myPort = 4567;
 
 	private ArrayList<IObserver> observers;
@@ -134,6 +135,14 @@ public class DistribullyModel implements IObservable {
 	public void putInviteState(String key, String inviteState) {
 		this.inviteStates.put(key, inviteState);
 		this.notifyObservers();
+	}
+
+	public String getCurrentHostName() {
+		return currentHostName;
+	}
+
+	public void setCurrentHostName(String currentHostName) {
+		this.currentHostName = currentHostName;
 	}
 
 

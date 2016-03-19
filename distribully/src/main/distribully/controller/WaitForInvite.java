@@ -85,8 +85,9 @@ public class WaitForInvite extends Thread {
 						//not available to invites anymore:
 						model.getMe().setAvailable(false);
 						model.setGAME_STATE(GameState.IN_LOBBY);
+						model.setCurrentHostName(hostName);
 						//start a thread that updates a list of game players
-						DistribullyController.lobbyThread = new LobbyThread(model, hostName);
+						DistribullyController.lobbyThread = new LobbyThread(model);
 						
 						listen = false;//kill this thread
 					} else {
