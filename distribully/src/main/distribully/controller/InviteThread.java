@@ -39,12 +39,6 @@ public class InviteThread extends Thread{
 			System.out.println("From "+ address+": " + data);
 			if(data.equals("Accepted")){ //TODO: gamestate check?
 				//TODO: setStatus joined
-				while(!started){} //TODO: timeout?
-				out.writeUTF("QueueName");
-				String ok = in.readUTF();
-				if(!ok.equals("ok")){//TODO: moet dit
-					//ALLES IS KAPOT!LL!L!LL!L!LL!L!!
-				}
 			}else{
 				//TODO: setStatus rejected
 			}
