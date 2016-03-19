@@ -18,7 +18,7 @@ public class DistribullyModel extends Observable {
 	
 	
 	public DistribullyModel() {
-		this.clientList = new ClientList();
+		this.clientList = new ClientList(serverAddress,serverPort);
 	}
 	
 	

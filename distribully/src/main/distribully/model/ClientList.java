@@ -1,22 +1,20 @@
 package distribully.model;
 
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 
 import org.eclipse.jetty.client.HttpClient;
-import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.http.HttpMethod;
 
 public class ClientList extends ConnectingComponent implements IObservable {
 	ArrayList<Player> players;
 	//list of observers
-	ArrayList<Observer> observers = new ArrayList<Observer>();
+	ArrayList<IObserver> observers = new ArrayList<IObserver>();
 	
-	public ClientList() {
+	public ClientList(String serverAddress, int serverPort) {
+		super(serverAddress,serverPort);
 		players = new ArrayList<Player>();
 	}
-	
+
 	public ArrayList<Player> getPlayers() {
 		return this.players;
 	}
@@ -25,7 +23,7 @@ public class ClientList extends ConnectingComponent implements IObservable {
 		HttpClient client = new HttpClient();
 		try {
 			client.start();
-			client.newRequest("http://82.72.30.166:4567" + "/players/" + playerName).method(HttpMethod.DELETE).send(); //TODO: fix hardcode
+			client.newRequest(this.serverAddress + ":" + this.serverPort + "/players/" + playerName).method(HttpMethod.DELETE).send();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -53,18 +51,18 @@ public class ClientList extends ConnectingComponent implements IObservable {
 	}
 
 	@Override
-	public void addObserver(Observer observer) {
+	public void addObserver(IObserver observer) {
 		this.observers.add(observer);
 	}
 
 	@Override
-	public void removeObserver(Observer observer) {
+	public void removeObserver(IObserver observer) {
 		this.observers.remove(observer);
 	}
 
 	@Override
 	public void notifyObservers() {
-		this.observers.forEach(observer -> observer.update(null, null));
+		this.observers.forEach(observer -> observer.update(this));
 	}
 	
 }

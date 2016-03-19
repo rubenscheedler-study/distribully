@@ -15,9 +15,11 @@ import javax.swing.JPanel;
 import distribully.controller.GameState;
 import distribully.controller.InviteUserHandler;
 import distribully.model.DistribullyModel;
+import distribully.model.IObservable;
+import distribully.model.IObserver;
 import distribully.model.Player;
 
-public class PlayerOverviewPanel extends DistribullyPanel implements Observer {
+public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 
 	private static final long serialVersionUID = -2882716648466999779L;
 	//private ArrayList<Player> playerRows = new ArrayList<Player>();
@@ -78,8 +80,9 @@ public class PlayerOverviewPanel extends DistribullyPanel implements Observer {
 		this.add(playerPanel);
 	}
 
+
 	@Override
-	public void update(Observable arg0, Object arg1) {
+	public void update(IObservable observable) {
 		System.out.println("player overview: received update of client list");
 		this.render();
 	}
