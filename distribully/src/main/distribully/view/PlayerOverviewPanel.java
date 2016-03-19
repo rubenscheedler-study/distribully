@@ -37,7 +37,7 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 	protected void render() {
 		this.removeAll();
 		ArrayList<Player> players = model.getClientList().getPlayers();
-		
+		System.out.println("render::playerCount:" + players.size());
 		//remove self from the list of available players
 		//players.removeIf(player -> player.getName().equals(model.getNickname()));
 				
@@ -75,9 +75,15 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		if (model.getGAME_STATE() == GameState.INVITING_USERS) {
 			//define an invite button with behavior
 			if (player.isAvailable()) {
-				InviteButton inviteButton = new InviteButton(model, player.getName());
+				InviteButton inviteButton = null;
+				//check if player was already invited
+				if (model.getInviteStates().containsKey(player.getName())) {
+					playerPanel.add(new JLabel(model.getInviteStates().get(player.getName())));
+				} else {
+					inviteButton = new InviteButton(model, player.getName());
+					playerPanel.add(inviteButton);
+				}
 				
-				playerPanel.add(inviteButton);
 			} else {
 				DistribullyTextLabel unavailableLabel = new DistribullyTextLabel("unavailable");
 				playerPanel.add(unavailableLabel);
