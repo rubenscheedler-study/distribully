@@ -31,8 +31,10 @@ public class PlayerServerController {
 		get("/game/:name", "application/json" , (request, response) -> getPlayerList(request, response)); 
 		
 		delete("/game/:name", "application/json", (request, response) -> removeFromPlayerList(request, response));
+		delete("/endGame/:name", "application/json", (request, response) -> deletePlayerList(request, response));
 
 		post("/game/:name", "application/json", (request, response) -> addToPlayerList(request, response));
+		post("/createGame/:name", "application/json", (request, response) -> createPlayerList(request, response));
 	}
 	
 	private JsonElement getPlayerList(Request request, Response response) {
@@ -73,6 +75,26 @@ public class PlayerServerController {
 		return returnObject;
 	}
 	
+	private JsonObject createPlayerList(Request request, Response response){
+		String gameName = request.params(":name");
+		JsonObject returnObject = new JsonObject();
+		if(gameName == null || gameName.trim().equals("")){
+			response.status(400);
+			returnObject.addProperty("Message", "Game name is missing.");
+			return returnObject;
+		}
+		String playerJson = request.queryParams("player");
+		JsonElement je = parser.parse(playerJson);
+		JsonObject playerObject = je.getAsJsonObject();
+		Player player = gson.fromJson(playerObject, Player.class);
+		
+		ArrayList<Player> list = new ArrayList<Player>();
+		list.add(player);
+		players.put(gameName, list);
+		response.status(201);
+		return returnObject;
+	}
+	
 	private JsonObject removeFromPlayerList(Request request, Response response){
 		String gameName = request.params(":name");
 		JsonObject returnObject = new JsonObject();
@@ -106,5 +128,24 @@ public class PlayerServerController {
 		response.status(200);
 		returnObject.addProperty("Message", "Player "+ playerString +" was removed.");
 		return returnObject;
+	}
+	
+	private JsonObject deletePlayerList(Request request, Response response){
+		String gameName = request.params(":name");
+		JsonObject returnObject = new JsonObject();
+		if(gameName == null || gameName.trim().equals("")){
+			response.status(400);
+			returnObject.addProperty("Message", "Game name is missing.");
+			return returnObject;
+		}
+		if(!players.containsKey(gameName)){
+			response.status(200);
+			returnObject.addProperty("Message", "Game is already gone.");
+			return returnObject;
+		} else{
+			players.remove(gameName);
+			returnObject.addProperty("Message", "Game is now gone.");
+			return returnObject;
+		}
 	}
 }
