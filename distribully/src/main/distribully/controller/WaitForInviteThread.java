@@ -16,7 +16,7 @@ public class WaitForInviteThread extends Thread {
 	private volatile boolean listen = false;
 	ServerSocket serverSocket;
 	DistribullyModel model;
-	
+
 	public WaitForInviteThread(DistribullyModel model) {
 		this.model = model;
 		this.port = model.getMyPort();
@@ -35,7 +35,7 @@ public class WaitForInviteThread extends Thread {
 				} catch (SocketException e) {
 					//TODO: ooit hier iets mee doen
 				}
-				
+
 			}
 			System.out.println("Job's done.");
 			serverSocket.close();
@@ -44,19 +44,17 @@ public class WaitForInviteThread extends Thread {
 			ioException.printStackTrace();
 		}
 	}
-	public void setListen(boolean listen){
-		this.listen = listen;
-	}
-	
 	public void closeServer(){
 		try{
-			serverSocket.close();
+			listen = false;
+			if(serverSocket != null){
+				serverSocket.close();
+			}
 		}catch(Exception e){
-			//Will always throw exception. Ignore.
+			//Will always throw exception if the thread is waiting for a response. TODO: Ignore?.
 		}
-		
 	}
-	
+
 	class Connection{
 		DataInputStream in;
 		DataOutputStream out;
@@ -75,20 +73,20 @@ public class WaitForInviteThread extends Thread {
 			try {
 				String hostName = in.readUTF();
 				System.out.println("client>" + hostName); 
-				
+
 				//only when the user is not playing/setting up a game: show the received invite
 				if (model.getGAME_STATE() == GameState.NOT_PLAYING) {
 					int acceptedInvite = JOptionPane.showConfirmDialog (null, "You received a game invitation from " + hostName + ". Would you like to accept?", "Game Invitation",JOptionPane.YES_NO_OPTION);
 					if (acceptedInvite == JOptionPane.YES_OPTION) {
-						out.writeUTF("Accepted");
-						
+						out.writeUTF("Accepted"); //TODO: Afvangen wanneer dit crasht
+
 						//not available to invites anymore:
 						model.getMe().setAvailable(false);
 						model.setGAME_STATE(GameState.IN_LOBBY);
 						model.setCurrentHostName(hostName);
 						//start a thread that updates a list of game players
 						DistribullyController.lobbyThread = new LobbyThread(model);
-						
+
 						listen = false;//kill this thread
 					} else {
 						out.writeUTF("Rejected");

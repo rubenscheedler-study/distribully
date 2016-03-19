@@ -1,21 +1,8 @@
 package distribully.controller;
 
 import java.net.ServerSocket;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import org.eclipse.jetty.client.HttpClient;
-import org.eclipse.jetty.client.api.ContentResponse;
-import org.eclipse.jetty.http.HttpMethod;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import distribully.model.DistribullyModel;
-import distribully.model.Player;
 
 public class LobbyThread extends Thread {
 	private volatile boolean inLobby = false;
