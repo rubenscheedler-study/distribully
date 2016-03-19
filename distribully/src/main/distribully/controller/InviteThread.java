@@ -45,8 +45,10 @@ public class InviteThread extends Thread{
 			out.writeUTF(model.getNickname());
 			String data = in.readUTF();
 			System.out.println("From "+ address+": " + data);
-			if(data.equals("Accepted")){ //TODO: gamestate check?
+			if(data.equals("Accepted")){ 
 				model.putInviteState(player.getName(), "Accepted");
+				//store this player on the game player list on the server
+				model.getGamePlayerList().addGamePlayer(player, model.getNickname());
 			}else{
 				model.putInviteState(player.getName(), "Rejected");
 			}

@@ -119,7 +119,7 @@ public class DistribullyModel implements IObservable {
 
 	@Override
 	public void notifyObservers() {
-		System.out.println("notifying model observers (count=" + this.observers.size() + ")");
+		//System.out.println("notifying model observers (count=" + this.observers.size() + ")");
 		this.observers.forEach(observer -> observer.update(this));
 	}
 	

@@ -56,7 +56,7 @@ public class ClientList extends ConnectingComponent implements IObservable {
 		
 		if (response.getStatus() == 200) {
 			JsonParser jsonParser = new JsonParser();
-			System.out.println(response.getContentAsString());
+			//System.out.println(response.getContentAsString());
 			JsonElement je = jsonParser.parse(response.getContentAsString());
 			JsonArray ja = je.getAsJsonArray();
 			
@@ -67,6 +67,36 @@ public class ClientList extends ConnectingComponent implements IObservable {
 			this.players.addAll(playerList);
 			this.notifyObservers();
 
+		} else {
+			//TODO peniek!
+		}
+	}
+	
+	/**
+	 * Adds the player to this clientlist and to the game player server list
+	 * @param player
+	 */
+	public void addGamePlayer(Player player, String hostName) {
+		
+		
+		HttpClient client = new HttpClient();
+		ContentResponse response = null;
+		
+		Gson gson = new Gson();
+		
+		try {
+			client.start();
+			response = client.newRequest(this.serverAddress + ":" + this.serverPort + "/game/" + hostName)
+					.method(HttpMethod.POST)
+					.param("player",gson.toJson(player))
+					.send();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if (response.getStatus() == 201) {
+			this.players.add(player);
+			this.notifyObservers();
 		} else {
 			//TODO peniek!
 		}
@@ -106,7 +136,7 @@ public class ClientList extends ConnectingComponent implements IObservable {
 	public void setPlayers(ArrayList<Player> playerList) {
 		this.players.removeAll(players);
 		playerList.forEach(player -> this.players.add(player));
-		System.out.println("updated list of players:" + players.size() + "," + observers.size());
+		//System.out.println("updated list of players:" + players.size() + "," + observers.size());
 		this.notifyObservers();
 	}
 	
@@ -135,11 +165,11 @@ public class ClientList extends ConnectingComponent implements IObservable {
 		this.observers.forEach(observer -> observer.update(this));
 	}
 
-	public void deleteFromGame(String hostName) {//TODO moet naar player?
+	public void deleteFromGame(String playerName, String hostName) {
 		HttpClient client = new HttpClient();
 		try {
 			client.start();
-			client.newRequest(this.serverAddress + ":" + this.serverPort + "/game/" + hostName).method(HttpMethod.DELETE).send();
+			client.newRequest(this.serverAddress + ":" + this.serverPort + "/game/" + hostName).method(HttpMethod.DELETE).param("playerName",playerName).send();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

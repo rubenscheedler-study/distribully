@@ -45,7 +45,7 @@ public class PlayerServerController {
 			returnObject.addProperty("Message", "Game name is missing.");
 			return returnObject;
 		}
-		System.out.println("Playerlist requested");
+		//System.out.println("Playerlist requested");
 		if(players.containsKey(gameName)){
 			response.status(200);
 			return parser.parse(gson.toJson(players.get(gameName))).getAsJsonArray();

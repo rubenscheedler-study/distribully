@@ -15,9 +15,11 @@ public class LeaveLobbyHandler implements ActionListener  {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		//delete me from the game list
-		model.getGamePlayerList().deleteFromGame(model.getCurrentHostName());
+		model.getGamePlayerList().deleteFromGame(model.getNickname(),model.getCurrentHostName());
 		//set available for invites
 		model.getMe().setAvailable(true);
+		//kill the lobby thread
+		DistribullyController.lobbyThread.setInLobby(false);
 		//change game state
 		DistribullyController.waitForInviteThread = new WaitForInviteThread(model);
 		//set game state

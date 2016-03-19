@@ -12,6 +12,7 @@ public class LeaveLobbyButton extends JButton {
 	private DistribullyModel model;
 	public LeaveLobbyButton(DistribullyModel model) {
 		this.setText("Leave Lobby");
+		this.model = model;
 		
 		this.addActionListener(new LeaveLobbyHandler(this.model));
 	}
