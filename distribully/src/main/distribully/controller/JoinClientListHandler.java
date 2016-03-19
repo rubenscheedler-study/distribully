@@ -54,7 +54,8 @@ public class JoinClientListHandler {
 		ContentResponse response = null;
 		try {
 			client.start();
-			response = client.newRequest(frame.getModel().getServerAddress() + ":" + frame.getModel().getServerPort() + "/players/" + nickname)
+			String sa = frame.getModel().getServerAddress();
+			response = client.newRequest(sa + ":" + frame.getModel().getServerPort() + "/players/" + nickname)
 					.method(HttpMethod.POST)
 					.param("port", frame.getModel().getMyPort()+"")
 					.send();

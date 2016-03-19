@@ -6,7 +6,7 @@ import distribully.controller.GameState;
 
 public class DistribullyModel extends Observable {
 	private ClientList clientList;//contains the current list of available players copied from the server
-	private String serverAddress = "http://82.72.30.166";
+	private String serverAddress = "http://82.73.233.237";
 	private int serverPort = 4567;
 	private String myIP;
 	private int myPort = 4567;

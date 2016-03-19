@@ -2,13 +2,16 @@ package distribully.model;
 
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.Observer;
 
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.http.HttpMethod;
 
-public class ClientList extends Observable {
+public class ClientList extends ConnectingComponent implements IObservable {
 	ArrayList<Player> players;
+	//list of observers
+	ArrayList<Observer> observers = new ArrayList<Observer>();
 	
 	public ClientList() {
 		players = new ArrayList<Player>();
@@ -33,10 +36,9 @@ public class ClientList extends Observable {
 	 * @param playerList
 	 */
 	public void setPlayers(ArrayList<Player> playerList) {
-		//this.players.removeAll(players);
+		this.players.removeAll(players);
 		playerList.forEach(player -> this.players.add(player));
-		System.out.println("updated list of players:" + players.size() + "," + this.countObservers());
-		this.setChanged();
+		System.out.println("updated list of players:" + players.size() + "," + observers.size());
 		this.notifyObservers();
 	}
 	
@@ -48,6 +50,21 @@ public class ClientList extends Observable {
 		}
 		System.out.println(nickname);
 		return null;
+	}
+
+	@Override
+	public void addObserver(Observer observer) {
+		this.observers.add(observer);
+	}
+
+	@Override
+	public void removeObserver(Observer observer) {
+		this.observers.remove(observer);
+	}
+
+	@Override
+	public void notifyObservers() {
+		this.observers.forEach(observer -> observer.update(null, null));
 	}
 	
 }
