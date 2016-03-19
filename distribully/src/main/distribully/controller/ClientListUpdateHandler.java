@@ -26,6 +26,7 @@ public class ClientListUpdateHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		//TODO: handle response
 		
 		JsonParser jsonParser = new JsonParser();
 		System.out.println(response.getContentAsString());

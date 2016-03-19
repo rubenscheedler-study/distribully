@@ -65,5 +65,6 @@ public class Player extends ConnectingComponent {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		//TODO: Handle response
 	}
 }

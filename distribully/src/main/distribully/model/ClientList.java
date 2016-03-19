@@ -27,6 +27,7 @@ public class ClientList extends ConnectingComponent implements IObservable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		//TODO: Handle response?
 	}
 
 	/**
