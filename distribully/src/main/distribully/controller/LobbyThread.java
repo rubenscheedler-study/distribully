@@ -19,7 +19,7 @@ public class LobbyThread extends Thread {
 		System.out.println("Starting lobby...");
 		while (inLobby) {
 			model.getGamePlayerList().fillWithGamePlayers(model.getCurrentHostName());
-			//model.updateInviteStatesByListState(model.getGamePlayerList());
+			model.updateInviteStatesByListState(model.getGamePlayerList());
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {

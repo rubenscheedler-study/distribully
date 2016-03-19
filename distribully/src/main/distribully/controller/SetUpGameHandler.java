@@ -22,6 +22,9 @@ public class SetUpGameHandler implements ActionListener {
 		}
 		frame.getModel().getMe().setAvailable(false);
 		
+		//set current host name
+		frame.getModel().setCurrentHostName(frame.getModel().getNickname());
+		
 		//update the available player list
 		new ClientListUpdateHandler(frame.getModel());
 		
