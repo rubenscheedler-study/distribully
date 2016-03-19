@@ -59,7 +59,7 @@ public class Player extends ConnectingComponent {
 		try {
 			client.start();
 			response = client.newRequest(this.serverAddress + ":" + this.serverPort + "/players/" + this.name)
-					.method(HttpMethod.POST)
+					.method(HttpMethod.PUT)
 					.param("available", available+"")
 					.send();
 		} catch (Exception e) {

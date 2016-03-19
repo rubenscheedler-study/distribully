@@ -4,16 +4,15 @@ package distribully.view;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
+
 
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import distribully.controller.GameState;
-import distribully.controller.InviteUserHandler;
+
 import distribully.model.DistribullyModel;
 import distribully.model.IObservable;
 import distribully.model.IObserver;
@@ -31,6 +30,7 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		this.model = model;
 		this.size = size;
 		model.getClientList().addObserver(this);
+		model.addObserver(this);
 		this.render();
 	}
 	
@@ -48,7 +48,14 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		if (players.size() == 0) {
 			this.add(new JLabel("No available players"));
 		} else {
-			players.forEach(player -> this.renderPlayer(player));
+			for (Player p : players) {
+				//do not render self
+				if (p.getName().equals(model.getNickname())) {
+					continue;
+				}
+				this.renderPlayer(p);
+			}
+
 		}
 		this.revalidate();
 		this.repaint();

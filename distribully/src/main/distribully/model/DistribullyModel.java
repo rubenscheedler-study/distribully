@@ -1,17 +1,18 @@
 package distribully.model;
 
+import java.util.ArrayList;
 import java.util.Observable;
 
 import distribully.controller.GameState;
 
-public class DistribullyModel extends Observable {
+public class DistribullyModel implements IObservable {
 	private ClientList clientList;//contains the current list of available players copied from the server
 	private String serverAddress = "http://82.73.233.237";
 	private int serverPort = 4567;
 	private String myIP;
 	private int myPort = 4567;
 
-
+	private ArrayList<IObserver> observers;
 
 
 	private String nickname;
@@ -19,6 +20,7 @@ public class DistribullyModel extends Observable {
 	
 	public DistribullyModel() {
 		this.clientList = new ClientList(serverAddress,serverPort);
+		observers = new ArrayList<IObserver>();
 	}
 	
 	
@@ -55,6 +57,7 @@ public class DistribullyModel extends Observable {
 
 	public void setGAME_STATE(GameState gAME_STATE) {
 		GAME_STATE = gAME_STATE;
+		this.notifyObservers();
 	}
 
 	public ClientList getClientList() {
@@ -87,7 +90,22 @@ public class DistribullyModel extends Observable {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
-		this.setChanged();
 		this.notifyObservers();
+	}
+
+	@Override
+	public void addObserver(IObserver observer) {
+		this.observers.add(observer);
+	}
+
+	@Override
+	public void removeObserver(IObserver observer) {
+		this.observers.remove(observer);
+	}
+
+	@Override
+	public void notifyObservers() {
+		System.out.println("notifying model observers (count=" + this.observers.size() + ")");
+		this.observers.forEach(observer -> observer.update(this));
 	}
 }

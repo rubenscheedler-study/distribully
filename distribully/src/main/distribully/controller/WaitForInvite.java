@@ -81,18 +81,13 @@ public class WaitForInvite extends Thread {
 					int acceptedInvite = JOptionPane.showConfirmDialog (null, "You received a game invitation from " + hostName + ". Would you like to accept?", "Game Invitation",JOptionPane.YES_NO_OPTION);
 					if (acceptedInvite == JOptionPane.YES_OPTION) {
 						model.getMe().setAvailable(false);
-						//TODO update view
+						out.writeUTF("Accepted");
+						listen = false;
 					} else {
-						//TODO send requested
+						out.writeUTF("Rejected");
 					}
-				}
-
-				String reversed = new StringBuffer(hostName).reverse().toString();
-				out.writeUTF(reversed);
-				if(reversed.equals("yes")){
-					listen = false;
-					//TODO: notify server of unavailability
-					//TODO: Go to users overview of this game
+				} else {
+					out.writeUTF("Rejected");
 				}
 			} catch (IOException ioException) {
 				ioException.printStackTrace();

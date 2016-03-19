@@ -41,6 +41,8 @@ public class JoinClientListHandler {
 		//check if name is unique
 		System.out.println("setting model nickname:" + choosenNickname);
 		frame.getModel().setNickname(choosenNickname);
+		//this update is required to fetch the current user from the server as well:
+		new ClientListUpdateHandler(frame.getModel());
 		DistribullyController.waitForInviteThread = new WaitForInvite(frame.getModel());
 	}
 
