@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import javax.swing.BoxLayout;
 
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import distribully.controller.GameState;
 
@@ -48,6 +47,9 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		if (players.size() == 0) {
 			this.add(new JLabel("No available players"));
 		} else {
+			
+			this.add(getHeaderPanel());
+			
 			for (Player p : players) {
 				//do not render self
 				if (p.getName().equals(model.getNickname())) {
@@ -56,14 +58,34 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 				this.renderPlayer(p);
 			}
 
+
 		}
 		this.revalidate();
 		this.repaint();
 		
 	}
 
+	
+	protected DistribullyPanel getHeaderPanel() {
+		DistribullyPanel headerPanel = new DistribullyPanel();
+		headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		headerPanel.setMinimumSize(new Dimension(this.size.width, 40));
+		headerPanel.setPreferredSize(new Dimension(this.size.width, 40));
+		headerPanel.setMaximumSize(new Dimension(this.size.width, 40));
+		if (model.getGAME_STATE() == GameState.INVITING_USERS) {
+			//add a button to actually start the game
+			headerPanel.add(new StartGameButton());
+		} else if (model.getGAME_STATE() == GameState.IN_LOBBY) {
+			//add a button to leave the lobby, that is: remove yourself from the game player list
+			headerPanel.add(new LeaveLobbyButton());
+		}
+		
+		return headerPanel;
+	}
+	
+	
 	protected void renderPlayer(Player player) {
-		JPanel playerPanel = new DistribullyPanel();
+		DistribullyPanel playerPanel = new DistribullyPanel();
 		playerPanel.setMinimumSize(new Dimension(this.size.width, 40));
 		playerPanel.setPreferredSize(new Dimension(this.size.width, 40));
 		playerPanel.setMaximumSize(new Dimension(this.size.width, 40));
@@ -72,28 +94,47 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		DistribullyTextLabel nameLabel = new DistribullyTextLabel(player.getName());
 		nameLabel.setPreferredSize(new Dimension(400,40));
 		playerPanel.add(nameLabel);
+		
 		if (model.getGAME_STATE() == GameState.INVITING_USERS) {
-			//define an invite button with behavior
-			if (player.isAvailable()) {
-				InviteButton inviteButton = null;
-				//check if player was already invited
-				if (model.getInviteStates().containsKey(player.getName())) {
-					playerPanel.add(new JLabel(model.getInviteStates().get(player.getName())));
-				} else {
-					inviteButton = new InviteButton(model, player.getName());
-					playerPanel.add(inviteButton);
-				}
-				
-			} else {
-				DistribullyTextLabel unavailableLabel = new DistribullyTextLabel("unavailable");
-				playerPanel.add(unavailableLabel);
-			}
-			
+			playerPanel.add(getInvitationPanel(player));
+		} else if (model.getGAME_STATE() == GameState.IN_LOBBY) {
+			playerPanel.add(getLobbyPanel(player));
 		}
+		
 		this.add(playerPanel);
 	}
 
-
+	/**
+	 * returns a panel containing either a working invite button, or an invitation state
+	 * @param player Player to render to a panel
+	 * @return the panel
+	 */
+	private DistribullyPanel getInvitationPanel(Player player) {
+		DistribullyPanel playerPanel = new DistribullyPanel();
+		if (player.isAvailable()) {
+			InviteButton inviteButton = null;
+			//check if player was already invited
+			if (model.getInviteStates().containsKey(player.getName())) {
+				playerPanel.add(new JLabel(model.getInviteStates().get(player.getName())));
+			} else {
+				inviteButton = new InviteButton(model, player.getName());
+				playerPanel.add(inviteButton);
+			}
+			
+		} else {
+			DistribullyTextLabel unavailableLabel = new DistribullyTextLabel("unavailable");
+			playerPanel.add(unavailableLabel);
+		}
+		return playerPanel;
+	}
+	
+	
+	private DistribullyPanel getLobbyPanel(Player player) {
+		DistribullyPanel playerPanel = new DistribullyPanel();
+		
+		return playerPanel;
+	}
+	
 	@Override
 	public void update(IObservable observable) {
 		System.out.println("player overview: received update of client list");

@@ -5,16 +5,16 @@ import java.awt.event.ActionListener;
 
 import distribully.view.DistribullyWindow;
 
-public class StartGameHandler implements ActionListener {
+public class SetUpGameHandler implements ActionListener {
 
 	private DistribullyWindow frame;
 	
-	public StartGameHandler(DistribullyWindow frame) {
+	public SetUpGameHandler(DistribullyWindow frame) {
 		this.frame = frame;
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("starting a game...");
+		System.out.println("setting up a game...");
 		
 		//no longer available for invitations
 		if (DistribullyController.waitForInviteThread != null) {

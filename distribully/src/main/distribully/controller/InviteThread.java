@@ -8,14 +8,17 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import distribully.model.DistribullyModel;
+import distribully.model.Player;
 
 public class InviteThread extends Thread{
 	private String address;
 	private int port;
+	private Player player;
 	DistribullyModel model;
-	public InviteThread(String targetAddress, int targetPort, DistribullyModel model){
-		address = targetAddress;
-		port = targetPort;
+	public InviteThread(Player player, DistribullyModel model){
+		this.player = player;
+		address = player.getIp();
+		port = player.getPort();
 		this.model = model;
 		this.start();
 	}
@@ -32,22 +35,23 @@ public class InviteThread extends Thread{
 			String data = in.readUTF();
 			System.out.println("From "+ address+": " + data);
 			if(data.equals("Accepted")){ //TODO: gamestate check?
-				//TODO: setStatus joined
+				model.putInviteState(player.getName(), "Accepted");
 			}else{
-				//TODO: setStatus rejected
+				model.putInviteState(player.getName(), "Rejected");
 			}
 		} catch (UnknownHostException e) {
-			System.err.println(e);
+			e.printStackTrace();
+			model.putInviteState(player.getName(), "Unreachable");
 		} catch (ConnectException e){ //Receiver has no open socket
 			//TODO: set status rejected
 		} catch (IOException e) {
-			System.err.println(e);
+			e.printStackTrace();
 		} finally {
 			if (s != null)
 				try {
 					s.close();
 				} catch (IOException e) {
-					System.err.println(e);
+					e.printStackTrace();
 				}
 		}
 	}

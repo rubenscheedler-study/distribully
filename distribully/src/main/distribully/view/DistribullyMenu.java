@@ -10,7 +10,7 @@ public class DistribullyMenu extends JMenuBar {
 	public DistribullyMenu(DistribullyWindow container) {
 		//gameMenu = new JMenu("Start Game");
 		//1) start game button
-		JMenuItem startGameItem = new StartGameButton(container);
+		JMenuItem startGameItem = new SetUpGameButton(container);
 		JMenuItem updateClientListButton = new UpdateClientListButton(container);
 		this.add(startGameItem);
 		this.add(updateClientListButton);

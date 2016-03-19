@@ -5,8 +5,9 @@ package distribully.controller;
 public enum GameState {
 	NOT_PLAYING (0),
 	INVITING_USERS (1),
-	SETTING_RULES (2),
-	IN_GAME (3);
+	IN_LOBBY (2),
+	SETTING_RULES (3),
+	IN_GAME (4);
 	
 	private int v;
 

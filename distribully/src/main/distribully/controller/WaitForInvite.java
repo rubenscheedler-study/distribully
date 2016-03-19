@@ -80,8 +80,11 @@ public class WaitForInvite extends Thread {
 				if (model.getGAME_STATE() == GameState.NOT_PLAYING) {
 					int acceptedInvite = JOptionPane.showConfirmDialog (null, "You received a game invitation from " + hostName + ". Would you like to accept?", "Game Invitation",JOptionPane.YES_NO_OPTION);
 					if (acceptedInvite == JOptionPane.YES_OPTION) {
-						model.getMe().setAvailable(false);
 						out.writeUTF("Accepted");
+						
+						model.getMe().setAvailable(false);
+						model.setGAME_STATE(GameState.IN_LOBBY);
+
 						listen = false;
 					} else {
 						out.writeUTF("Rejected");

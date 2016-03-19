@@ -30,7 +30,7 @@ public class DistribullyWindow extends JFrame {
 		
 		//get the size of the monitor
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		
+		screenSize.height -= 100;
 		//window properties
 		this.setSize(screenSize.width, screenSize.height);
 		this.setVisible(true);

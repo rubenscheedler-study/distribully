@@ -23,7 +23,7 @@ public class InviteUserHandler implements ActionListener {
 			//TODO: afvangen bitch
 		}else{
 			System.out.println("creating invite thread...");
-			new InviteThread(player.getIp(),player.getPort(), model);
+			new InviteThread(player, model);
 			model.putInviteState(name, "waiting for response...");
 		}
 		
