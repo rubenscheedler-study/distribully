@@ -1,9 +1,9 @@
 package distribully.controller;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import spark.ModelAndView;
 import distribully.model.DistribullyModel;
 import distribully.view.*;
 
@@ -13,6 +13,7 @@ public class DistribullyController {
 	DistribullyModel model;
 	public static WaitForInvite waitForInviteThread = null;
 	public static LobbyThread lobbyThread = null;
+	public static ArrayList<InviteThread> InviteThreadList = new ArrayList<InviteThread>(); 
 	
 	public DistribullyController() {
 		model = new DistribullyModel();

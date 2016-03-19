@@ -23,7 +23,8 @@ public class InviteUserHandler implements ActionListener {
 			//TODO: afvangen bitch
 		}else{
 			System.out.println("creating invite thread...");
-			new InviteThread(player, model);
+			InviteThread thread = new InviteThread(player, model);
+			DistribullyController.InviteThreadList.add(thread);
 			model.putInviteState(name, "waiting for response...");
 		}
 		

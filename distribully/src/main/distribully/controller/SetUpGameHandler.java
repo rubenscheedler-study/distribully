@@ -18,7 +18,6 @@ public class SetUpGameHandler implements ActionListener {
 		
 		//no longer available for invitations
 		if (DistribullyController.waitForInviteThread != null) {
-			DistribullyController.waitForInviteThread.setListen(false);
 			DistribullyController.waitForInviteThread.closeServer();
 		}
 		frame.getModel().getMe().setAvailable(false);

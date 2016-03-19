@@ -15,6 +15,8 @@ public class InviteThread extends Thread{
 	private int port;
 	private Player player;
 	DistribullyModel model;
+	Socket s = null;
+	
 	public InviteThread(Player player, DistribullyModel model){
 		this.player = player;
 		address = player.getIp();
@@ -23,8 +25,17 @@ public class InviteThread extends Thread{
 		this.start();
 	}
 	
+	public void closeServer(){
+		try{
+			if(s != null){
+				s.close();
+			}
+		}catch(Exception e){
+			//Will always throw exception if the thread is waiting for a response. TODO: Ignore?.
+		}
+	}
+	
 	public void run() {
-		Socket s = null;
 		DataOutputStream out;
 		DataInputStream in;
 		try {
@@ -47,12 +58,14 @@ public class InviteThread extends Thread{
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			if (s != null)
+			DistribullyController.InviteThreadList.remove(this);
+			if (s != null){
 				try {
 					s.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			}
 		}
 	}
 }
