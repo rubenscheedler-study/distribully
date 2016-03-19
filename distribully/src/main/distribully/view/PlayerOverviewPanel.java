@@ -47,7 +47,7 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		
 		
 		
-		System.out.println("render::playerCount:" + players.size());
+		//System.out.println("render::playerCount:" + players.size());
 		//remove self from the list of available players
 		//players.removeIf(player -> player.getName().equals(model.getNickname()));
 				
@@ -150,7 +150,7 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 	
 	@Override
 	public void update(IObservable observable) {
-		System.out.println("player overview: received update of client list");
+		//System.out.println("player overview: received update of client list");
 		this.render();
 	}
 }
