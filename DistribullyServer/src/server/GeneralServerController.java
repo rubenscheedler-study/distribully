@@ -23,7 +23,6 @@ public class GeneralServerController {
 	public static void main(String[] args) {
 		new GeneralServerController();
 		new PlayerServerController();
-		
 	}
 	
 	public GeneralServerController(){
