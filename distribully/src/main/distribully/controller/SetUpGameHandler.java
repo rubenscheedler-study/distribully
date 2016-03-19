@@ -24,9 +24,8 @@ public class SetUpGameHandler implements ActionListener {
 		frame.getModel().getMe().setAvailable(false);
 		frame.getModel().setGAME_STATE(GameState.INVITING_USERS);
 		
-		
-		
-		
+		//create a game list on the server
+		frame.getModel().getGamePlayerList().createGameList(frame.getModel().getMe());
 		
 		
 		

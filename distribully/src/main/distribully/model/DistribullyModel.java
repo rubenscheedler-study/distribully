@@ -7,7 +7,10 @@ import java.util.Observable;
 import distribully.controller.GameState;
 
 public class DistribullyModel implements IObservable {
-	private ClientList clientList;//contains the current list of available players copied from the server
+	private ClientList onlinePlayerList;//contains the current list of online players copied from the server
+	
+	private ClientList gamePlayerList;//contains the players that are part of the game that this user is a part of.
+	
 	private String serverAddress = "http://82.73.233.237";
 	private int serverPort = 4567;
 	private String myIP;
@@ -20,7 +23,8 @@ public class DistribullyModel implements IObservable {
 	
 	
 	public DistribullyModel() {
-		this.clientList = new ClientList(serverAddress,serverPort);
+		this.onlinePlayerList = new ClientList(serverAddress,serverPort);
+		this.gamePlayerList = new ClientList(serverAddress, serverPort);
 		observers = new ArrayList<IObserver>();
 		inviteStates = new HashMap<String,String>();
 	}
@@ -34,7 +38,7 @@ public class DistribullyModel implements IObservable {
 	 * @return
 	 */
 	public Player getMe() {
-		return this.clientList.getPlayerByNickname(nickname);
+		return this.onlinePlayerList.getPlayerByNickname(nickname);
 	}
 	
 	public String getMyIP() {
@@ -62,12 +66,20 @@ public class DistribullyModel implements IObservable {
 		this.notifyObservers();
 	}
 
-	public ClientList getClientList() {
-		return clientList;
+	public ClientList getGamePlayerList() {
+		return gamePlayerList;
 	}
 
-	public void setClientList(ClientList clientList) {
-		this.clientList = clientList;
+	public void setGamePlayerList(ClientList gamePlayerList) {
+		this.gamePlayerList = gamePlayerList;
+	}
+
+	public ClientList getOnlinePlayerList() {
+		return onlinePlayerList;
+	}
+
+	public void setOnlinePlayerList(ClientList onlinePlayerList) {
+		this.onlinePlayerList = onlinePlayerList;
 	}
 
 	public String getServerAddress() {
@@ -123,4 +135,6 @@ public class DistribullyModel implements IObservable {
 		this.inviteStates.put(key, inviteState);
 		this.notifyObservers();
 	}
+
+
 }

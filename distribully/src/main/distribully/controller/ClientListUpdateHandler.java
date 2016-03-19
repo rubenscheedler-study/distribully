@@ -40,6 +40,6 @@ public class ClientListUpdateHandler {
 		playerList.forEach(player -> player.setServerAddress(model.getServerAddress()));
 		playerList.forEach(player -> player.setServerPort(model.getServerPort()));
 		
-		model.getClientList().setPlayers(playerList);
+		model.getOnlinePlayerList().setPlayers(playerList);
 	}
 }

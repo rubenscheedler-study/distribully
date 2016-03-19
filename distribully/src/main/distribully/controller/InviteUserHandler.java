@@ -18,7 +18,7 @@ public class InviteUserHandler implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		Player player = model.getClientList().getPlayers().stream().filter(x -> x.getName().equals(name)).findFirst().get();
+		Player player = model.getOnlinePlayerList().getPlayers().stream().filter(x -> x.getName().equals(name)).findFirst().get();
 		if(player == null){
 			//TODO: afvangen bitch
 		}else{

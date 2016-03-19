@@ -82,10 +82,13 @@ public class WaitForInvite extends Thread {
 					if (acceptedInvite == JOptionPane.YES_OPTION) {
 						out.writeUTF("Accepted");
 						
+						//not available to invites anymore:
 						model.getMe().setAvailable(false);
 						model.setGAME_STATE(GameState.IN_LOBBY);
-
-						listen = false;
+						//start a thread that updates a list of game players
+						DistribullyController.lobbyThread = new LobbyThread(model, hostName);
+						
+						listen = false;//kill this thread
 					} else {
 						out.writeUTF("Rejected");
 					}

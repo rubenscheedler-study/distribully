@@ -15,7 +15,7 @@ public class CloseWindowHandler extends WindowAdapter {
 	@Override
     public void windowClosing(WindowEvent e)
     {
-		model.getClientList().deleteFromServer(model.getNickname());
+		model.getOnlinePlayerList().deleteFromServer(model.getNickname());
 		//TODO: leave current game
         System.out.println("Closed game");
         e.getWindow().dispose();

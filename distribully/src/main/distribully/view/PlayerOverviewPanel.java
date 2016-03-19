@@ -28,14 +28,25 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		System.out.println("created player overview panel:" + size.getWidth() + "," + size.getHeight());
 		this.model = model;
 		this.size = size;
-		model.getClientList().addObserver(this);
+		model.getOnlinePlayerList().addObserver(this);
+		model.getGamePlayerList().addObserver(this);
 		model.addObserver(this);
 		this.render();
 	}
 	
 	protected void render() {
 		this.removeAll();
-		ArrayList<Player> players = model.getClientList().getPlayers();
+		
+		//determine which list of players to render: game members or all online
+		ArrayList<Player> players;
+		if (model.getGAME_STATE() == GameState.IN_LOBBY) {
+			players = model.getGamePlayerList().getPlayers();
+		} else {
+			players = model.getOnlinePlayerList().getPlayers();
+		}
+		
+		
+		
 		System.out.println("render::playerCount:" + players.size());
 		//remove self from the list of available players
 		//players.removeIf(player -> player.getName().equals(model.getNickname()));
@@ -44,6 +55,8 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		this.setMinimumSize(size);
 		this.setPreferredSize(size);
 		this.setMaximumSize(size);
+		
+		
 		if (players.size() == 0) {
 			this.add(new JLabel("No available players"));
 		} else {
