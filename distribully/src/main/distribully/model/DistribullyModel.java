@@ -10,7 +10,7 @@ public class DistribullyModel implements IObservable {
 	
 	private ClientList gamePlayerList;//contains the players that are part of the game that this user is a part of.
 	
-	private String serverAddress = "http://82.72.30.166";
+	private String serverAddress = "http://82.73.233.237";
 	private int serverPort = 4567;
 	private String myIP;
 	private String currentHostName;
@@ -144,7 +144,7 @@ public class DistribullyModel implements IObservable {
 		ArrayList<String> toRemove = new ArrayList<String>();
 		//check which players left
 		for (String name : this.inviteStates.keySet()) {
-			if (this.inviteStates.get(name).equals("accepted") && gamePlayers.getPlayerByNickname(name) == null) {
+			if (this.inviteStates.get(name).equals("Accepted") && gamePlayers.getPlayerByNickname(name) == null) {
 				toRemove.add(name);
 			}
 		}
