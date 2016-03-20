@@ -16,7 +16,7 @@ public class UpdateGameHostThread extends Thread {
 		this.start();
 	}
 	public void run() {
-		System.out.println("Starting update game host thread...");
+		System.out.println("Starting update game host thread for playerstatus only...");
 		while (isSettingUpGame) {
 			model.getGamePlayerList().fillWithGamePlayers(model.getNickname());
 			model.updateInviteStatesByListState(model.getGamePlayerList());
@@ -27,7 +27,7 @@ public class UpdateGameHostThread extends Thread {
 				e.printStackTrace();
 			}			
 		}
-		System.out.println("No longer in lobby.");
+		System.out.println("No longer inviting players.");
 	}
 	public void setIsSettingUpGame(boolean isSettingUpGame){
 		this.isSettingUpGame = isSettingUpGame;

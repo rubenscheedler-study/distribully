@@ -68,6 +68,19 @@ public class GameConsumerThread extends Thread{
 				switch(response.getEnvelope().getRoutingKey()){
 				case "Start":
 					System.out.println("GAMESTART!");
+					if(DistribullyController.lobbyThread != null){
+						DistribullyController.lobbyThread.setInLobby(false);
+					}
+					new ClientListUpdateHandler(model);
+					model.getGamePlayerList().getPlayers().forEach(player -> initPlayerExchange(player));
+					model.setGAME_STATE(GameState.SETTING_RULES);
+					
+					break;
+				case "Leave":
+					break;
+				case "Rules":
+					break;
+				case "PlayCard":
 					break;
 				}
 				System.out.println(" [" + i + "] Received '" + body + "'");
@@ -77,4 +90,21 @@ public class GameConsumerThread extends Thread{
 		}
 	}
 
+	private void initPlayerExchange(Player player){
+		ConnectionFactory factory = new ConnectionFactory();  
+		String playerName = player.getName();
+		factory.setHost(player.getIp());
+		Connection connection = null;
+		try {
+			connection = factory.newConnection();
+			channel = connection.createChannel();
+			channel.exchangeDeclare(playerName, "fanout");
+			queueName = channel.queueDeclare().getQueue();
+			channel.queueBind(queueName, playerName, "");
+			System.out.println("host connected: " + playerName);
+		} catch (IOException | TimeoutException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

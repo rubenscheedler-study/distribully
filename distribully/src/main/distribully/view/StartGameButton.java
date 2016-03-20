@@ -12,6 +12,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
+import distribully.controller.DistribullyController;
 import distribully.model.DistribullyModel;
 
 public class StartGameButton extends JButton {
@@ -27,6 +28,8 @@ public class StartGameButton extends JButton {
 		{
 			public void actionPerformed(ActionEvent e)
 			{
+				DistribullyController.InviteThreadList.forEach(thread -> thread.closeServer());
+				DistribullyController.updateGameHostThread.setIsSettingUpGame(false);
 				ConnectionFactory factory = new ConnectionFactory();
 				factory.setHost(model.getMe().getIp());
 				Connection connection;

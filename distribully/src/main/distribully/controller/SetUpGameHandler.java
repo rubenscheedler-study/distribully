@@ -28,20 +28,18 @@ public class SetUpGameHandler implements ActionListener {
 
 		//update the available player list
 		new ClientListUpdateHandler(frame.getModel());
-		
+
 		//create a game list on the server
 		frame.getModel().getGamePlayerList().createGameList(frame.getModel().getMe());
 
 
 		frame.getModel().setGAME_STATE(GameState.INVITING_USERS);
 
-
-		//start a thread that keeps the player list up to date
+		//start the thread that will handle the distributed game
+		DistribullyController.consumerThread = new GameConsumerThread(frame.getModel());
+		
+		//start a thread that keeps the player list invite status up to date
 		DistribullyController.updateGameHostThread = new UpdateGameHostThread(frame.getModel());
-
-
-
-
 	}
 
 }
