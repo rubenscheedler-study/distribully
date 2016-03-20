@@ -23,7 +23,7 @@ public class UpdateGameHostThread extends Thread {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				System.out.println("Lobbythread interrupted during sleep!");
+				System.out.println("GameHostThread interrupted during sleep!");
 				e.printStackTrace();
 			}			
 		}

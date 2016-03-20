@@ -57,7 +57,7 @@ public class ClientList extends ConnectingComponent implements IObservable {
 	 * Fills the list with the game players on the server of the game owned by hostName
 	 * @param hostName
 	 */
-	public void fillWithGamePlayers(String hostName) {
+	public boolean fillWithGamePlayers(String hostName) {
 		HttpClient client = new HttpClient();
 		ContentResponse response = null;
 		try {
@@ -88,9 +88,12 @@ public class ClientList extends ConnectingComponent implements IObservable {
 			this.players.removeAll(this.players);
 			this.players.addAll(playerList);
 			this.notifyObservers();
-
-		} else {
-			//TODO peniek!
+			return true;
+		} else if(response.getStatus() == 403){
+			this.players.removeAll(this.players);
+			return false;
+		} else{
+			return false;
 		}
 	}
 	

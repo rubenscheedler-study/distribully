@@ -86,6 +86,7 @@ public class WaitForInviteThread extends Thread {
 						model.setCurrentHostName(hostName);
 						//start a thread that updates a list of game players
 						DistribullyController.lobbyThread = new LobbyThread(model);
+						DistribullyController.consumerThread = new GameConsumerThread(model);
 
 						listen = false;//kill this thread
 					} else {

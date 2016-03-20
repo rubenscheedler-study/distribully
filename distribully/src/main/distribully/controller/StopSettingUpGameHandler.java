@@ -17,6 +17,8 @@ public class StopSettingUpGameHandler implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		//delete game list from server
 		model.getGamePlayerList().deleteGameList(model.getCurrentHostName());
+		//Kill open invites
+		DistribullyController.InviteThreadList.forEach(thread -> thread.closeServer());
 		//stop update thread of game list
 		DistribullyController.updateGameHostThread.setIsSettingUpGame(false);
 		//start wait for invite thread
