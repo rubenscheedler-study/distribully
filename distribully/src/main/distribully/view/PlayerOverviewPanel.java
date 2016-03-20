@@ -65,7 +65,7 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 			
 			for (Player p : players) {
 				//do not render self
-				if (p.getName().equals(model.getNickname())) {
+				if (p.getName().equals(model.getNickname()) && model.getGAME_STATE() != GameState.IN_LOBBY) {
 					continue;
 				}
 				this.renderPlayer(p);
