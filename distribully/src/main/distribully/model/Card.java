@@ -25,30 +25,35 @@ public class Card {
 		this.suit = suit;
 	}
 	
-	public String getImage() {
-		String img = "";
+	public String getCardName() {
+		String name = "";
 		if (number > 10) {//map to the right textual name
 			switch (number) {
 			case 11:
-				img += "ace";
+				name += "ace";
 				break;
 			case 12:
-				img += "jack2";
+				name += "jack";
 				break;
 			case 13:
-				img += "queen2";
+				name += "queen";
 				break;
 			case 14:
-				img += "king2";
+				name += "king";
 				break;
 			default:
-				img += number;//easier to detect the problem than empty string
+				name += number;//easier to detect the problem than empty string
 				break;
 			}
 
 		} else {
-			img += number;
+			name = number+"";
 		}
+		return name;
+	}
+	public String getImage() {
+		String img = this.getCardName();
+		
 		img += "_of_";
 		//add the suit to the image file name
 		

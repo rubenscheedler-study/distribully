@@ -16,5 +16,5 @@ public abstract class Rule {
 	 * 
 	 * @return The description/name of the rule.
 	 */
-	public abstract String ruleName();
+	public abstract String toString();
 }

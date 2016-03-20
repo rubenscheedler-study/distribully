@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import distribully.controller.GameState;
+import distribully.model.rules.DrawTwoRule;
 import distribully.model.rules.Rule;
+import distribully.model.rules.SkipTurnRule;
 
 public class DistribullyModel implements IObservable {
 	private ClientList onlinePlayerList;//contains the current list of online players copied from the server
@@ -21,19 +23,31 @@ public class DistribullyModel implements IObservable {
 	private HashMap<String,String> inviteStates;
 
 	private String nickname;
+	private Stack stack;
 	
-	private ArrayList<Rule> availableRules;
+	private ArrayList<Rule> allRules;
+	private HashMap<Integer,Rule> choosenRules;
 	
 	public DistribullyModel() {
+		this.stack = new Stack();
 		this.onlinePlayerList = new ClientList(serverAddress,serverPort);
 		this.gamePlayerList = new ClientList(serverAddress, serverPort);
 		observers = new ArrayList<IObserver>();
 		inviteStates = new HashMap<String,String>();
-		availableRules = new ArrayList<Rule>();
+		allRules = new ArrayList<Rule>();
+		choosenRules = new HashMap<Integer,Rule>();
+		fillAllRules();
 	}
 	
 	
 	
+	private void fillAllRules() {
+		allRules.add(new DrawTwoRule(this.stack));
+		allRules.add(new SkipTurnRule(this.stack));
+	}
+
+
+
 	private GameState GAME_STATE;
 	
 	/**
@@ -164,5 +178,29 @@ public class DistribullyModel implements IObservable {
 		this.currentHostName = currentHostName;
 	}
 
+	public void setCardRule(int cardNumber, Rule rule) {
+		this.getChoosenRules().put(cardNumber, rule);
+		this.notifyObservers();
+	}
 
+	public void removeCardRule(int cardNumber) {
+		this.getChoosenRules().remove(cardNumber);
+		this.notifyObservers();
+	}
+
+	public ArrayList<Rule> getAllRules() {
+		return allRules;
+	}
+
+	public void setAllRules(ArrayList<Rule> allRules) {
+		this.allRules = allRules;
+	}
+
+	public HashMap<Integer,Rule> getChoosenRules() {
+		return choosenRules;
+	}
+
+	public void setChoosenRules(HashMap<Integer,Rule> choosenRules) {
+		this.choosenRules = choosenRules;
+	}
 }
