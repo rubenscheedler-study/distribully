@@ -78,7 +78,7 @@ public class WaitForInviteThread extends Thread {
 				if (model.getGAME_STATE() == GameState.NOT_PLAYING) {
 					int acceptedInvite = JOptionPane.showConfirmDialog (null, "You received a game invitation from " + hostName + ". Would you like to accept?", "Game Invitation",JOptionPane.YES_NO_OPTION);
 					if (acceptedInvite == JOptionPane.YES_OPTION) {
-						out.writeUTF("Accepted"); //TODO: Afvangen wanneer dit crasht
+						out.writeUTF("Accepted"); //TODO: Afvangen wanneer dit crasht/ niet aankomt
 
 						//not available to invites anymore:
 						model.getMe().setAvailable(false);

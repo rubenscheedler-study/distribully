@@ -69,6 +69,13 @@ public class ClientList extends ConnectingComponent implements IObservable {
 			e.printStackTrace();
 		}
 		
+		try {
+			client.stop();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		if (response.getStatus() == 200) {
 			JsonParser jsonParser = new JsonParser();
 			//System.out.println(response.getContentAsString());
@@ -166,6 +173,8 @@ public class ClientList extends ConnectingComponent implements IObservable {
 		} else {
 			//TODO peniek!
 		}
+		
+		
 	}
 	
 	/**
