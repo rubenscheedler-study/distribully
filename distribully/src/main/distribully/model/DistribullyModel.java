@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import distribully.controller.GameState;
+import distribully.model.rules.Rule;
 
 public class DistribullyModel implements IObservable {
 	private ClientList onlinePlayerList;//contains the current list of online players copied from the server
@@ -21,12 +22,14 @@ public class DistribullyModel implements IObservable {
 
 	private String nickname;
 	
+	private ArrayList<Rule> availableRules;
 	
 	public DistribullyModel() {
 		this.onlinePlayerList = new ClientList(serverAddress,serverPort);
 		this.gamePlayerList = new ClientList(serverAddress, serverPort);
 		observers = new ArrayList<IObserver>();
 		inviteStates = new HashMap<String,String>();
+		availableRules = new ArrayList<Rule>();
 	}
 	
 	
