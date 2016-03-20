@@ -24,6 +24,8 @@ public class DistribullyModel implements IObservable {
 
 	private String nickname;
 	private Stack stack;
+	private HashMap<Player,Card> topOfStacks;
+	private ArrayList<Card> hand;
 	
 	private ArrayList<Rule> allRules;
 	private HashMap<Integer,Rule> choosenRules;
@@ -37,6 +39,10 @@ public class DistribullyModel implements IObservable {
 		allRules = new ArrayList<Rule>();
 		choosenRules = new HashMap<Integer,Rule>();
 		fillAllRules();
+		hand = new ArrayList<Card>();
+		topOfStacks = new HashMap<Player,Card>();
+		this.hand.add(new Card(5,CardSuit.CLUBS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
 	}
 	
 	
@@ -202,5 +208,29 @@ public class DistribullyModel implements IObservable {
 
 	public void setChoosenRules(HashMap<Integer,Rule> choosenRules) {
 		this.choosenRules = choosenRules;
+	}
+
+
+
+	public HashMap<Player,Card> getTopOfStacks() {
+		return topOfStacks;
+	}
+
+
+
+	public void setTopOfStacks(HashMap<Player,Card> topOfStacks) {
+		this.topOfStacks = topOfStacks;
+	}
+
+
+
+	public ArrayList<Card> getHand() {
+		return hand;
+	}
+
+
+
+	public void setHand(ArrayList<Card> hand) {
+		this.hand = hand;
 	}
 }
