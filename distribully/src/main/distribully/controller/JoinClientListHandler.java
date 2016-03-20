@@ -24,7 +24,7 @@ public class JoinClientListHandler {
 		String choosenNickname = "";
 
 		do {
-			choosenNickname = askUserForName();
+			choosenNickname = askUserForName().trim();
 			
 			if (choosenNickname == null) { //user does not want to pick a username => close application
 				frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
