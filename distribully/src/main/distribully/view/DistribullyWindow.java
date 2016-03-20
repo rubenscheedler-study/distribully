@@ -40,7 +40,8 @@ public class DistribullyWindow extends JFrame {
 		this.setJMenuBar(new DistribullyMenu(this));
 		new ClientListUpdateHandler(this.model);
 		//mainPanel = new PlayerOverviewPanel(this.model, this.getSize());
-		mainPanel = new SelectRulesPanel(this,this.getSize());
+		//mainPanel = new SelectRulesPanel(this,this.getSize());
+		mainPanel = new GamePanel(this.getModel(),this.getSize());
 		this.add(mainPanel);
 		mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.PAGE_AXIS));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
