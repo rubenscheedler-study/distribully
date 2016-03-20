@@ -77,7 +77,9 @@ public class DistribullyWindow extends JFrame implements IObserver {
 
 	@Override
 	public void update(IObservable observable) {
+		this.remove(mainPanel);
 		determinePanelToShow();	
+		this.add(mainPanel);
 		this.revalidate();
 		this.repaint();
 	}
