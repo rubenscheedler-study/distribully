@@ -40,7 +40,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		int i = 0;
 		for (Card c : model.getHand()) {
 			String imageName = "src/main/distribully/cards/" + c.getImage();
-			System.out.println(System.getProperty("user.dir") + "|||" + imageName);
+			//System.out.println(System.getProperty("user.dir") + "|||" + imageName);
 			File image = new File(imageName);
 			BufferedImage img = null;
 			

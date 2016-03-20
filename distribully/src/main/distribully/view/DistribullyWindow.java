@@ -12,8 +12,10 @@ import javax.swing.JPanel;
 import distribully.controller.ClientListUpdateHandler;
 import distribully.controller.CloseWindowHandler;
 import distribully.model.DistribullyModel;
+import distribully.model.IObservable;
+import distribully.model.IObserver;
 
-public class DistribullyWindow extends JFrame {
+public class DistribullyWindow extends JFrame implements IObserver {
 
 	private static final long serialVersionUID = -6180030798589552918L;
 	Logger logger = Logger.getLogger("DistribullyWindow");
@@ -24,6 +26,9 @@ public class DistribullyWindow extends JFrame {
 	//view components
 	private JPanel mainPanel;
 	private Font font;
+	private PlayerOverviewPanel playerOverviewPanel;
+	private SelectRulesPanel selectRulesPanel;
+	private GamePanel gamePanel;
 	
 	public DistribullyWindow(DistribullyModel model) {
 		this.model = model;
@@ -35,18 +40,22 @@ public class DistribullyWindow extends JFrame {
 		this.setSize(screenSize.width, screenSize.height);
 		this.setVisible(true);
 		this.setTitle("Distribully v0.1");
-		
+		model.addObserver(this);
 		//init of menu
 		this.setJMenuBar(new DistribullyMenu(this));
 		new ClientListUpdateHandler(this.model);
-		//mainPanel = new PlayerOverviewPanel(this.model, this.getSize());
-		//mainPanel = new SelectRulesPanel(this,this.getSize());
-		mainPanel = new GamePanel(this.getModel(),this.getSize());
-		this.add(mainPanel);
-		mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.PAGE_AXIS));
+		
+		playerOverviewPanel = new PlayerOverviewPanel(model,this.getSize());
+		selectRulesPanel = new SelectRulesPanel(this,this.getSize());
+		gamePanel = new GamePanel(model,this.getSize());
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		this.addWindowListener(new CloseWindowHandler(model));
+		
+		this.determinePanelToShow();
+		mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.PAGE_AXIS));
+		this.add(mainPanel);
 		
 		this.revalidate();
 		this.repaint();
@@ -65,7 +74,30 @@ public class DistribullyWindow extends JFrame {
 	public DistribullyModel getModel() {
 		return this.model;
 	}
+
+	@Override
+	public void update(IObservable observable) {
+		determinePanelToShow();	
+		this.revalidate();
+		this.repaint();
+	}
 	
+	public void determinePanelToShow() {
+		switch (model.getGAME_STATE()) {
+		case SETTING_RULES:
+			mainPanel = selectRulesPanel;
+			break;
+		case IN_GAME:
+			mainPanel = gamePanel;
+			break;
+		case NOT_PLAYING:
+		case INVITING_USERS:
+		case IN_LOBBY:
+		default:
+			mainPanel = playerOverviewPanel;
+			break;
+		}
+	}
 	
 
 }
