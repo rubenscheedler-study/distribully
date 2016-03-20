@@ -34,7 +34,7 @@ public class SetUpGameHandler implements ActionListener {
 		frame.getModel().getGamePlayerList().createGameList(frame.getModel().getMe());
 		
 		//start a thread that keeps the player list up to date
-		DistribullyController.lobbyThread = new LobbyThread(frame.getModel());
+		DistribullyController.updateGameHostThread = new UpdateGameHostThread(frame.getModel());
 		
 		
 		

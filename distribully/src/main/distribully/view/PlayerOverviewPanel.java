@@ -3,15 +3,15 @@ package distribully.view;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.util.ArrayList;
 
 
-import javax.swing.BoxLayout;
 
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 
 import distribully.controller.GameState;
-
 import distribully.model.DistribullyModel;
 import distribully.model.IObservable;
 import distribully.model.IObserver;
@@ -88,9 +88,15 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		if (model.getGAME_STATE() == GameState.INVITING_USERS) {
 			//add a button to actually start the game
 			headerPanel.add(new StartGameButton(model));
+			headerPanel.add(new StopSettingUpGameButton(model));
 		} else if (model.getGAME_STATE() == GameState.IN_LOBBY) {
 			//add a button to leave the lobby, that is: remove yourself from the game player list
 			headerPanel.add(new LeaveLobbyButton(model));
+		} else if (model.getGAME_STATE() == GameState.NOT_PLAYING) {
+			headerPanel.setHeaderFont();
+			DistribullyTextLabel headerLabel = new DistribullyTextLabel("Players that are online");
+			headerLabel.setHeaderFont();
+			headerPanel.add(headerLabel);
 		}
 		
 		return headerPanel;

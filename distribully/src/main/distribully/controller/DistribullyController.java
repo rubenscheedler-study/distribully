@@ -13,6 +13,7 @@ public class DistribullyController {
 	DistribullyModel model;
 	public static WaitForInviteThread waitForInviteThread = null;
 	public static LobbyThread lobbyThread = null;
+	public static UpdateGameHostThread updateGameHostThread = null;
 	public static ArrayList<InviteThread> InviteThreadList = new ArrayList<InviteThread>(); 
 	
 	public DistribullyController() {

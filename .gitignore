@@ -47,4 +47,5 @@ local.properties
 .springBeans
 
 # Code Recommenders
-.recommenders/
+.recommenders//NC2016_5_RabbitMQ/
+/NC2016_5_RabbitMQ/
