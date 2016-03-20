@@ -2,6 +2,9 @@ package org.netcomputing.rabbitmq.helloworld;
 
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
+
+import java.util.concurrent.TimeoutException;
+
 import com.rabbitmq.client.Channel;
 
 public class Sender {
@@ -14,8 +17,14 @@ public class Sender {
 		// localhost. If we wanted to connect to a broker on a different machine
 		// we'd simply specify its name or IP address here.
 		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost("localhost");
-		Connection connection = factory.newConnection();
+		factory.setHost("82.73.233.237");
+		Connection connection = null;
+		try {
+			connection = factory.newConnection();
+		} catch (TimeoutException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// Next we create a channel, which is where most of the API for getting
 		// things done resides.
 		Channel channel = connection.createChannel();
@@ -29,7 +38,12 @@ public class Sender {
 		channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
 		System.out.println(" [x] Sent '" + message + "'");
 		//Lastly, we close the channel and the connection
-		channel.close();
+		try {
+			channel.close();
+		} catch (TimeoutException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		connection.close();
 	}
 }

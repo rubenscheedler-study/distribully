@@ -1,5 +1,6 @@
 package org.netcomputing.rabbitmq.workqueues;
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -32,9 +33,14 @@ public class Worker extends JFrame implements Runnable{
 	public void run() {
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost("localhost");
-		Connection connection;
+		Connection connection = null;
 		try {
-			connection = factory.newConnection();
+			try {
+				connection = factory.newConnection();
+			} catch (TimeoutException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			Channel channel = connection.createChannel();
 			channel.queueDeclare(TASK_QUEUE_NAME, true, false, false, null);

@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Date;
+import java.util.concurrent.TimeoutException;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -37,15 +39,25 @@ public class Commander extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost("localhost");
-		Connection connection;
+		Connection connection = null;
 		try {
-			connection = factory.newConnection();
+			try {
+				connection = factory.newConnection();
+			} catch (TimeoutException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			Channel channel = connection.createChannel();
 			channel.queueDeclare(TASK_QUEUE_NAME, true, false, false, null);
 			String message = new Date() + ":" + command.getText();
 			channel.basicPublish("", TASK_QUEUE_NAME, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
 			System.out.println(" [x] Sent '" + message + "'");
-			channel.close();
+			try {
+				channel.close();
+			} catch (TimeoutException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			connection.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
