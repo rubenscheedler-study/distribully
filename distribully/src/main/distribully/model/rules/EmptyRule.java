@@ -2,10 +2,11 @@ package distribully.model.rules;
 
 import distribully.model.Stack;
 
-public class DrawTwoRule extends Rule {
+public class EmptyRule extends Rule {
 
-	public DrawTwoRule(Stack stack) {
+	public EmptyRule(Stack stack) {
 		super(stack);
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -16,7 +17,7 @@ public class DrawTwoRule extends Rule {
 
 	@Override
 	public String toString() {
-		return "pick two cards";
+		return "no rule";
 	}
 
 }
