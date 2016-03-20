@@ -36,6 +36,21 @@ public class ClientList extends ConnectingComponent implements IObservable {
 		}
 		//TODO: Handle response?
 	}
+	
+	@Override
+	public void addObserver(IObserver observer) {
+		this.observers.add(observer);
+	}
+
+	@Override
+	public void removeObserver(IObserver observer) {
+		this.observers.remove(observer);
+	}
+
+	@Override
+	public void notifyObservers() {
+		this.observers.forEach(observer -> observer.update(this));
+	}
 
 	
 	/**
@@ -118,6 +133,30 @@ public class ClientList extends ConnectingComponent implements IObservable {
 					.method(HttpMethod.POST)
 					.param("player",gson.toJson(host))
 					.send();
+			client.stop();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if (response.getStatus() == 200) {
+
+		} else {
+			//TODO peniek!
+		}
+		
+		
+	}
+	
+	public void deleteGameList(String hostName) {
+		HttpClient client = new HttpClient();
+		ContentResponse response = null;
+		
+		try {
+			client.start();
+			response = client.newRequest(this.serverAddress + ":" + this.serverPort + "/endGame/" + hostName)
+					.method(HttpMethod.DELETE)
+					.send();
+			client.stop();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -150,26 +189,14 @@ public class ClientList extends ConnectingComponent implements IObservable {
 		return null;
 	}
 
-	@Override
-	public void addObserver(IObserver observer) {
-		this.observers.add(observer);
-	}
 
-	@Override
-	public void removeObserver(IObserver observer) {
-		this.observers.remove(observer);
-	}
-
-	@Override
-	public void notifyObservers() {
-		this.observers.forEach(observer -> observer.update(this));
-	}
 
 	public void deleteFromGame(String playerName, String hostName) {
 		HttpClient client = new HttpClient();
 		try {
 			client.start();
 			client.newRequest(this.serverAddress + ":" + this.serverPort + "/game/" + hostName).method(HttpMethod.DELETE).param("playerName",playerName).send();
+			client.stop();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

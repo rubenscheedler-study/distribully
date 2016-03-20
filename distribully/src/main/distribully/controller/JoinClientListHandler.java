@@ -61,6 +61,7 @@ public class JoinClientListHandler {
 					.method(HttpMethod.POST)
 					.param("port", frame.getModel().getMyPort()+"")
 					.send();
+			client.stop();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
