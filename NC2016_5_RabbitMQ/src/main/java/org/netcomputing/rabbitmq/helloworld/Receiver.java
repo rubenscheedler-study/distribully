@@ -16,7 +16,7 @@ public class Receiver {
 			java.lang.InterruptedException {
 
 		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost("82.73.233.237");
+		factory.setHost("82.73.233.237");//82.73.233.237//82.72.30.166
 		Connection connection = null;
 		try {
 			connection = factory.newConnection();
@@ -28,17 +28,17 @@ public class Receiver {
 
 		channel.queueDeclare(QUEUE_NAME, false, false, false, null);
 		System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
-//		ConnectionFactory factory2 = new ConnectionFactory();
-//		factory2.setHost("82.72.30.166");
-//		Connection connection2 = null;
-//		try {
-//			connection2 = factory2.newConnection();
-//		} catch (TimeoutException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		channel = connection2.createChannel();
-//		channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+		/*ConnectionFactory factory2 = new ConnectionFactory();
+		factory2.setHost("82.72.30.166");
+		Connection connection2 = null;
+		try {
+			connection2 = factory2.newConnection();
+		} catch (TimeoutException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		channel = connection2.createChannel();
+		channel.queueDeclare(QUEUE_NAME, false, false, false, null);*/
 		
 
 		//QueueingConsumer consumer = new QueueingConsumer(channel);
