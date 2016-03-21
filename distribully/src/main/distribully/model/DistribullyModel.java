@@ -53,7 +53,7 @@ public class DistribullyModel implements IObservable {
 
 
 	private void fillAllRules() {
-		allRules.add(new DrawTwoRule(this.stack)); //TODO: alfa
+		allRules.add(new DrawTwoRule(this.stack));
 		allRules.add(new SkipTurnRule(this.stack));
 		allRules.add(new ChooseSuiteRule(this.stack));
 		allRules.add(new DrawFiveRule(this.stack));
