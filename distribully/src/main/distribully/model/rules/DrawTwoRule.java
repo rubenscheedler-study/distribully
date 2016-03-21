@@ -14,7 +14,7 @@ public class DrawTwoRule extends Rule {
 		TurnState turnState = new TurnState(model.getTurnState().getNextPlayer(),model.getTurnState().getToPick(),model.getTurnState().getDirection(),model.getTurnState().getAction());
 		
 		turnState.setNextPlayer(rotateTurn(turnState.getDirection()));
-		turnState.setAction("drawing 2");
+		turnState.setAction("draw 2");
 		turnState.setToPick(turnState.getToPick()+2);
 		return turnState;
 	}
