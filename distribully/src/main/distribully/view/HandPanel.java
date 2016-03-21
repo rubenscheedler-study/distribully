@@ -131,7 +131,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 	class CardClickListener extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			if (model.getTurnState().getNextPlayer().equals(model.getMe())) {
+			if (model.getTurnState().getNextPlayer().equals(model.getMe().getName())) {
 				for (CardComponent component : handCards) {
 
 					if (component.wasClicked(e.getX(), e.getY())) {
