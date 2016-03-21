@@ -21,6 +21,7 @@ public class WaitingForGameStartPanel extends DistribullyPanel implements IObser
 		this.size = size;
 		
 		this.model.addObserver(this);
+		this.model.getGamePlayerList().addObserver(this);
 		
 		this.setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
 		this.setMinimumSize(size);

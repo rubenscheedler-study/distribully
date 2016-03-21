@@ -112,7 +112,7 @@ public class GameConsumerThread extends Thread{
 			case "Leave":
 				JsonElement jeLeave = parser.parse(new String(body));
 				String playerNameLeave = jeLeave.getAsJsonObject().get("playerName").getAsString();
-				model.getGamePlayerList().getPlayers().removeIf(player -> player.getName().equals(playerNameLeave));
+				model.getGamePlayerList().removePlayerByPlayerName(playerNameLeave);
 				System.out.println(playerNameLeave + " left");
 				
 				//TODO: view
@@ -238,7 +238,6 @@ public class GameConsumerThread extends Thread{
 				int stackSuit = Integer.parseInt(joStack.get("cardSuit").getAsString());
 				String playerStackName = joStack.get("playerName").getAsString();
 				System.out.println(playerStackName +" has top of stack " + stackSuit + " " + stackCardId);
-				//TODO: view
 				model.putTopOfStack(model.getGamePlayerList().getPlayerByNickname(playerStackName), new Card(stackCardId, CardSuit.values()[stackSuit]));
 				break;
 			case "Win":

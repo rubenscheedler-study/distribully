@@ -56,6 +56,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		IMAGE_WIDTH = (int) (500.0 * ((double)IMAGE_HEIGHT/726.0));
 		CARD_VISIBLE_WIDTH = (int)((double)IMAGE_WIDTH/5.75);
 		this.model.addObserver(this);
+		this.model.getGamePlayerList().addObserver(this);
 		calculateAndSetSize();
 		handCards = new ArrayList<CardComponent>();
 		stackCards = new ArrayList<CardComponent>();
