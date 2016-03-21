@@ -27,6 +27,7 @@ import distribully.model.DistribullyModel;
 import distribully.model.IObservable;
 import distribully.model.IObserver;
 import distribully.model.Player;
+import distribully.model.TurnState;
 
 public class HandPanel extends DistribullyPanel implements IObserver {
 
@@ -222,7 +223,9 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 				}
 				
 				if (drawCardsComponent.wasClicked(e.getX(),e.getY())) {
-					model.draw(model.getTurnState().getToPick()+1);
+					TurnState toSend =model.getTurnState();
+					toSend.setNextPlayer(model.getNextPlayer());
+					model.draw(model.getTurnState().getToPick()+1, toSend);
 				}
 
 				revalidate();

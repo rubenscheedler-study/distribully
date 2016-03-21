@@ -171,9 +171,11 @@ public class GameConsumerThread extends Thread{
 			case "MustDraw":
 				JsonObject joMustDraw= parser.parse(new String(body)).getAsJsonObject();
 				int drawAmount = Integer.parseInt(joMustDraw.get("drawAmount").getAsString());
+				JsonObject nextState = joMustDraw.get("turnState").getAsJsonObject();
+				TurnState nextTurn = gson.fromJson(nextState, TurnState.class);
 				System.out.println("Must draw " + drawAmount + " cards");
 				if(model.isMyTurn()){
-					model.draw(drawAmount);
+					model.draw(drawAmount, nextTurn);
 				}	
 				break;
 				

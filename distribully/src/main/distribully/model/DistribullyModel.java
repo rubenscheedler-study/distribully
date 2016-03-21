@@ -352,7 +352,6 @@ public class DistribullyModel implements IObservable {
 
 
 	public void executeCard(int cardId) {
-		String nextPlayer = null; 
 		int direction = 1;
 		int toPick = 0;
 		String action;
@@ -363,11 +362,7 @@ public class DistribullyModel implements IObservable {
 		}else{
 			direction = this.getTurnState().getDirection();
 			toPick = this.getTurnState().getToPick();
-
-			int numPlayers = this.gamePlayerList.getPlayers().size();
-			int index = this.gamePlayerList.getPlayers().indexOf(gamePlayerList.getPlayerByNickname(this.getTurnState().getNextPlayer()));
-			nextPlayer = this.gamePlayerList.getPlayers().get((index + numPlayers + direction) % numPlayers ).getName(); //Ensure we stay in the range
-			turnState = new TurnState(nextPlayer,toPick,direction, "none");
+			turnState = new TurnState(getNextPlayer(),toPick,direction, "none");
 
 		}
 		if(turnState.getToPick() == this.getTurnState().getToPick() && turnState.getToPick() > 0){
@@ -382,6 +377,10 @@ public class DistribullyModel implements IObservable {
 				channel.exchangeDeclare(this.getNickname(), "fanout");
 				JsonObject message = new JsonObject();
 				message.addProperty("drawAmount",  this.getTurnState().getToPick());
+				Gson gson = new Gson();
+				JsonParser parser = new JsonParser();
+				message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
+
 
 				channel.basicPublish(this.getNickname(), "MustDraw", null, message.toString().getBytes());
 				System.out.println(" [x] Sent '" + message + "'");
@@ -393,31 +392,34 @@ public class DistribullyModel implements IObservable {
 				e1.printStackTrace();
 			}
 		}
+		else{
+			ConnectionFactory factory = new ConnectionFactory();
+			factory.setHost(this.getMe().getIp());
+			Connection connection;
+			try {
+				connection = factory.newConnection();
 
-		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost(this.getMe().getIp());
-		Connection connection;
-		try {
-			connection = factory.newConnection();
+				Channel channel = connection.createChannel();
 
-			Channel channel = connection.createChannel();
+				channel.exchangeDeclare(this.getNickname(), "fanout");
 
-			channel.exchangeDeclare(this.getNickname(), "fanout");
+				Gson gson = new Gson();
+				JsonParser parser = new JsonParser();
+				JsonObject message = new JsonObject();
+				message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
 
-			Gson gson = new Gson();
-			JsonParser parser = new JsonParser();
-			JsonObject message = new JsonObject();
-			message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
+				channel.basicPublish(this.getNickname(), "NextTurn", null, message.toString().getBytes());
+				System.out.println(" [x] Sent '" + message + "'");
 
-			channel.basicPublish(this.getNickname(), "NextTurn", null, message.toString().getBytes());
-			System.out.println(" [x] Sent '" + message + "'");
-
-			channel.close();
-			connection.close();
-		} catch (IOException | TimeoutException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+				channel.close();
+				connection.close();
+			} catch (IOException | TimeoutException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
+
+
 	}
 
 	public boolean isMyTurn() {
@@ -426,14 +428,13 @@ public class DistribullyModel implements IObservable {
 
 
 
-	public void draw(int drawAmount) {
+	public void draw(int drawAmount, TurnState nextTurn) {
 		//update model according to action
-		turnState.setToPick(0);
 		//draw the cards, add them to the hand
 		for (int i = 0; i < drawAmount; i++) {
 			hand.add(Card.getARandomCard());
 		}
-		
+
 		//notify others about what this player has done
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(this.getMe().getIp());
@@ -443,15 +444,14 @@ public class DistribullyModel implements IObservable {
 			Channel channel = connection.createChannel();
 
 			channel.exchangeDeclare(this.getNickname(), "fanout");
-			
+
 			Gson gson = new Gson();
 			JsonParser parser = new JsonParser();
-			
+
 			JsonObject message = new JsonObject();
-			
-			
+
 			message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
-			
+
 			message.addProperty("amount", drawAmount);
 
 			channel.basicPublish(this.getNickname(), "HaveDrawn", null, message.toString().getBytes());
@@ -463,5 +463,13 @@ public class DistribullyModel implements IObservable {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+	}
+
+
+
+	public String getNextPlayer() {
+		int numPlayers = this.gamePlayerList.getPlayers().size();
+		int index = this.gamePlayerList.getPlayers().indexOf(gamePlayerList.getPlayerByNickname(this.getTurnState().getNextPlayer()));
+		return this.gamePlayerList.getPlayers().get((index + numPlayers + getTurnState().getDirection()) % numPlayers ).getName(); //Ensure we stay in the range
 	}
 }
