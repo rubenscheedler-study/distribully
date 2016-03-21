@@ -1,7 +1,10 @@
 package distribully.model;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+
 
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
@@ -13,7 +16,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 public class ClientList extends ConnectingComponent implements IObservable {
-	ArrayList<Player> players;
+	private ArrayList<Player> players;
 	//list of observers
 	ArrayList<IObserver> observers = new ArrayList<IObserver>();
 	
@@ -48,8 +51,8 @@ public class ClientList extends ConnectingComponent implements IObservable {
 	}
 
 	@Override
-	public void notifyObservers() {
-		this.observers.forEach(observer -> observer.update(this));
+	public void notifyObservers(Object changedObject) {
+		this.observers.forEach(observer -> observer.update(this, changedObject));
 	}
 
 	
@@ -85,9 +88,15 @@ public class ClientList extends ConnectingComponent implements IObservable {
 			Gson gson = new Gson();
 			Player[] players = gson.fromJson(ja, Player[].class);
 			ArrayList<Player> playerList  = new ArrayList<Player>(Arrays.asList(players));
-			this.players.removeAll(this.players);
-			this.players.addAll(playerList);
-			this.notifyObservers();
+			
+			//only update the list if it's different
+			boolean listsAreEqual = this.playersListEquals(playerList);
+			if (!listsAreEqual) {
+				this.players.removeAll(this.players);
+				this.players.addAll(playerList);
+				this.notifyObservers(this);
+			} 
+
 			return true;
 		} else if(response.getStatus() == 403){
 			this.players.removeAll(this.players);
@@ -121,7 +130,7 @@ public class ClientList extends ConnectingComponent implements IObservable {
 		
 		if (response.getStatus() == 201) {
 			this.players.add(player);
-			this.notifyObservers();
+			this.notifyObservers(this);
 		} else {
 			//TODO peniek!
 		}
@@ -185,10 +194,12 @@ public class ClientList extends ConnectingComponent implements IObservable {
 	 * @param playerList
 	 */
 	public void setPlayers(ArrayList<Player> playerList) {
-		this.players.removeAll(players);
-		playerList.forEach(player -> this.players.add(player));
-		//System.out.println("updated list of players:" + players.size() + "," + observers.size());
-		this.notifyObservers();
+		if (!this.playersListEquals(playerList)) {
+			this.players.removeAll(players);
+			playerList.forEach(player -> this.players.add(player));
+			//System.out.println("updated list of players:" + players.size() + "," + observers.size());
+			this.notifyObservers(this);
+		}
 	}
 	
 	public Player getPlayerByNickname(String nickname) {
@@ -215,5 +226,20 @@ public class ClientList extends ConnectingComponent implements IObservable {
 		//TODO: Handle response?
 		
 	}
-	
+
+	public boolean playersListEquals(ArrayList<Player> otherPlayerList) {
+		Collections.sort(otherPlayerList, new PlayerComperator());
+		
+		if (this.players.size() != otherPlayerList.size()) {
+			return false;
+		}
+		
+		//check if current list and new list are not equal
+		boolean listsAreEqual = true;
+		for (int i = 0; i < this.players.size(); i++) {
+			listsAreEqual = listsAreEqual && (this.players.get(i).equals(otherPlayerList.get(i)));
+		}
+		
+		return listsAreEqual;
+	}
 }

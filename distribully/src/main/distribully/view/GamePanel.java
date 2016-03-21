@@ -47,7 +47,7 @@ public class GamePanel extends DistribullyPanel implements IObserver {
 	}
 
 	@Override
-	public void update(IObservable observable) {
+	public void update(IObservable observable, Object changedObject) {
 		// TODO Auto-generated method stub
 		this.render();
 	}

@@ -116,7 +116,7 @@ public class SelectRulesPanel extends DistribullyPanel implements IObserver {
 	}
 
 	@Override
-	public void update(IObservable observable) {
+	public void update(IObservable observable, Object changedObject) {
 		this.render();
 	}
 }

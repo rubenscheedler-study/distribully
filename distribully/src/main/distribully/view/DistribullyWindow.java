@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 
 import distribully.controller.ClientListUpdateHandler;
 import distribully.controller.CloseWindowHandler;
+import distribully.controller.GameState;
 import distribully.model.DistribullyModel;
 import distribully.model.IObservable;
 import distribully.model.IObserver;
@@ -75,14 +76,21 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		return this.model;
 	}
 
+	
+	
 	@Override
-	public void update(IObservable observable) {
-		this.remove(mainPanel);
-		determinePanelToShow();	
-		this.add(mainPanel);
-		this.revalidate();
-		this.repaint();
+	public void update(IObservable observable, Object gameState) {
+		if (gameState instanceof GameState) {
+			this.remove(mainPanel);
+			determinePanelToShow();	
+			this.add(mainPanel);
+			System.out.println("repaint of whole window");
+			this.revalidate();
+			this.repaint();
+		} 
 	}
+	
+
 	
 	public void determinePanelToShow() {
 		switch (model.getGAME_STATE()) {

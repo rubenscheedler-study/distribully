@@ -34,9 +34,16 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
+		//size of a rendered card:
 		int imageWidth = this.size.width/model.getHand().size();
 		int imageHeight = imageWidth * (726/500);//regular size of image
 		
+		//image is too high => resize to maximum allowed height
+		if (imageHeight > (this.size.height-30)) {
+			double shrinkFactor = imageHeight/(this.size.height-30);
+			imageWidth *= shrinkFactor;
+			imageHeight *= shrinkFactor;
+		}
 		int i = 0;
 		for (Card c : model.getHand()) {
 			String imageName = "src/main/distribully/cards/" + c.getImage();
@@ -57,7 +64,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 	}
 
 	@Override
-	public void update(IObservable observable) {
+	public void update(IObservable observable, Object changedObject) {
 		this.repaint();
 	}
 }
