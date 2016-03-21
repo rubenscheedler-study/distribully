@@ -156,4 +156,7 @@ public class Card {
 		return true;
 	}
 
+	public boolean isSameCard(Card other) {
+		return other.getNumber() == this.number && other.getSuit() == this.suit;
+	}
 }
