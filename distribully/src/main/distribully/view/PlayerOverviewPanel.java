@@ -141,7 +141,14 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 			}
 			
 		} else {
-			DistribullyTextLabel unavailableLabel = new DistribullyTextLabel("unavailable");
+			DistribullyTextLabel unavailableLabel;
+			
+			if (model.getInviteStates().containsKey(player.getName())) {
+				unavailableLabel = new DistribullyTextLabel(model.getInviteStates().get(player.getName()));
+			} else {
+				unavailableLabel = new DistribullyTextLabel("unavailable");
+			}
+			
 			playerPanel.add(unavailableLabel);
 		}
 		return playerPanel;
