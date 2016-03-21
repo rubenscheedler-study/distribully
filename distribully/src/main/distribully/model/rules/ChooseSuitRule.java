@@ -11,7 +11,10 @@ public class ChooseSuitRule extends Rule {
 
 	@Override
 	public TurnState execute() {
-		return new TurnState(model.getTurnState().getNextPlayer(),model.getTurnState().getToPick(),model.getTurnState().getDirection(),"chooseSuit");
+		return new TurnState(model.getTurnState().getNextPlayer(),
+				model.getTurnState().getToPick(),
+				model.getTurnState().getDirection(),
+				model.getTurnState().getNextPlayer() + " played 'choose suit'.");
 	}
 
 	@Override

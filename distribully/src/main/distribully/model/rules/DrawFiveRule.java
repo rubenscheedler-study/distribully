@@ -16,8 +16,9 @@ public class DrawFiveRule extends Rule {
 
 		
 		turnState.setNextPlayer(rotateTurn(turnState.getDirection()));
-		turnState.setAction("drawing 5");
 		turnState.setToPick(turnState.getToPick()+5);
+		turnState.setAction(model.getTurnState().getNextPlayer() + " played 'draw 5'. The total draw count now stands at: " + turnState.getToPick() + ".");
+		
 		return turnState;
 	}
 
