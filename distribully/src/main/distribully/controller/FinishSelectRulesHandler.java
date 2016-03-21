@@ -36,9 +36,11 @@ public class FinishSelectRulesHandler  implements ActionListener {
 
 				JsonObject message = new JsonObject();
 				message.addProperty("playerName", model.getNickname());
+				String x = message.toString();
 
-				channel.basicPublish(model.getNickname(), "Rules", null, message.toString().getBytes());
+				channel.basicPublish(model.getNickname(), "Rules", null, x.getBytes());
 				System.out.println(" [x] Sent '" + message + "'");
+				model.setGAME_STATE(GameState.WAITING_FOR_GAMESTART);
 
 				channel.close();
 				connection.close();

@@ -15,12 +15,14 @@ public class Player extends ConnectingComponent implements Comparable<Player> {
 	private String ip;
 	private int port;
 	private boolean available;
+	private transient boolean readyToPlay;
 	
 	public Player(String name, String ip, int port) {
 		this.name = name;
 		this.ip = ip;
 		this.port = port;
 		available = true;
+		setReadyToPlay(false);
 	}
 	
 	public Player(String serverAddress, int serverPort, String name, String ip, int port) {
@@ -29,6 +31,7 @@ public class Player extends ConnectingComponent implements Comparable<Player> {
 		this.ip = ip;
 		this.port = port;
 		available = true;
+		setReadyToPlay(false);
 	}
 	
 	public String getName() {
@@ -68,6 +71,14 @@ public class Player extends ConnectingComponent implements Comparable<Player> {
 			e.printStackTrace();
 		}
 		//TODO: Handle response
+	}
+
+	public boolean isReadyToPlay() {
+		return readyToPlay;
+	}
+
+	public void setReadyToPlay(boolean readyToPlay) {
+		this.readyToPlay = readyToPlay;
 	}
 
 	@Override

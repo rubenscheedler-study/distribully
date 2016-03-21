@@ -7,7 +7,8 @@ public enum GameState {
 	INVITING_USERS (1),
 	IN_LOBBY (2),
 	SETTING_RULES (3),
-	IN_GAME (4);
+	WAITING_FOR_GAMESTART (4),
+	IN_GAME (5);
 	
 	private int v;
 
