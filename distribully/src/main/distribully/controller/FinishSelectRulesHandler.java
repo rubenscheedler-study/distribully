@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+import javax.swing.JOptionPane;
+
 import com.google.gson.JsonObject;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -16,34 +18,41 @@ public class FinishSelectRulesHandler  implements ActionListener {
 
 	private DistribullyModel model;
 	public FinishSelectRulesHandler(DistribullyModel model) {
-	this.model = model;	
+		this.model = model;	
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost(model.getMe().getIp());
-		Connection connection;
-		try {
-			connection = factory.newConnection();
+		if(model.getChoosenRules().size() == model.getAllRules().size()){
+			ConnectionFactory factory = new ConnectionFactory();
+			factory.setHost(model.getMe().getIp());
+			Connection connection;
+			try {
+				connection = factory.newConnection();
 
-			Channel channel = connection.createChannel();
+				Channel channel = connection.createChannel();
 
-			channel.exchangeDeclare(model.getNickname(), "fanout");
+				channel.exchangeDeclare(model.getNickname(), "fanout");
 
-			JsonObject message = new JsonObject();
-			message.addProperty("playerName", model.getNickname());
+				JsonObject message = new JsonObject();
+				message.addProperty("playerName", model.getNickname());
 
-			channel.basicPublish(model.getNickname(), "Rules", null, message.toString().getBytes());
-			System.out.println(" [x] Sent '" + message + "'");
+				channel.basicPublish(model.getNickname(), "Rules", null, message.toString().getBytes());
+				System.out.println(" [x] Sent '" + message + "'");
 
-			channel.close();
-			connection.close();
-		} catch (IOException | TimeoutException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+				channel.close();
+				connection.close();
+			} catch (IOException | TimeoutException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}else{
+			JOptionPane.showMessageDialog(null,
+				    "Every rule must be assigned.",
+				    "Missing rule",
+				    JOptionPane.ERROR_MESSAGE);
 		}
-		
+
 	}
 
 }

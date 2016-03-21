@@ -2,6 +2,7 @@ package distribully.view;
 
 import javax.swing.JButton;
 
+import distribully.controller.FinishSelectRulesHandler;
 import distribully.model.DistribullyModel;
 
 public class FinishSelectRulesButton extends JButton {
@@ -13,5 +14,6 @@ public class FinishSelectRulesButton extends JButton {
 	public FinishSelectRulesButton(DistribullyModel model) {
 		this.model = model;
 		this.setText("Finish");
+		this.addActionListener(new FinishSelectRulesHandler(model));
 	}
 }

@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import distribully.controller.GameState;
+import distribully.model.rules.ChooseSuiteRule;
+import distribully.model.rules.DrawFiveRule;
 import distribully.model.rules.DrawTwoRule;
+import distribully.model.rules.PlayAgainRule;
+import distribully.model.rules.RevertTurnOrderRule;
 import distribully.model.rules.Rule;
 import distribully.model.rules.SkipTurnRule;
 
@@ -48,8 +52,12 @@ public class DistribullyModel implements IObservable {
 
 
 	private void fillAllRules() {
-		allRules.add(new DrawTwoRule(this.stack));
+		allRules.add(new DrawTwoRule(this.stack)); //TODO: alfa
 		allRules.add(new SkipTurnRule(this.stack));
+		allRules.add(new ChooseSuiteRule(this.stack));
+		allRules.add(new DrawFiveRule(this.stack));
+		allRules.add(new PlayAgainRule(this.stack));
+		allRules.add(new RevertTurnOrderRule(this.stack));
 	}
 
 

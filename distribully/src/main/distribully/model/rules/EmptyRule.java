@@ -17,7 +17,7 @@ public class EmptyRule extends Rule {
 
 	@Override
 	public String toString() {
-		return "no rule";
+		return "No rule";
 	}
 
 }

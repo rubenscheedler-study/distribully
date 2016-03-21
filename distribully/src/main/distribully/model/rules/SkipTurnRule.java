@@ -15,7 +15,7 @@ public class SkipTurnRule extends Rule {
 
 	@Override
 	public String toString() {
-		return "skip turn";
+		return "Skip turn";
 	}
 
 }
