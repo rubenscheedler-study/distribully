@@ -8,6 +8,7 @@ import java.util.concurrent.TimeoutException;
 
 import javax.swing.JButton;
 
+import com.google.gson.JsonObject;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -40,10 +41,8 @@ public class StartGameButton extends JButton {
 
 					channel.exchangeDeclare(model.getNickname(), "fanout");
 
-					String message = "HELLO";
-
-					channel.basicPublish(model.getNickname(), "Start", null, message.getBytes());
-					System.out.println(" [x] Sent '" + message + "'");
+					channel.basicPublish(model.getNickname(), "Start", null, null);
+					System.out.println(" [x] Sent gameStart");
 
 					channel.close();
 					connection.close();

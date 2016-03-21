@@ -13,7 +13,7 @@ public class DistribullyModel implements IObservable {
 	
 	private ClientList gamePlayerList;//contains the players that are part of the game that this user is a part of.
 	
-	private String serverAddress = "http://82.73.233.237";
+	private String serverAddress = "http://82.72.30.166";
 	private int serverPort = 4567;
 	private String myIP;
 	private String currentHostName;

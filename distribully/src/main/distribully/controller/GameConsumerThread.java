@@ -3,6 +3,9 @@ package distribully.controller;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -18,6 +21,8 @@ public class GameConsumerThread extends Thread{
 	DistribullyModel model;
 	String queueName;
 	Channel channel;
+	JsonParser parser;
+	Gson gson;
 	boolean playing;
 	public GameConsumerThread(DistribullyModel model){
 		this.model = model;
@@ -26,6 +31,8 @@ public class GameConsumerThread extends Thread{
 		String hostName = model.getCurrentHostName();
 		Player host = model.getOnlinePlayerList().getPlayerByNickname(hostName);
 		factory.setHost(host.getIp());
+		parser = new JsonParser();
+		gson = new Gson();
 		playing = true;
 		Connection connection = null;
 		try {
@@ -52,7 +59,6 @@ public class GameConsumerThread extends Thread{
 	}
 
 	public void run(){
-		int i = 0;
 		while(playing){
 			GetResponse response = null;
 			try {
@@ -64,10 +70,9 @@ public class GameConsumerThread extends Thread{
 			if (response == null) { 
 				//pblblbllb -> no messages
 			}else{
-				String body = new String(response.getBody());
 				switch(response.getEnvelope().getRoutingKey()){
 				case "Start":
-					System.out.println("GAMESTART!");
+					System.out.println("Game is starting!");
 					if(DistribullyController.lobbyThread != null){
 						DistribullyController.lobbyThread.setInLobby(false);
 					}
@@ -77,14 +82,19 @@ public class GameConsumerThread extends Thread{
 					
 					break;
 				case "Leave":
+					JsonElement jeLeave = parser.parse(new String(response.getBody()));
+					String playerNameLeave = jeLeave.getAsJsonObject().get("playerName").toString();
+					model.getGamePlayerList().getPlayers().removeIf(player -> player.getName().equals(playerNameLeave));
+					System.out.println(playerNameLeave + " left");
 					break;
 				case "Rules":
+					JsonElement jeRule = parser.parse(new String(response.getBody()));
+					String playerNameRule = jeRule.getAsJsonObject().get("playerName").toString();
+					System.out.println("Rules from  "+ playerNameRule + " received");
 					break;
 				case "PlayCard":
 					break;
 				}
-				System.out.println(" [" + i + "] Received '" + body + "'");
-				i++;
 			}
 
 		}

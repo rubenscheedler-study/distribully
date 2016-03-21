@@ -51,7 +51,7 @@ public class SelectRulesPanel extends DistribullyPanel implements IObserver {
 		availableRules.addAll(model.getAllRules().stream()
 								   .filter(r -> !model.getChoosenRules().containsValue(r))
 								   .collect(Collectors.toCollection(ArrayList<Rule>::new)));
-		System.out.println(availableRules.size());
+
 		//add a panel for each card that allows the user to select a rule for that card
 		for (int i = 2; i < 15; i++) {
 			this.add(renderSelectForCard(i,availableRules));
