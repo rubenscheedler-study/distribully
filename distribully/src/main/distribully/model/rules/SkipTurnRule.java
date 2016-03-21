@@ -14,7 +14,7 @@ public class SkipTurnRule extends Rule {
 		TurnState turnState = new TurnState(model.getTurnState().getNextPlayer(),model.getTurnState().getToPick(),model.getTurnState().getDirection(),model.getTurnState().getAction());
 
 		turnState.setNextPlayer(rotateTurn(turnState.getDirection()*2));
-		turnState.setAction(model.getTurnState().getNextPlayer() + " played skip the next player.");
+		turnState.setAction(model.getTurnState().getNextPlayer() + " played 'skip the next player'.");
 		return turnState;
 	}
 

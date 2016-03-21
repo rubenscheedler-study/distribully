@@ -472,4 +472,39 @@ public class DistribullyModel implements IObservable {
 		int index = this.gamePlayerList.getPlayers().indexOf(gamePlayerList.getPlayerByNickname(this.getTurnState().getNextPlayer()));
 		return this.gamePlayerList.getPlayers().get((index + numPlayers + getTurnState().getDirection()) % numPlayers ).getName(); //Ensure we stay in the range
 	}
+
+
+
+	public void broadcastStackSuit(String stackOwner, int cardSuitIndex) {
+		
+		TurnState turnState = new TurnState(getNextPlayer(),this.turnState.getToPick(),this.turnState.getDirection(),this.getNickname() + " changed the suit of the stack of " + getNextPlayer() + ".");
+		ConnectionFactory factory = new ConnectionFactory();
+		factory.setHost(this.getMe().getIp());
+		Connection connection;
+		try {
+			connection = factory.newConnection();
+			Channel channel = connection.createChannel();
+
+			channel.exchangeDeclare(this.getNickname(), "fanout");
+
+			Gson gson = new Gson();
+			JsonParser parser = new JsonParser();
+
+			JsonObject message = new JsonObject();
+
+			message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
+
+			message.addProperty("cardSuit", cardSuitIndex);
+			message.addProperty("stackPlayer", stackOwner);
+			
+			channel.basicPublish(this.getNickname(), "ChooseSuit", null, message.toString().getBytes());
+			System.out.println(" [x] Sent '" + message + "'");
+
+			channel.close();
+			connection.close();
+		} catch (IOException | TimeoutException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 }

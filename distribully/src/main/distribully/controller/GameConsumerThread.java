@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.concurrent.TimeoutException;
 
+import javax.swing.JOptionPane;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -158,13 +160,44 @@ public class GameConsumerThread extends Thread{
 				JsonObject joTurn = parser.parse(new String(body)).getAsJsonObject();
 				JsonObject turnState = joTurn.get("turnState").getAsJsonObject();
 				TurnState newState = gson.fromJson(turnState, TurnState.class);
-				model.setTurnState(newState);
+				
 				System.out.println("Next player is "+ newState.getNextPlayer() +" by action " + newState.getAction());
 				if(model.isMyTurn()){
 					if (newState.getAction().contains("choose Suit")){
-						//PopUp
+						String suitCandidate = "";
+						int cardSuitIndex = -1;
+						while (suitCandidate.equals("")) {
+							suitCandidate = JOptionPane.showInputDialog(null,
+							    "Choose a new suit for this stack from: \n"
+								+ "hearts, diamonds, clubs, spades",
+							    "Choose a New Suit",
+							    JOptionPane.QUESTION_MESSAGE).toLowerCase();
+							switch (suitCandidate) {
+							case "hearts":
+								cardSuitIndex = 0;
+								break;
+							case "diamonds" :
+								cardSuitIndex = 1;
+								break;
+							case "clubs":
+								cardSuitIndex = 2;
+								break;
+							case "spades":
+								cardSuitIndex = 3;
+								break;
+							default:
+								suitCandidate = "";
+								break;
+							}
+						}
+						model.setTurnState(newState);
+						model.broadcastStackSuit(model.getTurnState().getNextPlayer(),cardSuitIndex);
 					}
+				} else {
+					model.setTurnState(newState);
 				}
+				
+				
 				break;
 				
 			case "MustDraw":
@@ -197,7 +230,7 @@ public class GameConsumerThread extends Thread{
 				TurnState updatedState = gson.fromJson(changedState, TurnState.class);
 				System.out.println("new suite on "+ stackPlayer +" is " + suit); //suite parse
 				model.getTopOfStacks().get(model.getGamePlayerList().getPlayerByNickname(stackPlayer)).setSuit(CardSuit.values()[suit]);
-				//TODO: View
+				model.notifyObservers(model);
 				break;
 			case "InitStack":
 				JsonObject joStack = parser.parse(new String(body)).getAsJsonObject();
