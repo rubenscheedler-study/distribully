@@ -144,12 +144,14 @@ public class GameConsumerThread extends Thread{
 			case "PlayCard":
 				JsonObject joCard = parser.parse(new String(body)).getAsJsonObject();
 				int cardId = Integer.parseInt(joCard.get("cardId").getAsString());
+				int suiteId = Integer.parseInt(joCard.get("suitId").getAsString());
 				String stackOwner = joCard.get("stackOwner").getAsString();
 				System.out.println("Card "+ cardId +" played");
 				if(stackOwner.equals(model.getNickname())){
 					model.executeCard(cardId);
 				}
-				//TODO: reduce cardCount of currentplayer, staat in turnstate
+				model.putTopOfStack(model.getGamePlayerList().getPlayerByNickname(stackOwner),new Card(cardId, CardSuit.values()[suiteId]));
+				//TODO: reduce cardCount of currentplayer, die staat in turnstate
 				//TODO: View
 				break;
 			case "NextTurn":
@@ -191,7 +193,7 @@ public class GameConsumerThread extends Thread{
 				JsonObject changedState = joSuit.get("turnState").getAsJsonObject();
 				TurnState updatedState = gson.fromJson(changedState, TurnState.class);
 				System.out.println("new suite on "+ stackPlayer +" is " + suit); //suite parse
-				model.getTopOfStacks().get(stackPlayer).setSuit(CardSuit.values()[suit]);
+				model.getTopOfStacks().get(model.getGamePlayerList().getPlayerByNickname(stackPlayer)).setSuit(CardSuit.values()[suit]);
 				//TODO: View
 				break;
 			case "InitStack":
