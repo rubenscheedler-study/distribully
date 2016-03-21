@@ -20,26 +20,29 @@ public class LeaveGameHandler implements ActionListener  {
 	public LeaveGameHandler(DistribullyModel model) {
 		this.model = model;
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		
+		int leaveGame = JOptionPane.showConfirmDialog (null, 
+				"You are in the middle of a game, are you sure you want to stop?", 
+				"Confirm",JOptionPane.YES_NO_OPTION); 
+		if(leaveGame == JOptionPane.YES_OPTION){
 			ConnectionFactory factory = new ConnectionFactory();
 			factory.setHost(model.getMe().getIp());
 			Connection connection;
 			try {
 				connection = factory.newConnection();
-	
+
 				Channel channel = connection.createChannel();
-	
+
 				channel.exchangeDeclare(model.getNickname(), "fanout");
-	
+
 				JsonObject message = new JsonObject();
 				message.addProperty("playerName", model.getNickname());
-	
+
 				channel.basicPublish(model.getNickname(), "Leave", null, message.toString().getBytes());
 				System.out.println(" [x] Sent '" + message + "'");
-	
+
 				channel.close();
 				connection.close();
 			} catch (IOException | TimeoutException e1) {
@@ -54,6 +57,6 @@ public class LeaveGameHandler implements ActionListener  {
 			model.setGAME_STATE(GameState.NOT_PLAYING);
 			//refresh the online player list
 			new ClientListUpdateHandler(model);
-		
+		}
 	}
 }

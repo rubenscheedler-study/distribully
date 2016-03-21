@@ -22,8 +22,7 @@ import distribully.model.Player;
 public class GameConsumerThread extends Thread{
 
 	DistribullyModel model;
-	String queueName;
-	Channel channel;
+
 	boolean playing;
 	public GameConsumerThread(DistribullyModel model){
 		this.model = model;
@@ -58,11 +57,14 @@ public class GameConsumerThread extends Thread{
 		ConnectionFactory factory = new ConnectionFactory();  
 		String playerName = player.getName();
 		factory.setHost(player.getIp());
-		Connection connection = null;
+		String queueName = model.getNickname();
 		try {
-			connection = factory.newConnection();
-			channel = connection.createChannel();
-			queueName = channel.queueDeclare(model.getNickname(), false, false, false, null).getQueue();
+			Connection connection = factory.newConnection();
+			Channel channel = connection.createChannel();
+			if(model.getCurrentHostName().equals(model.getNickname()) && model.getNickname().equals(playerName)){
+				channel.queueDelete(queueName);
+			}
+			channel.queueDeclare(queueName, false, false, false, null);
 			channel.exchangeDeclare(playerName, "fanout");
 			channel.queueBind(queueName, playerName, "");
 			Consumer consumer = new MessageConsumer(channel);
@@ -100,6 +102,7 @@ public class GameConsumerThread extends Thread{
 					model.getGamePlayerList().getPlayers().removeIf(player -> player.getName().equals(playerNameLeave));
 					System.out.println(playerNameLeave + " left");
 					//TODO: view?
+					//TODO: if length <= 1 en zelf er wel in, back to main screen
 					break;
 				case "Rules":
 					JsonElement jeRule = parser.parse(new String(body));
@@ -132,6 +135,14 @@ public class GameConsumerThread extends Thread{
 					String playerNext = jeSuite.get("playerNextName").getAsString();
 					String playerCurrent = jeSuite.get("playerName").getAsString();
 					System.out.println("Next player is "+ playerNext +", new suite on "+ playerCurrent +" is " + suite); //suite parse
+					//TODO: View
+					break;
+				case "TopOfStack":
+					JsonObject jeStack = parser.parse(new String(body)).getAsJsonObject();
+					int stackCardId = Integer.parseInt(jeStack.get("cardId").getAsString());
+					int stackSuite = Integer.parseInt(jeStack.get("cardSuite").getAsString());
+					String playerStackName = jeStack.get("playerName").getAsString();
+					System.out.println(playerStackName +" has top of stack " + stackSuite + " " + stackCardId); //suite parse
 					//TODO: View
 					break;
 				case "Win":
