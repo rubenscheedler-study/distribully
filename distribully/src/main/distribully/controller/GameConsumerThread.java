@@ -175,6 +175,7 @@ public class GameConsumerThread extends Thread{
 				if(model.isMyTurn()){
 					model.draw(drawAmount);
 				}	
+				break;
 				
 			case "HaveDrawn":
 				JsonObject joDraw= parser.parse(new String(body)).getAsJsonObject();
@@ -185,6 +186,7 @@ public class GameConsumerThread extends Thread{
 				model.setTurnState(updateState);
 				//TODO: view
 				//TODO: Update counts, player is in turnstate
+				break;
 				
 			case "ChooseSuit":
 				JsonObject joSuit = parser.parse(new String(body)).getAsJsonObject();
