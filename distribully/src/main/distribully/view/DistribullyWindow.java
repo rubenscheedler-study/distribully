@@ -2,12 +2,14 @@ package distribully.view;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.ScrollPane;
 import java.awt.Toolkit;
 import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import distribully.controller.ClientListUpdateHandler;
 import distribully.controller.CloseWindowHandler;
@@ -30,6 +32,7 @@ public class DistribullyWindow extends JFrame implements IObserver {
 	private PlayerOverviewPanel playerOverviewPanel;
 	private SelectRulesPanel selectRulesPanel;
 	private GamePanel gamePanel;
+	private JScrollPane scrollPane;
 	
 	public DistribullyWindow(DistribullyModel model) {
 		this.model = model;
@@ -56,7 +59,9 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		
 		this.determinePanelToShow();
 		mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.PAGE_AXIS));
-		this.add(mainPanel);
+		
+		scrollPane = new JScrollPane(mainPanel);
+		this.add(scrollPane);
 		
 		this.revalidate();
 		this.repaint();
@@ -64,7 +69,7 @@ public class DistribullyWindow extends JFrame implements IObserver {
 	
 	public void setMainPanel(JPanel content) {
 		System.out.println(this.getComponentCount());
-		this.remove(mainPanel);
+		this.remove(scrollPane);
 		this.mainPanel = content;
 		this.add(mainPanel);
 		System.out.println("updated main panel");
@@ -81,9 +86,10 @@ public class DistribullyWindow extends JFrame implements IObserver {
 	@Override
 	public void update(IObservable observable, Object gameState) {
 		if (gameState instanceof GameState) {
-			this.remove(mainPanel);
+			this.remove(scrollPane);
 			determinePanelToShow();	
-			this.add(mainPanel);
+			scrollPane = new JScrollPane(mainPanel);
+			this.add(scrollPane);
 			System.out.println("repaint of whole window");
 			this.revalidate();
 			this.repaint();
@@ -104,10 +110,10 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		case INVITING_USERS:
 		case IN_LOBBY:
 		default:
-			mainPanel = playerOverviewPanel;
+			mainPanel = playerOverviewPanel;//gamePanel
 			break;
 		}
 	}
 	
-
+	
 }

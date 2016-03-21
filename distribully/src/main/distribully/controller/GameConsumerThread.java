@@ -61,7 +61,7 @@ public class GameConsumerThread extends Thread{
 			queueName = channel.queueDeclare(model.getNickname(), false, false, false, null).getQueue();
 			channel.exchangeDeclare(playerName, "fanout");
 			channel.queueBind(queueName, playerName, "");
-			Consumer consumer = new MessageConsumer(channel, model);
+			Consumer consumer = new MessageConsumer(channel);
 			channel.basicConsume(queueName, true, consumer);
 			System.out.println("host connected: " + playerName);
 		} catch (IOException | TimeoutException e) {
@@ -72,7 +72,7 @@ public class GameConsumerThread extends Thread{
 	
 	class MessageConsumer extends DefaultConsumer{
 		JsonParser parser;
-		public MessageConsumer(Channel channel, DistribullyModel model) {
+		public MessageConsumer(Channel channel) {
 			super(channel);
 			parser = new JsonParser();
 		}
