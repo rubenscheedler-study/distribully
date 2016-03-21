@@ -2,10 +2,10 @@ package distribully.model;
 
 public enum CardSuit {
 	
-	HEARTS (2),
-	DIAMONDS (3),
-	CLUBS (4),
-	SPADES (5);
+	HEARTS (0),
+	DIAMONDS (1),
+	CLUBS (2),
+	SPADES (3);
 		
 	private int v;
 	
@@ -24,13 +24,13 @@ public enum CardSuit {
 	
 	CardSuit getSuit(int suit) {
 		switch (suit) {
-		case 2:
+		case 0:
 			return this.HEARTS;
-		case 3:
+		case 1:
 			return this.DIAMONDS;
-		case 4:
+		case 2:
 			return this.CLUBS;
-		case 5:
+		case 3:
 			return this.SPADES;
 		default:
 			return null;
