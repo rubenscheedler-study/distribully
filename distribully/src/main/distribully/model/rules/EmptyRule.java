@@ -1,18 +1,18 @@
 package distribully.model.rules;
 
+import distribully.model.DistribullyModel;
 import distribully.model.Stack;
+import distribully.model.TurnState;
 
 public class EmptyRule extends Rule {
 
-	public EmptyRule(Stack stack) {
-		super(stack);
-		// TODO Auto-generated constructor stub
+	public EmptyRule(DistribullyModel model) {
+		super(model);
 	}
 
 	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
-		
+	public TurnState execute() {
+		return null;
 	}
 
 	@Override

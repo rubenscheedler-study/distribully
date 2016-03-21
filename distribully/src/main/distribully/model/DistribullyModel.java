@@ -63,12 +63,12 @@ public class DistribullyModel implements IObservable {
 
 
 	private void fillAllRules() {
-		allRules.add(new DrawTwoRule(this.stack));
-		allRules.add(new SkipTurnRule(this.stack));
-		allRules.add(new ChooseSuitRule(this.stack));
-		allRules.add(new DrawFiveRule(this.stack));
-		allRules.add(new PlayAgainRule(this.stack));
-		allRules.add(new RevertTurnOrderRule(this.stack));
+		allRules.add(new DrawTwoRule(this));
+		allRules.add(new SkipTurnRule(this));
+		allRules.add(new ChooseSuitRule(this));
+		allRules.add(new DrawFiveRule(this));
+		allRules.add(new PlayAgainRule(this));
+		allRules.add(new RevertTurnOrderRule(this));
 		Collections.sort(allRules, (rule1, rule2) -> rule1.toString().compareTo(rule2.toString()));
 	}
 
