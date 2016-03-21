@@ -243,4 +243,9 @@ public class ClientList extends ConnectingComponent implements IObservable {
 		
 		return listsAreEqual;
 	}
+	
+	public void setPlayerReadyState(String nickname, boolean readyToPlay) {
+		this.getPlayerByNickname(nickname).setReadyToPlay(readyToPlay);
+		this.notifyObservers(this);
+	}
 }

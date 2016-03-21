@@ -43,6 +43,17 @@ public class WaitingForGameStartPanel extends DistribullyPanel implements IObser
 	public DistribullyPanel getPlayerPanel(Player player) {
 		DistribullyPanel playerPanel = new DistribullyPanel();
 		playerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		playerPanel.setMinimumSize(new Dimension(this.size.width,40));
+		playerPanel.setPreferredSize(new Dimension(this.size.width,40));
+		playerPanel.setMaximumSize(new Dimension(this.size.width,40));
+		
+		DistribullyTextLabel name = new DistribullyTextLabel(player.getName());
+		name.setPreferredSize(new Dimension(200,40));
+		DistribullyTextLabel choosenrules = new DistribullyTextLabel(player.isReadyToPlay() ? "ready" : "still choosing rules");
+		choosenrules.setPreferredSize(new Dimension(200,40));
+		
+		playerPanel.add(name);
+		playerPanel.add(choosenrules);
 		
 		return playerPanel;
 	}

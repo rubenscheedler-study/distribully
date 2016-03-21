@@ -31,8 +31,10 @@ public class DistribullyWindow extends JFrame implements IObserver {
 	private Font font;
 	private PlayerOverviewPanel playerOverviewPanel;
 	private SelectRulesPanel selectRulesPanel;
+	private WaitingForGameStartPanel waitingForGameStartPanel;
 	private HandPanel gamePanel;
 	private JScrollPane scrollPane;
+	
 	
 	public DistribullyWindow(DistribullyModel model) {
 		this.model = model;
@@ -52,7 +54,7 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		playerOverviewPanel = new PlayerOverviewPanel(model,this.getSize());
 		selectRulesPanel = new SelectRulesPanel(this,this.getSize());
 		gamePanel = new HandPanel(model,this.getSize());
-
+		waitingForGameStartPanel = new WaitingForGameStartPanel(model,this.getContentPane().getSize());
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
 		this.addWindowListener(new CloseWindowHandler(model));
@@ -102,6 +104,9 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		switch (model.getGAME_STATE()) {
 		case SETTING_RULES:
 			mainPanel = selectRulesPanel;
+			break;
+		case WAITING_FOR_GAMESTART:
+			mainPanel = waitingForGameStartPanel;
 			break;
 		case IN_GAME:
 			mainPanel = gamePanel;
