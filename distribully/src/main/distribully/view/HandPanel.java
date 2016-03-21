@@ -175,6 +175,9 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 						if (selectedStackCard.getCard().getNumber() == selectedCard.getCard().getNumber()
 							|| selectedStackCard.getCard().getSuit() == selectedCard.getCard().getSuit()) {
 							
+							//remove card from hand
+							model.getHand().remove(selectedCard);//TODO notify?
+							
 							ConnectionFactory factory = new ConnectionFactory();
 							factory.setHost(model.getMe().getIp());
 							Connection connection;
@@ -186,6 +189,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 								channel.exchangeDeclare(model.getNickname(), "fanout");
 								JsonObject message = new JsonObject();
 								message.addProperty("cardId",  selectedCard.getCard().getNumber());
+								message.addProperty("suitId", selectedCard.getCard().getSuit().getV());
 								String ownerName = "";
 								for (Player owner : model.getTopOfStacks().keySet()) {
 									if (model.getTopOfStacks().get(owner).equals(selectedStackCard.getCard())) {
