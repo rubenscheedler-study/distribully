@@ -231,9 +231,10 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 				
 				if (drawCardsComponent.wasClicked(e.getX(),e.getY())) {
 					TurnState toSend = model.getTurnState();
+					int toDraw = model.getTurnState().getToPick()+1;
 					toSend.setNextPlayer(model.getNextPlayer());
 					toSend.setToPick(0);
-					model.draw(model.getTurnState().getToPick()+1, toSend);
+					model.draw(toDraw, toSend);
 				}
 
 				revalidate();
