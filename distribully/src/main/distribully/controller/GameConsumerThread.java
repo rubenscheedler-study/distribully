@@ -6,10 +6,15 @@ import java.util.concurrent.TimeoutException;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.AMQP.Queue.DeclareOk;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.ConsumerCancelledException;
+import com.rabbitmq.client.DefaultConsumer;
+import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.GetResponse;
 import com.rabbitmq.client.ShutdownSignalException;
 
@@ -34,19 +39,8 @@ public class GameConsumerThread extends Thread{
 		parser = new JsonParser();
 		gson = new Gson();
 		playing = true;
-		Connection connection = null;
 		try {
-			connection = factory.newConnection();
-			channel = connection.createChannel();
-			channel.exchangeDeclare(hostName, "fanout");
-			queueName = channel.queueDeclare().getQueue();
-			channel.queueBind(queueName, hostName, "");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TimeoutException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			initPlayerExchange(host);
 		} catch (ShutdownSignalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -60,43 +54,7 @@ public class GameConsumerThread extends Thread{
 
 	public void run(){
 		while(playing){
-			GetResponse response = null;
-			try {
-				response = channel.basicGet(queueName, true);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if (response == null) { 
-				//pblblbllb -> no messages
-			}else{
-				switch(response.getEnvelope().getRoutingKey()){
-				case "Start":
-					System.out.println("Game is starting!");
-					if(DistribullyController.lobbyThread != null){
-						DistribullyController.lobbyThread.setInLobby(false);
-					}
-					new ClientListUpdateHandler(model);
-					model.getGamePlayerList().getPlayers().forEach(player -> initPlayerExchange(player));
-					model.setGAME_STATE(GameState.SETTING_RULES);
-					
-					break;
-				case "Leave":
-					JsonElement jeLeave = parser.parse(new String(response.getBody()));
-					String playerNameLeave = jeLeave.getAsJsonObject().get("playerName").toString();
-					model.getGamePlayerList().getPlayers().removeIf(player -> player.getName().equals(playerNameLeave));
-					System.out.println(playerNameLeave + " left");
-					break;
-				case "Rules":
-					JsonElement jeRule = parser.parse(new String(response.getBody()));
-					String playerNameRule = jeRule.getAsJsonObject().get("playerName").toString();
-					System.out.println("Rules from  "+ playerNameRule + " received");
-					break;
-				case "PlayCard":
-					break;
-				}
-			}
-
+			
 		}
 	}
 
@@ -108,9 +66,41 @@ public class GameConsumerThread extends Thread{
 		try {
 			connection = factory.newConnection();
 			channel = connection.createChannel();
+			queueName = channel.queueDeclare(model.getNickname(), false, false, false, null).getQueue();
 			channel.exchangeDeclare(playerName, "fanout");
-			queueName = channel.queueDeclare().getQueue();
 			channel.queueBind(queueName, playerName, "");
+			Consumer consumer = new DefaultConsumer(channel) {
+			      @Override
+			      public void handleDelivery(String consumerTag, Envelope envelope,
+			                                 AMQP.BasicProperties properties, byte[] body) throws IOException {
+			    	  switch(envelope.getRoutingKey()){
+						case "Start":
+							System.out.println("Game is starting!");
+							if(DistribullyController.lobbyThread != null){
+								DistribullyController.lobbyThread.setInLobby(false);
+							}
+							new ClientListUpdateHandler(model);
+							model.getGamePlayerList().getPlayers().forEach(player -> initPlayerExchange(player));
+							model.setGAME_STATE(GameState.SETTING_RULES);
+							
+							break;
+						case "Leave":
+							JsonElement jeLeave = parser.parse(new String(body));
+							String playerNameLeave = jeLeave.getAsJsonObject().get("playerName").toString();
+							model.getGamePlayerList().getPlayers().removeIf(player -> player.getName().equals(playerNameLeave));
+							System.out.println(playerNameLeave + " left");
+							break;
+						case "Rules":
+							JsonElement jeRule = parser.parse(new String(body));
+							String playerNameRule = jeRule.getAsJsonObject().get("playerName").toString();
+							System.out.println("Rules from  "+ playerNameRule + " received");
+							break;
+						case "PlayCard":
+							break;
+						}
+			      }
+			    };
+			    channel.basicConsume(queueName, true, consumer);
 			System.out.println("host connected: " + playerName);
 		} catch (IOException | TimeoutException e) {
 			// TODO Auto-generated catch block
