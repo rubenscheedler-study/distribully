@@ -1,6 +1,7 @@
 package distribully.model.rules;
 
 import distribully.model.Stack;
+import distribully.model.TurnState;
 
 public abstract class Rule {
 	private Stack stack;
@@ -10,8 +11,9 @@ public abstract class Rule {
 	}
 	/**
 	 * applies the effect of this card on the stack and/or the owner of the stack.
+	 * @return 
 	 */
-	public abstract void execute();
+	public abstract TurnState execute();
 	/**
 	 * 
 	 * @return The description/name of the rule.

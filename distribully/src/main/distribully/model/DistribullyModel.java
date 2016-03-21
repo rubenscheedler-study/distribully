@@ -42,10 +42,10 @@ public class DistribullyModel implements IObservable {
 	private ArrayList<Card> hand;
 
 	private ArrayList<Rule> allRules;
-	private HashMap<Integer,Rule> choosenRules;
+	private HashMap<Integer,Rule> chosenRules;
 
 	private TurnState turnState;
-	
+
 	public DistribullyModel() {
 		this.stack = new Stack();
 		this.onlinePlayerList = new ClientList(serverAddress,serverPort);
@@ -53,11 +53,11 @@ public class DistribullyModel implements IObservable {
 		observers = new ArrayList<IObserver>();
 		inviteStates = new HashMap<String,String>();
 		allRules = new ArrayList<Rule>();
-		choosenRules = new HashMap<Integer,Rule>();
+		chosenRules = new HashMap<Integer,Rule>();
 		fillAllRules();
 		hand = new ArrayList<Card>();
 		topOfStacks = new HashMap<Player,Card>();
-		
+
 	}
 
 
@@ -193,8 +193,8 @@ public class DistribullyModel implements IObservable {
 		}
 		//remove them from the invitation states
 		toRemove.forEach(name -> this.inviteStates.remove(name));
-		
-		
+
+
 		if (!toRemove.isEmpty()) {
 			this.notifyObservers(this.inviteStates);
 		}
@@ -209,13 +209,13 @@ public class DistribullyModel implements IObservable {
 	}
 
 	public void setCardRule(int cardNumber, Rule rule) {
-		this.choosenRules.put(cardNumber, rule);
-		this.notifyObservers(this.choosenRules);
+		this.chosenRules.put(cardNumber, rule);
+		this.notifyObservers(this.chosenRules);
 	}
 
 	public void removeCardRule(int cardNumber) {
-		this.choosenRules.remove(cardNumber);
-		this.notifyObservers(this.choosenRules);
+		this.chosenRules.remove(cardNumber);
+		this.notifyObservers(this.chosenRules);
 	}
 
 	public ArrayList<Rule> getAllRules() {
@@ -227,11 +227,11 @@ public class DistribullyModel implements IObservable {
 	}
 
 	public HashMap<Integer,Rule> getChoosenRules() {
-		return choosenRules;
+		return chosenRules;
 	}
 
 	public void setChoosenRules(HashMap<Integer,Rule> choosenRules) {
-		this.choosenRules = choosenRules;
+		this.chosenRules = choosenRules;
 	}
 
 
@@ -273,7 +273,7 @@ public class DistribullyModel implements IObservable {
 			Channel channel = connection.createChannel();
 
 			channel.exchangeDeclare(this.getNickname(), "fanout");
-			
+
 			Card card = Card.getARandomCard();
 
 			JsonObject message = new JsonObject();
@@ -321,7 +321,57 @@ public class DistribullyModel implements IObservable {
 		String nextPlayer = this.gamePlayerList.getPlayers().get(i).getName();
 		int direction = 1;
 		int toPick = 0;
-		TurnState turnState = new TurnState(nextPlayer,toPick,direction);
+		TurnState turnState = new TurnState(nextPlayer,toPick,direction, "none");
+
+		ConnectionFactory factory = new ConnectionFactory();
+		factory.setHost(this.getMe().getIp());
+		Connection connection;
+		try {
+			connection = factory.newConnection();
+
+			Channel channel = connection.createChannel();
+
+			channel.exchangeDeclare(this.getNickname(), "fanout");
+
+			Gson gson = new Gson();
+			JsonParser parser = new JsonParser();
+			JsonObject message = new JsonObject();
+			message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
+
+			channel.basicPublish(this.getNickname(), "NextTurn", null, message.toString().getBytes());
+			System.out.println(" [x] Sent '" + message + "'");
+
+			channel.close();
+			connection.close();
+		} catch (IOException | TimeoutException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
+
+
+	public void executeCard(int cardId) {
+		String nextPlayer = null; 
+		int direction = 1;
+		int toPick = 0;
+		String action;
+		TurnState turnState;
+		if(chosenRules.containsKey(cardId)){
+			Rule rule = chosenRules.get(cardId);
+			turnState = rule.execute();
+		}else{
+			direction = this.getTurnState().getDirection();
+			toPick = this.getTurnState().getToPick();
+			if(this.getTurnState().getToPick() > 0){
+				turnState = new TurnState(this.getTurnState().getNextPlayer(),toPick,direction, "mustDraw");
+			} else{
+				int numPlayers = this.gamePlayerList.getPlayers().size();
+				int index = this.gamePlayerList.getPlayers().indexOf(gamePlayerList.getPlayerByNickname(this.getTurnState().getNextPlayer()));
+				nextPlayer = this.gamePlayerList.getPlayers().get((index + numPlayers + direction) % numPlayers ).getName(); //Ensure we stay in the range
+				turnState = new TurnState(nextPlayer,toPick,direction, "none");
+			}
+		}
 		
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(this.getMe().getIp());
@@ -336,7 +386,6 @@ public class DistribullyModel implements IObservable {
 			Gson gson = new Gson();
 			JsonParser parser = new JsonParser();
 			JsonObject message = new JsonObject();
-			message.addProperty("action", "");
 			message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
 
 			channel.basicPublish(this.getNickname(), "NextTurn", null, message.toString().getBytes());

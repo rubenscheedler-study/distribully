@@ -144,9 +144,12 @@ public class GameConsumerThread extends Thread{
 			case "PlayCard":
 				JsonObject joCard = parser.parse(new String(body)).getAsJsonObject();
 				int cardId = Integer.parseInt(joCard.get("cardId").getAsString());
-				int cardSuit = Integer.parseInt(joCard.get("cardSuit").getAsString());
-				String playerName = joCard.get("playerName").getAsString();
-				System.out.println("Card "+ cardId + " from suite " + cardSuit +" played on stack of "+ playerName); //TODO cardSuite parser
+				String stackOwner = joCard.get("stackOwner").getAsString();
+				System.out.println("Card "+ cardId +" played");
+				if(stackOwner.equals(model.getNickname())){
+					model.executeCard(cardId);
+				}
+				//TODO: reduce cardCount of currentplayer, staat in turnstate
 				//TODO: View
 				break;
 			case "NextTurn":
@@ -158,20 +161,19 @@ public class GameConsumerThread extends Thread{
 				System.out.println("Next player is "+ newState.getNextPlayer() +" by action " + action);
 				//TODO: action handlen
 				//TODO: View
-				break;
+				break;				
 			case "Draw":
 				JsonObject joDraw= parser.parse(new String(body)).getAsJsonObject();
 				int amount = Integer.parseInt(joDraw.get("amount").getAsString());
-				String drawerName = joDraw.get("playerName").getAsString();
-				System.out.println(drawerName +" has drawn " + amount + " cards");
+				System.out.println("Drawn " + amount + " cards");
 				//TODO: view
+				//TODO: Update counts, player is in turnstate
 				
 			case "ChooseSuit":
 				JsonObject joSuit = parser.parse(new String(body)).getAsJsonObject();
 				int suit = Integer.parseInt(joSuit.get("cardSuit").getAsString());
-				String playerNext = joSuit.get("playerNextName").getAsString();
-				String stackOwner = joSuit.get("playerName").getAsString();
-				System.out.println("Next player is "+ playerNext +", new suite on "+ stackOwner +" is " + suit); //suite parse
+				String stackPlayer = joSuit.get("stackPlayer").getAsString();
+				System.out.println("new suite on "+ stackPlayer +" is " + suit); //suite parse
 				//TODO: View
 				break;
 			case "InitStack":
