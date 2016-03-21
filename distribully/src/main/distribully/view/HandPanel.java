@@ -12,9 +12,15 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeoutException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+
+import com.google.gson.JsonObject;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 
 import distribully.model.Card;
 import distribully.model.DistribullyModel;
@@ -169,6 +175,33 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 						if (selectedStackCard.getCard().getNumber() == selectedCard.getCard().getNumber()
 							|| selectedStackCard.getCard().getSuit() == selectedCard.getCard().getSuit()) {
 							
+							ConnectionFactory factory = new ConnectionFactory();
+							factory.setHost(model.getMe().getIp());
+							Connection connection;
+							try {
+								connection = factory.newConnection();
+
+								Channel channel = connection.createChannel();
+
+								channel.exchangeDeclare(model.getNickname(), "fanout");
+								JsonObject message = new JsonObject();
+								message.addProperty("cardId",  selectedCard.getCard().getNumber());
+								String ownerName = "";
+								for (Player owner : model.getTopOfStacks().keySet()) {
+									if (model.getTopOfStacks().get(owner).equals(selectedStackCard.getCard())) {
+										ownerName = owner.getName();
+									}
+								}
+								message.addProperty("stackOwner", ownerName);
+								channel.basicPublish(model.getNickname(), "PlayCard", null, message.toString().getBytes());
+								System.out.println(" [x] Sent '" + message + "'");
+
+								channel.close();
+								connection.close();
+							} catch (IOException | TimeoutException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 							
 						} else {
 							JOptionPane.showMessageDialog(null,
@@ -185,7 +218,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 				}
 				
 				if (drawCardsComponent.wasClicked(e.getX(),e.getY())) {
-					
+					model.draw(model.getTurnState().getToPick()+1);
 				}
 
 				revalidate();

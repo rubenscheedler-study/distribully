@@ -427,6 +427,14 @@ public class DistribullyModel implements IObservable {
 
 
 	public void draw(int drawAmount) {
+		//update model according to action
+		turnState.setToPick(0);
+		//draw the cards, add them to the hand
+		for (int i = 0; i < drawAmount; i++) {
+			hand.add(Card.getARandomCard());
+		}
+		
+		//notify others about what this player has done
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(this.getMe().getIp());
 		Connection connection;
@@ -435,7 +443,15 @@ public class DistribullyModel implements IObservable {
 			Channel channel = connection.createChannel();
 
 			channel.exchangeDeclare(this.getNickname(), "fanout");
+			
+			Gson gson = new Gson();
+			JsonParser parser = new JsonParser();
+			
 			JsonObject message = new JsonObject();
+			
+			
+			message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
+			
 			message.addProperty("amount", drawAmount);
 
 			channel.basicPublish(this.getNickname(), "HaveDrawn", null, message.toString().getBytes());
