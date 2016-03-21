@@ -5,9 +5,12 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -17,7 +20,7 @@ import distribully.model.IObservable;
 import distribully.model.IObserver;
 import distribully.model.Player;
 
-public class HandPanel extends DistribullyPanel implements IObserver {
+public class HandPanel extends DistribullyPanel implements IObserver, MouseListener {
 
 	private static final long serialVersionUID = -7619956785679933010L;
 	private final int LEFT_OFFSET = 40;
@@ -29,6 +32,9 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 	private DistribullyModel model;
 	private Dimension size;
 	
+	private ArrayList<CardComponent> handCards;
+	private ArrayList<CardComponent> stackCards;
+	
 	public HandPanel(DistribullyModel model, Dimension size) {
 		this.model = model;
 		this.size = size;
@@ -36,6 +42,8 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		IMAGE_WIDTH = (int) (500.0 * ((double)IMAGE_HEIGHT/726.0));
 		CARD_VISIBLE_WIDTH = (int)((double)IMAGE_WIDTH/5.75);
 		calculateAndSetSize();
+		handCards = new ArrayList<CardComponent>();
+		stackCards = new ArrayList<CardComponent>();
 	}
 	
 	public void calculateAndSetSize() {
@@ -60,23 +68,15 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		g.drawString("Your Hand", LEFT_OFFSET, TOP_OFFSET);
 		
 		//2) draw the hand of the player
+
 		int i = 0;
 		for (Card c : model.getHand()) {
-			String imageName = c.getImage();
-			//System.out.println(System.getProperty("user.dir") + "|||" + imageName);
-			File image = new File(imageName);
-			BufferedImage img = null;
 			
-			try {
-				img = ImageIO.read(image);
-			} catch(IOException e) {
-				e.printStackTrace();
-			}
-			
-			
-			g.drawImage(img,LEFT_OFFSET+CARD_VISIBLE_WIDTH*i,TOP_OFFSET+15,IMAGE_WIDTH,IMAGE_HEIGHT,null);
+			CardComponent cardComponent = new CardComponent(LEFT_OFFSET+CARD_VISIBLE_WIDTH*i,TOP_OFFSET+15,IMAGE_WIDTH,IMAGE_HEIGHT,c);
+			cardComponent.draw(g);
 			i++;
 		}
+		
 		//3 draw header "Current Stack of Players"
 		g.drawString("Current Stacks of Players:",LEFT_OFFSET,TOP_OFFSET+30+IMAGE_HEIGHT);
 		
@@ -100,5 +100,35 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 	@Override
 	public void update(IObservable observable, Object changedObject) {
 		this.repaint();
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 }

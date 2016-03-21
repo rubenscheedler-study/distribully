@@ -10,6 +10,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import distribully.controller.ClientListUpdateHandler;
 import distribully.controller.CloseWindowHandler;
@@ -63,6 +65,19 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.PAGE_AXIS));
 		
 		scrollPane = new JScrollPane(mainPanel);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+		scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+		scrollPane.getViewport().addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				System.out.println("scroll event");
+				mainPanel.revalidate();
+				mainPanel.repaint();
+			}
+			
+			
+		});
 		this.add(scrollPane);
 		
 		this.revalidate();
@@ -115,7 +130,7 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		case INVITING_USERS:
 		case IN_LOBBY:
 		default:
-			mainPanel = playerOverviewPanel;
+			mainPanel = gamePanel;//playerOverviewPanel
 			break;
 		}
 	}
