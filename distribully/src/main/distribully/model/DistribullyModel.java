@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.TimeoutException;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -42,6 +44,8 @@ public class DistribullyModel implements IObservable {
 	private ArrayList<Rule> allRules;
 	private HashMap<Integer,Rule> choosenRules;
 
+	private TurnState turnState;
+	
 	public DistribullyModel() {
 		this.stack = new Stack();
 		this.onlinePlayerList = new ClientList(serverAddress,serverPort);
@@ -53,12 +57,6 @@ public class DistribullyModel implements IObservable {
 		fillAllRules();
 		hand = new ArrayList<Card>();
 		topOfStacks = new HashMap<Player,Card>();
-		this.hand.add(new Card(5,CardSuit.CLUBS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
 		
 	}
 
@@ -284,6 +282,64 @@ public class DistribullyModel implements IObservable {
 			message.addProperty("playerName", this.getNickname());
 
 			channel.basicPublish(this.getNickname(), "InitStack", null, message.toString().getBytes());
+			System.out.println(" [x] Sent '" + message + "'");
+
+			channel.close();
+			connection.close();
+		} catch (IOException | TimeoutException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
+
+
+	public void generateNewHand() {
+		for (int i = 0; i < 7; i++) {
+			this.hand.add(Card.getARandomCard());
+		}
+		this.notifyObservers(this);
+	}
+
+
+
+	public TurnState getTurnState() {
+		return turnState;
+	}
+
+
+
+	public void setTurnState(TurnState turnState) {
+		this.turnState = turnState;
+		this.notifyObservers(this.turnState);
+	}
+
+
+
+	public void generateAndSendFirstTurnObject() {
+		int i = (int)(Math.random()*(double)this.gamePlayerList.getPlayers().size());
+		String nextPlayer = this.gamePlayerList.getPlayers().get(i).getName();
+		int direction = 1;
+		int toPick = 0;
+		TurnState turnState = new TurnState(nextPlayer,toPick,direction);
+		
+		ConnectionFactory factory = new ConnectionFactory();
+		factory.setHost(this.getMe().getIp());
+		Connection connection;
+		try {
+			connection = factory.newConnection();
+
+			Channel channel = connection.createChannel();
+
+			channel.exchangeDeclare(this.getNickname(), "fanout");
+
+			Gson gson = new Gson();
+			JsonParser parser = new JsonParser();
+			JsonObject message = new JsonObject();
+			message.addProperty("action", "");
+			message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
+
+			channel.basicPublish(this.getNickname(), "NextTurn", null, message.toString().getBytes());
 			System.out.println(" [x] Sent '" + message + "'");
 
 			channel.close();

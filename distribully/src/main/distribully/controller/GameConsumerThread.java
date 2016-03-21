@@ -1,6 +1,9 @@
 package distribully.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.concurrent.TimeoutException;
 
 import com.google.gson.JsonElement;
@@ -121,8 +124,25 @@ public class GameConsumerThread extends Thread{
 				Player player = model.getGamePlayerList().getPlayerByNickname(playerNameRule);
 				player.setReadyToPlay(true);
 				if(model.getGamePlayerList().getPlayers().stream().allMatch(p->p.isReadyToPlay())){
-					model.setGAME_STATE(GameState.IN_GAME);
+					
 					model.setAndBroadCastTopOfStack();
+					model.generateNewHand();
+					//only one player may create the first turn object. We define this as the alphabetically first player
+					ArrayList<Player> toSort = new ArrayList<Player>();
+					toSort.addAll(model.getGamePlayerList().getPlayers());
+					Collections.sort(toSort, new Comparator<Player>() {
+
+						@Override
+						public int compare(Player first, Player second) {
+							return first.getName().compareTo(second.getName());
+						}
+						
+						
+					});
+					if (model.getNickname().equals(toSort.get(0).getName())) {
+						model.generateAndSendFirstTurnObject();
+					}
+					model.setGAME_STATE(GameState.IN_GAME);
 				}
 				break;
 			case "PlayCard":

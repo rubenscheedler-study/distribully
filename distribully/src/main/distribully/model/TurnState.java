@@ -5,9 +5,10 @@ public class TurnState {
 	int toPick;
 	int direction;
 	
-	public TurnState(){
-		toPick = 0;
-		direction =1;
+	public TurnState(String nextPlayer, int toPick, int direction){
+		this.nextPlayer = nextPlayer;
+		this.toPick = toPick;
+		this.direction = direction;
 	}
 
 	public String getNextPlayer() {
