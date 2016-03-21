@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 import distribully.model.Card;
 import distribully.model.DistribullyModel;
@@ -37,6 +38,9 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 	private ArrayList<CardComponent> stackCards;
 	private CardComponent selectedCard;
 	private CardComponent selectedStackCard;
+	
+	private PlayCardComponent playCardComponent;
+	private DrawCardsComponent drawCardsComponent;
 
 	public HandPanel(DistribullyModel model, Dimension size) {
 		this.model = model;
@@ -70,7 +74,12 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		g.setFont(this.headerFont);
 		g.setColor(new Color(230,230,230));
 		g.drawString("Your Hand", LEFT_OFFSET, TOP_OFFSET);
-
+		if (model.isMyTurn()) {
+			playCardComponent = new PlayCardComponent(LEFT_OFFSET+200-10, TOP_OFFSET-15, 100, 20);
+			drawCardsComponent = new DrawCardsComponent(LEFT_OFFSET+400-10, TOP_OFFSET-15, 150, 20);
+			playCardComponent.draw(g);
+			drawCardsComponent.draw(g);
+		}
 		//2) draw the hand of the player
 
 		int i = 0;
@@ -131,7 +140,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 	class CardClickListener extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			if (model.getTurnState().getNextPlayer().equals(model.getMe().getName())) {
+			if (model.isMyTurn()) {
 				for (CardComponent component : handCards) {
 
 					if (component.wasClicked(e.getX(), e.getY())) {
@@ -155,10 +164,30 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 					}
 				}
 
-				//TODO if both are set, GO GO GO
-				if (selectedStackCard != null && selectedCard != null) {
-					System.out.println("GO GO GO");
+				if (playCardComponent.wasClicked(e.getX(), e.getY()))  {
+					if (selectedStackCard != null && selectedCard != null) {
+						if (selectedStackCard.getCard().getNumber() == selectedCard.getCard().getNumber()
+							|| selectedStackCard.getCard().getSuit() == selectedCard.getCard().getSuit()) {
+							
+							
+						} else {
+							JOptionPane.showMessageDialog(null,
+							          "The card you selected may not be played on that stack.",
+							          "Invalid play",
+							          JOptionPane.WARNING_MESSAGE);
+						}
+					} else {
+						JOptionPane.showMessageDialog(null,
+						          "Please choose a card to play and a stack to play it on.",
+						          "Incomplete Selection",
+						          JOptionPane.WARNING_MESSAGE);
+					}
 				}
+				
+				if (drawCardsComponent.wasClicked(e.getX(),e.getY())) {
+					
+				}
+
 				revalidate();
 				repaint();
 			}

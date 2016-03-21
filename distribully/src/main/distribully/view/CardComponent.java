@@ -11,19 +11,12 @@ import javax.imageio.ImageIO;
 
 import distribully.model.Card;
 
-public class CardComponent {
-	private int posX;
-	private int posY;
-	private int width;
-	private int height;
+public class CardComponent extends DrawableComponent {
 	private Card card;
 	private int actualWidth;
 	
 	public CardComponent(int posX, int posY, int width, int height, Card card, int actualWidth) {
-		this.posX = posX;
-		this.posY = posY;
-		this.width = width;
-		this.height = height;
+		super(posX,posY,width,height);
 		this.card = card;
 		this.actualWidth = actualWidth;
 
@@ -60,6 +53,7 @@ public class CardComponent {
 	 * @param y
 	 * @return
 	 */
+	@Override
 	public boolean wasClicked(int x, int y) {
 		return x >= posX && x < (posX + actualWidth) && y >= posY && y < (posY + height);
 	}
@@ -113,6 +107,11 @@ public class CardComponent {
 	
 	public String toString() {
 		return "[posX:" + posX + ",posY:" + posY + ",width:" + width + ",height:" + height + "]";
+	}
+
+	@Override
+	public void draw(Graphics g) {
+		this.draw(g,false);
 	}
 
 
