@@ -16,7 +16,7 @@ public class DrawTwoRule extends Rule {
 
 	@Override
 	public String toString() {
-		return "pick two cards";
+		return "Draw two cards";
 	}
 
 }
