@@ -31,11 +31,6 @@ public class GeneralServerController {
 	
 	private void init() {
 		players = new ArrayList<Player>();
-		Player x = new Player("Lekker_in_verrote bananen_knijpen", "Meneer", 666);
-		x.setAvailable(false);
-		players.add(x);
-		players.add(new Player("Zag_je_me_vliegen", "kartoffel", 111));
-		players.add(new Player("Buiten_om_je_stad", "omringeld", 8888));
 		gson = new Gson();
 		parser = new JsonParser();
 		get("/players", "application/json" , (request, response) -> getUserList(request, response)); //testing feature
