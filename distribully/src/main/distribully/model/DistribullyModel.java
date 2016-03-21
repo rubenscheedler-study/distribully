@@ -1,8 +1,15 @@
 package distribully.model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.concurrent.TimeoutException;
+
+import com.google.gson.JsonObject;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 
 import distribully.controller.GameState;
 import distribully.model.rules.ChooseSuiteRule;
@@ -245,8 +252,9 @@ public class DistribullyModel implements IObservable {
 		this.topOfStacks = topOfStacks;
 	}
 
-	public void setTopOfStack(Player player, Card card) {
+	public void putTopOfStack(Player player, Card card) {
 		this.topOfStacks.put(player, card);
+		notifyObservers(this);
 	}
 
 	public ArrayList<Card> getHand() {
@@ -257,5 +265,35 @@ public class DistribullyModel implements IObservable {
 
 	public void setHand(ArrayList<Card> hand) {
 		this.hand = hand;
+	}
+
+
+
+	public void setAndBroadCastTopOfStack() {
+		ConnectionFactory factory = new ConnectionFactory();
+		factory.setHost(this.getMe().getIp());
+		Connection connection;
+		try {
+			connection = factory.newConnection();
+
+			Channel channel = connection.createChannel();
+
+			channel.exchangeDeclare(this.getNickname(), "fanout");
+			
+			Card card = Card.getARandomCard();
+
+			JsonObject message = new JsonObject();
+			message.addProperty("cardId", card.getNumber());
+			message.addProperty("cardSuit", card.getSuit().getV());
+
+			channel.basicPublish(this.getNickname(), "TopOfStack", null, message.toString().getBytes());
+			System.out.println(" [x] Sent '" + message + "'");
+
+			channel.close();
+			connection.close();
+		} catch (IOException | TimeoutException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 }

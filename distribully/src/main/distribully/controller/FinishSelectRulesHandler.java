@@ -40,7 +40,9 @@ public class FinishSelectRulesHandler  implements ActionListener {
 
 				channel.basicPublish(model.getNickname(), "Rules", null, x.getBytes());
 				System.out.println(" [x] Sent '" + message + "'");
-				model.setGAME_STATE(GameState.WAITING_FOR_GAMESTART);
+				if(model.getGAME_STATE() != GameState.IN_GAME){ //Since the queue may update the state before this does, this is needed.
+					model.setGAME_STATE(GameState.WAITING_FOR_GAMESTART);
+				}
 
 				channel.close();
 				connection.close();

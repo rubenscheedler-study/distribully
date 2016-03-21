@@ -130,7 +130,7 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		case INVITING_USERS:
 		case IN_LOBBY:
 		default:
-			mainPanel = gamePanel;//playerOverviewPanel
+			mainPanel = playerOverviewPanel;//playerOverviewPanel
 			break;
 		}
 	}
