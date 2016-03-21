@@ -2,9 +2,9 @@ package distribully.model.rules;
 
 import distribully.model.Stack;
 
-public class ChooseSuiteRule extends Rule {
+public class ChooseSuitRule extends Rule {
 
-	public ChooseSuiteRule(Stack stack) {
+	public ChooseSuitRule(Stack stack) {
 		super(stack);
 	}
 
@@ -15,7 +15,8 @@ public class ChooseSuiteRule extends Rule {
 
 	@Override
 	public String toString() {
-		return "Choose suite";
+		return "Choose suit";
 	}
+	
 
 }

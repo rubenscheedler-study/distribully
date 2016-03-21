@@ -3,6 +3,8 @@ package distribully.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.JOptionPane;
+
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.http.HttpMethod;
@@ -24,7 +26,12 @@ public class ClientListUpdateHandler {
 			client.start();
 			response = client.newRequest(model.getServerAddress() + ":" + model.getServerPort() + "/players").method(HttpMethod.GET).send();
 		} catch (Exception e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+				    "The server is currently online. \n"
+					+ "Start the server first",
+				    "Server error",
+				    JOptionPane.WARNING_MESSAGE);
+			System.exit(69);  //Service unavailable
 		}
 	
 	

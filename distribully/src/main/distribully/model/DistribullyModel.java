@@ -12,7 +12,7 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
 import distribully.controller.GameState;
-import distribully.model.rules.ChooseSuiteRule;
+import distribully.model.rules.ChooseSuitRule;
 import distribully.model.rules.DrawFiveRule;
 import distribully.model.rules.DrawTwoRule;
 import distribully.model.rules.PlayAgainRule;
@@ -26,10 +26,10 @@ public class DistribullyModel implements IObservable {
 	private ClientList gamePlayerList;//contains the players that are part of the game that this user is a part of.
 
 	private String serverAddress = "http://82.73.233.237";
-	private int serverPort = 4567;
+	private final int serverPort = 4567;
 	private String myIP;
 	private String currentHostName;
-	private int myPort = 4567;
+	private int myPort;
 
 	private ArrayList<IObserver> observers;
 	private HashMap<String,String> inviteStates;
@@ -67,7 +67,7 @@ public class DistribullyModel implements IObservable {
 	private void fillAllRules() {
 		allRules.add(new DrawTwoRule(this.stack));
 		allRules.add(new SkipTurnRule(this.stack));
-		allRules.add(new ChooseSuiteRule(this.stack));
+		allRules.add(new ChooseSuitRule(this.stack));
 		allRules.add(new DrawFiveRule(this.stack));
 		allRules.add(new PlayAgainRule(this.stack));
 		allRules.add(new RevertTurnOrderRule(this.stack));
@@ -139,10 +139,6 @@ public class DistribullyModel implements IObservable {
 
 	public int getServerPort() {
 		return serverPort;
-	}
-
-	public void setServerPort(int serverPort) {
-		this.serverPort = serverPort;
 	}
 
 	public String getNickname() {

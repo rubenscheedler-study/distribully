@@ -46,6 +46,17 @@ public class DistribullyController {
 					Integer.parseInt(portString);
 				} catch (NumberFormatException e) {
 					portString = "";
+					JOptionPane.showMessageDialog(null,
+						    "Invalid port",
+						    "Invalid port",
+						    JOptionPane.WARNING_MESSAGE);
+				}
+				if(portString.equals("4567")){
+					JOptionPane.showMessageDialog(null,
+						    "This port is used by the server, choose a different port",
+						    "Invalid port",
+						    JOptionPane.WARNING_MESSAGE);
+					portString = "";
 				}
 			}
 			

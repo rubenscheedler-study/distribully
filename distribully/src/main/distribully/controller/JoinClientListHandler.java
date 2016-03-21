@@ -32,8 +32,19 @@ public class JoinClientListHandler {
 			}
 			chosenNickname = chosenNickname.trim();
 			
-			if (chosenNickname.contains(" ") || !nicknameAvailable(chosenNickname)) {
+			if (chosenNickname.contains(" ")){
 				chosenNickname = "";
+				JOptionPane.showMessageDialog(null,
+					    "Spaces are not allowed in the username",
+					    "Invalid username",
+					    JOptionPane.WARNING_MESSAGE);
+			}
+			if (!nicknameAvailable(chosenNickname)) {
+				chosenNickname = "";
+				JOptionPane.showMessageDialog(null,
+					    "Username is already is use",
+					    "Invalid username",
+					    JOptionPane.WARNING_MESSAGE);
 			}
 			
 		}

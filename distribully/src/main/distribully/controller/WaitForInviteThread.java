@@ -41,7 +41,12 @@ public class WaitForInviteThread extends Thread {
 			serverSocket.close();
 		}
 		catch (IOException ioException) {
-			ioException.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+				    "Could not open port, choose a different port",
+				    "Port bind error",
+				    JOptionPane.ERROR_MESSAGE);
+			//TODO: select new port
+			
 		}
 	}
 	public void closeServer(){
