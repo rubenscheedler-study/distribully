@@ -160,7 +160,8 @@ public class GameConsumerThread extends Thread{
 				JsonObject joTurn = parser.parse(new String(body)).getAsJsonObject();
 				JsonObject turnState = joTurn.get("turnState").getAsJsonObject();
 				TurnState newState = gson.fromJson(turnState, TurnState.class);
-				
+				String stackOwner1 = model.getTurnState().getNextPlayer();
+				model.setTurnState(newState);
 				System.out.println("Next player is "+ newState.getNextPlayer() +" by action " + newState.getAction());
 				if(model.isMyTurn()){
 					if (newState.getAction().contains("choose suit")){
@@ -190,17 +191,13 @@ public class GameConsumerThread extends Thread{
 								break;
 							}
 						}
-						String stackOwner1 = model.getTurnState().getNextPlayer();
+						
 						model.setTurnState(newState);
 						model.broadcastStackSuit(stackOwner1,cardSuitIndex);
 					}
-				} else {
-					model.setTurnState(newState);
 				}
-				
-				
+							
 				break;
-				
 			case "MustDraw":
 				JsonObject joMustDraw= parser.parse(new String(body)).getAsJsonObject();
 				int drawAmount = Integer.parseInt(joMustDraw.get("drawAmount").getAsString());
