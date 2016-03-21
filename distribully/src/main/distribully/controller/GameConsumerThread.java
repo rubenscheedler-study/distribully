@@ -154,11 +154,10 @@ public class GameConsumerThread extends Thread{
 				break;
 			case "NextTurn":
 				JsonObject joTurn = parser.parse(new String(body)).getAsJsonObject();
-				String action = joTurn.get("action").getAsString();
 				JsonObject turnState = joTurn.get("turnState").getAsJsonObject();
 				TurnState newState = gson.fromJson(turnState, TurnState.class);
 				model.setTurnState(newState);
-				System.out.println("Next player is "+ newState.getNextPlayer() +" by action " + action);
+				System.out.println("Next player is "+ newState.getNextPlayer() +" by action " + newState.getAction());
 				//TODO: action handlen
 				//TODO: View
 				break;				
