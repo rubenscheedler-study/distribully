@@ -15,7 +15,7 @@ public class RevertTurnOrderRule extends Rule {
 		
 		turnState.setDirection(turnState.getDirection()*-1);
 		turnState.setNextPlayer(rotateTurn(turnState.getDirection()));
-		turnState.setAction("reverse playing order");
+		turnState.setAction(model.getTurnState().getNextPlayer() + " played 'revert playing order'.");
 		return turnState;
 	}
 

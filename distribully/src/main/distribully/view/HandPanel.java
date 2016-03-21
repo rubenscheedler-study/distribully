@@ -90,9 +90,9 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		
 		//render action
 		if (model.getTurnState() != null) {
-			String actionString = model.getTurnState().getNextPlayer() + " played " + model.getTurnState().getAction() + ".";
+			String actionString = model.getTurnState().getAction();
 			g.drawString(actionString,LEFT_OFFSET+600,TOP_OFFSET);
-		}
+		}	
 		
 		//2) draw the hand of the player
 
@@ -128,7 +128,13 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		int j = 0;
 		//4) draw top of stacks
 		for (Player player : model.getGamePlayerList().getPlayers()) {
+			Color oldColor = g.getColor();
+			if (model.getNextPlayer().equals(player.getName())) {
+				g.setColor(Color.GREEN);
+			}
 			g.drawString(player.getName(),LEFT_OFFSET+j*(IMAGE_WIDTH+15), TOP_OFFSET+30+IMAGE_HEIGHT+30);
+			g.setColor(oldColor);
+			
 			CardComponent cardComponent;
 			if (refreshStackComponents) {
 				Card topCard = null;
