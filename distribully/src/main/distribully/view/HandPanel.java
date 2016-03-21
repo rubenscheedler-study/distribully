@@ -89,7 +89,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		
 		//render action
 		if (model.getTurnState() != null) {
-			String actionString = model.getTurnState().getNextPlayer() + " played " + model.getTurnState().getAction();
+			String actionString = model.getTurnState().getNextPlayer() + " played " + model.getTurnState().getAction() + ".";
 			g.drawString(actionString,LEFT_OFFSET+600,TOP_OFFSET);
 		}
 		

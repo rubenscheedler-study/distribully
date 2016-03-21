@@ -14,13 +14,13 @@ public class SkipTurnRule extends Rule {
 		TurnState turnState = new TurnState(model.getTurnState().getNextPlayer(),model.getTurnState().getToPick(),model.getTurnState().getDirection(),model.getTurnState().getAction());
 
 		turnState.setNextPlayer(rotateTurn(turnState.getDirection()*2));
-		turnState.setAction("skip a player");
+		turnState.setAction("skip the next player");
 		return turnState;
 	}
 
 	@Override
 	public String toString() {
-		return "Skip turn";
+		return "Skip next player";
 	}
 
 }
