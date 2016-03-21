@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -20,7 +21,7 @@ import distribully.model.IObservable;
 import distribully.model.IObserver;
 import distribully.model.Player;
 
-public class HandPanel extends DistribullyPanel implements IObserver, MouseListener {
+public class HandPanel extends DistribullyPanel implements IObserver {
 
 	private static final long serialVersionUID = -7619956785679933010L;
 	private final int LEFT_OFFSET = 40;
@@ -31,10 +32,12 @@ public class HandPanel extends DistribullyPanel implements IObserver, MouseListe
 	private int CARD_VISIBLE_WIDTH;
 	private DistribullyModel model;
 	private Dimension size;
-	
+
 	private ArrayList<CardComponent> handCards;
 	private ArrayList<CardComponent> stackCards;
-	
+	private CardComponent selectedCard;
+	private CardComponent selectedStackCard;
+
 	public HandPanel(DistribullyModel model, Dimension size) {
 		this.model = model;
 		this.size = size;
@@ -44,8 +47,9 @@ public class HandPanel extends DistribullyPanel implements IObserver, MouseListe
 		calculateAndSetSize();
 		handCards = new ArrayList<CardComponent>();
 		stackCards = new ArrayList<CardComponent>();
+		this.addMouseListener(new CardClickListener());
 	}
-	
+
 	public void calculateAndSetSize() {
 		//width: 
 		int panelWidth = LEFT_OFFSET + ((model.getHand().size()-1)*CARD_VISIBLE_WIDTH) + IMAGE_WIDTH + RIGHT_MARGIN;
@@ -54,45 +58,57 @@ public class HandPanel extends DistribullyPanel implements IObserver, MouseListe
 		this.setPreferredSize(new Dimension(panelWidth, this.size.height));
 		this.setMaximumSize(new Dimension(panelWidth, this.size.height));
 	}
-	
+
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
 		calculateAndSetSize();
-		
-		
+
+
 		//1) draw the header "Your Hand"
 		g.setFont(this.headerFont);
 		g.setColor(new Color(230,230,230));
 		g.drawString("Your Hand", LEFT_OFFSET, TOP_OFFSET);
-		
+
 		//2) draw the hand of the player
 
 		int i = 0;
+		boolean refreshHandComponents = this.handCards.size() != model.getHand().size();
+		if (refreshHandComponents) {
+			this.handCards = new ArrayList<CardComponent>();
+		}
 		for (Card c : model.getHand()) {
-			
-			CardComponent cardComponent = new CardComponent(LEFT_OFFSET+CARD_VISIBLE_WIDTH*i,TOP_OFFSET+15,IMAGE_WIDTH,IMAGE_HEIGHT,c);
+			CardComponent cardComponent;
+			if (refreshHandComponents) {
+				System.out.println("refresh!");
+				int visibleWidth = model.getHand().indexOf(c) == (model.getHand().size()-1) ? IMAGE_WIDTH : CARD_VISIBLE_WIDTH;
+				cardComponent = new CardComponent(LEFT_OFFSET+CARD_VISIBLE_WIDTH*i,TOP_OFFSET+15,IMAGE_WIDTH,IMAGE_HEIGHT,c,visibleWidth);
+				this.handCards.add(cardComponent);
+			} else {
+				cardComponent = this.handCards.get(i);
+			}
 			cardComponent.draw(g);
 			i++;
 		}
-		
+
 		//3 draw header "Current Stack of Players"
 		g.drawString("Current Stacks of Players:",LEFT_OFFSET,TOP_OFFSET+30+IMAGE_HEIGHT);
-		
+
+		boolean refreshStackComponents = this.stackCards.size() != model.getOnlinePlayerList().getPlayers().size();
 		int j = 0;
 		//4) draw top of stacks
 		for (Player player : model.getOnlinePlayerList().getPlayers()) {
 			g.drawString(player.getName(),LEFT_OFFSET+j*(IMAGE_WIDTH+15), TOP_OFFSET+30+IMAGE_HEIGHT+30);
-			File image = new File(Card.getARandomCard().getImage());
-			BufferedImage img = null;
-			
-			try {
-				img = ImageIO.read(image);
-			} catch(IOException e) {
-				e.printStackTrace();
+			CardComponent cardComponent;
+			if (refreshStackComponents) {
+
+				cardComponent = new CardComponent(LEFT_OFFSET+j*(IMAGE_WIDTH+15),TOP_OFFSET+30+IMAGE_HEIGHT+30,IMAGE_WIDTH,IMAGE_HEIGHT,Card.getARandomCard(),IMAGE_WIDTH);
+				this.stackCards.add(cardComponent);
+			} else {
+				cardComponent = this.stackCards.get(j);
 			}
-		    g.drawImage(img,LEFT_OFFSET+j*(IMAGE_WIDTH+15),TOP_OFFSET+30+IMAGE_HEIGHT+30,IMAGE_WIDTH,IMAGE_HEIGHT,null);
+			cardComponent.draw(g);
 			j++;
 		}
 	}
@@ -102,33 +118,42 @@ public class HandPanel extends DistribullyPanel implements IObserver, MouseListe
 		this.repaint();
 	}
 
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	class CardClickListener extends MouseAdapter {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			System.out.println("click:" + e.getX() + "," + e.getY());
+			for (CardComponent component : handCards) {
+
+				if (component.wasClicked(e.getX(), e.getY())) {
+					System.out.println("HIT");
+					if (selectedCard != null && !selectedCard.equals(component)) {
+						System.out.println("toggling old selected card");
+						selectedCard.click();
+					} else {
+						selectedCard = component;
+					}
+					component.click();
+				}
+			}
+
+			for (CardComponent component : stackCards) {//TODO validate
+				if (component.wasClicked(e.getX(), e.getY())) {
+					if (selectedStackCard != null && !selectedStackCard.equals(component)) {
+						selectedStackCard.click();//unselected this card
+					} else {
+						selectedStackCard = component;
+					}
+					component.click();
+				}
+			}
+
+			//TODO if both are set, GO GO GO
+			if (selectedStackCard != null && selectedStackCard != null) {
+				System.out.println("GO GO GO");
+			}
+			revalidate();
+			repaint();
+		}
 	}
 
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
 }
