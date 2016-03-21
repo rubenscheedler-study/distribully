@@ -163,7 +163,7 @@ public class GameConsumerThread extends Thread{
 				
 				System.out.println("Next player is "+ newState.getNextPlayer() +" by action " + newState.getAction());
 				if(model.isMyTurn()){
-					if (newState.getAction().contains("choose Suit")){
+					if (newState.getAction().contains("choose suit")){
 						String suitCandidate = "";
 						int cardSuitIndex = -1;
 						while (suitCandidate.equals("")) {
@@ -190,8 +190,9 @@ public class GameConsumerThread extends Thread{
 								break;
 							}
 						}
+						String stackOwner1 = model.getTurnState().getNextPlayer();
 						model.setTurnState(newState);
-						model.broadcastStackSuit(model.getTurnState().getNextPlayer(),cardSuitIndex);
+						model.broadcastStackSuit(stackOwner1,cardSuitIndex);
 					}
 				} else {
 					model.setTurnState(newState);

@@ -130,7 +130,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		//4) draw top of stacks
 		for (Player player : model.getGamePlayerList().getPlayers()) {
 			Color oldColor = g.getColor();
-			if (model.getNextPlayer().equals(player.getName())) {
+			if (model.getTurnState().getNextPlayer().equals(player.getName())) {
 				g.setColor(Color.GREEN);
 			}
 			g.drawString(player.getName(),LEFT_OFFSET+j*(IMAGE_WIDTH+15), TOP_OFFSET+30+IMAGE_HEIGHT+30);
