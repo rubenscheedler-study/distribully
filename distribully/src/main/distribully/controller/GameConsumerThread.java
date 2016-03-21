@@ -164,18 +164,23 @@ public class GameConsumerThread extends Thread{
 					}
 				}
 				//TODO: View updaten met de action
-				break;	
+				break;
+				
 			case "MustDraw":
 				JsonObject joMustDraw= parser.parse(new String(body)).getAsJsonObject();
 				int drawAmount = Integer.parseInt(joMustDraw.get("drawAmount").getAsString());
 				System.out.println("Must draw " + drawAmount + " cards");
 				if(model.isMyTurn()){
 					model.draw(drawAmount);
-				}				
+				}	
+				
 			case "HaveDrawn":
 				JsonObject joDraw= parser.parse(new String(body)).getAsJsonObject();
 				int amount = Integer.parseInt(joDraw.get("amount").getAsString());
 				System.out.println("Drawn " + amount + " cards");
+				JsonObject changeState = joDraw.get("turnState").getAsJsonObject();
+				TurnState updateState = gson.fromJson(changeState, TurnState.class);
+				model.setTurnState(updateState);
 				//TODO: view
 				//TODO: Update counts, player is in turnstate
 				
@@ -183,6 +188,8 @@ public class GameConsumerThread extends Thread{
 				JsonObject joSuit = parser.parse(new String(body)).getAsJsonObject();
 				int suit = Integer.parseInt(joSuit.get("cardSuit").getAsString());
 				String stackPlayer = joSuit.get("stackPlayer").getAsString();
+				JsonObject changedState = joSuit.get("turnState").getAsJsonObject();
+				TurnState updatedState = gson.fromJson(changedState, TurnState.class);
 				System.out.println("new suite on "+ stackPlayer +" is " + suit); //suite parse
 				model.getTopOfStacks().get(stackPlayer).setSuit(CardSuit.values()[suit]);
 				//TODO: View
