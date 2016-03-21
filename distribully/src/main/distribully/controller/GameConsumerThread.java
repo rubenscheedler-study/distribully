@@ -110,7 +110,7 @@ public class GameConsumerThread extends Thread{
 			case "Leave":
 				JsonElement jeLeave = parser.parse(new String(body));
 				String playerNameLeave = jeLeave.getAsJsonObject().get("playerName").getAsString();
-				model.getGamePlayerList().getPlayers().removeIf(player -> player.getName().equals(playerNameLeave));
+				model.getGamePlayerList().removePlayerByPlayerName(playerNameLeave);
 				System.out.println(playerNameLeave + " left");
 				
 				//TODO: view

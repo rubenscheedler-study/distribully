@@ -227,6 +227,11 @@ public class ClientList extends ConnectingComponent implements IObservable {
 		//TODO: Handle response?
 		
 	}
+	
+	public void removePlayerByPlayerName(String playerName) {
+		getPlayers().removeIf(player -> player.getName().equals(playerName));
+		notifyObservers(this);
+	}
 
 	public boolean playersListEquals(ArrayList<Player> otherPlayerList) {
 		Collections.sort(otherPlayerList, new PlayerComperator());
