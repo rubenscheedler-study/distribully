@@ -398,4 +398,8 @@ public class DistribullyModel implements IObservable {
 			e1.printStackTrace();
 		}
 	}
+	
+	public boolean isMyTurn() {
+		return this.getNickname().equals(this.getTurnState().getNextPlayer());
+	}
 }
