@@ -1,5 +1,7 @@
 package distribully.model;
 
+import java.util.ArrayList;
+
 public class Card {
 	private int number;//ace=11,jack=12,queen=13,king=14
 	private CardSuit suit;
@@ -52,7 +54,7 @@ public class Card {
 		return name;
 	}
 	public String getImage() {
-		String img = this.getCardName();
+		String img = "src/main/distribully/cards/" + this.getCardName();
 		
 		img += "_of_";
 		//add the suit to the image file name
@@ -77,5 +79,46 @@ public class Card {
 		
 		//add the file extension
 		return img + ".png";
+	}
+	
+	public ArrayList<Card> getFullDeck() {
+		ArrayList<Card> deck = new ArrayList<Card>();
+		
+		for (int i = 2; i < 15; i++) {
+			deck.add(new Card(i,CardSuit.CLUBS));
+		}
+		for (int i = 2; i < 15; i++) {
+			deck.add(new Card(i,CardSuit.DIAMONDS));
+		}
+		for (int i = 2; i < 15; i++) {
+			deck.add(new Card(i,CardSuit.HEARTS));
+		}
+		for (int i = 2; i < 15; i++) {
+			deck.add(new Card(i,CardSuit.SPADES));
+		}
+		
+		return deck;
+	}
+	
+	public static Card getARandomCard() {
+		int cardIndex = (int)(2.0 + (Math.random()*12.0));
+		int cardSuitIndex = (int)(Math.random()*3.0);
+		CardSuit suit;
+		switch (cardSuitIndex) {
+		case 0:
+			suit = CardSuit.CLUBS;
+			break;
+		case 1:
+			suit = CardSuit.DIAMONDS;
+			break;
+		case 2:
+			suit = CardSuit.HEARTS;
+			break;
+		case 3:
+		default:
+			suit = CardSuit.SPADES;
+			break;
+		}
+		return new Card(cardIndex,suit);
 	}
 }

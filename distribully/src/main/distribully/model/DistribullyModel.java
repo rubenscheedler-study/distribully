@@ -48,6 +48,49 @@ public class DistribullyModel implements IObservable {
 		topOfStacks = new HashMap<Player,Card>();
 		this.hand.add(new Card(5,CardSuit.CLUBS));
 		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		this.hand.add(new Card(12,CardSuit.HEARTS));
+		
 	}
 
 
@@ -240,7 +283,9 @@ public class DistribullyModel implements IObservable {
 		this.topOfStacks = topOfStacks;
 	}
 
-
+	public void setTopOfStack(Player player, Card card) {
+		this.topOfStacks.put(player, card);
+	}
 
 	public ArrayList<Card> getHand() {
 		return hand;
