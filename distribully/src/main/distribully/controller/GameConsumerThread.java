@@ -183,6 +183,8 @@ public class GameConsumerThread extends Thread{
 				JsonObject joSuit = parser.parse(new String(body)).getAsJsonObject();
 				int suit = Integer.parseInt(joSuit.get("cardSuit").getAsString());
 				String stackPlayer = joSuit.get("stackPlayer").getAsString();
+				JsonObject changedState = joSuit.get("turnState").getAsJsonObject();
+				TurnState updatedState = gson.fromJson(changedState, TurnState.class);
 				System.out.println("new suite on "+ stackPlayer +" is " + suit); //suite parse
 				model.getTopOfStacks().get(stackPlayer).setSuit(CardSuit.values()[suit]);
 				//TODO: View
