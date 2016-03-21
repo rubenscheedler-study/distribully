@@ -16,6 +16,8 @@ import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.ShutdownSignalException;
 
+import distribully.model.Card;
+import distribully.model.CardSuit;
 import distribully.model.DistribullyModel;
 import distribully.model.Player;
 
@@ -120,14 +122,15 @@ public class GameConsumerThread extends Thread{
 					player.setReadyToPlay(true);
 					if(model.getGamePlayerList().getPlayers().stream().allMatch(p->p.isReadyToPlay())){
 						model.setGAME_STATE(GameState.IN_GAME);
+						model.setAndBroadCastTopOfStack();
 					}
 					break;
 				case "PlayCard":
 					JsonObject jeCard = parser.parse(new String(body)).getAsJsonObject();
 					int cardId = Integer.parseInt(jeCard.get("cardId").getAsString());
-					int cardSuite = Integer.parseInt(jeCard.get("cardSuite").getAsString());
+					int cardSuit = Integer.parseInt(jeCard.get("cardSuit").getAsString());
 					String playerName = jeCard.get("playerName").getAsString();
-					System.out.println("Card "+ cardId + " from suite " + cardSuite +" played on stack of "+ playerName); //TODO cardSuite parser
+					System.out.println("Card "+ cardId + " from suite " + cardSuit +" played on stack of "+ playerName); //TODO cardSuite parser
 					//TODO: View
 					break;
 				case "NextTurn":
@@ -137,21 +140,22 @@ public class GameConsumerThread extends Thread{
 					System.out.println("Next player is "+ playerNameNext +" by action " + action);
 					//TODO: View
 					break;
-				case "ChooseSuite":
-					JsonObject jeSuite = parser.parse(new String(body)).getAsJsonObject();
-					int suite = Integer.parseInt(jeSuite.get("cardSuite").getAsString());
-					String playerNext = jeSuite.get("playerNextName").getAsString();
-					String playerCurrent = jeSuite.get("playerName").getAsString();
-					System.out.println("Next player is "+ playerNext +", new suite on "+ playerCurrent +" is " + suite); //suite parse
+				case "ChooseSuit":
+					JsonObject jeSuit = parser.parse(new String(body)).getAsJsonObject();
+					int suit = Integer.parseInt(jeSuit.get("cardSuit").getAsString());
+					String playerNext = jeSuit.get("playerNextName").getAsString();
+					String playerCurrent = jeSuit.get("playerName").getAsString();
+					System.out.println("Next player is "+ playerNext +", new suite on "+ playerCurrent +" is " + suit); //suite parse
 					//TODO: View
 					break;
 				case "TopOfStack":
 					JsonObject jeStack = parser.parse(new String(body)).getAsJsonObject();
 					int stackCardId = Integer.parseInt(jeStack.get("cardId").getAsString());
-					int stackSuite = Integer.parseInt(jeStack.get("cardSuite").getAsString());
+					int stackSuit = Integer.parseInt(jeStack.get("cardSuit").getAsString());
 					String playerStackName = jeStack.get("playerName").getAsString();
-					System.out.println(playerStackName +" has top of stack " + stackSuite + " " + stackCardId); //suite parse
-					//TODO: View
+					System.out.println(playerStackName +" has top of stack " + stackSuit + " " + stackCardId);
+					//TODO: view
+					model.putTopOfStack(model.getGamePlayerList().getPlayerByNickname(playerStackName), new Card(stackCardId, CardSuit.values()[stackSuit]));
 					break;
 				case "Win":
 					JsonObject jeWin = parser.parse(new String(body)).getAsJsonObject();
