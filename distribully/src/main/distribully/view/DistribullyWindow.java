@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import static javax.swing.ScrollPaneConstants.*;
 
 import distribully.controller.ClientListUpdateHandler;
 import distribully.controller.CloseWindowHandler;
@@ -53,10 +54,13 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		this.setJMenuBar(new DistribullyMenu(this));
 		new ClientListUpdateHandler(this.model);
 		
-		playerOverviewPanel = new PlayerOverviewPanel(model,this.getSize());
-		selectRulesPanel = new SelectRulesPanel(this,this.getSize());
-		gamePanel = new HandPanel(model,this.getSize());
-		waitingForGameStartPanel = new WaitingForGameStartPanel(model,this.getContentPane().getSize());
+		Dimension contentSize = this.getContentPane().getSize();
+		contentSize.width -= 25;
+		contentSize.height -= 100;
+		playerOverviewPanel = new PlayerOverviewPanel(model,contentSize);
+		selectRulesPanel = new SelectRulesPanel(this,contentSize);
+		gamePanel = new HandPanel(model,contentSize);
+		waitingForGameStartPanel = new WaitingForGameStartPanel(model,contentSize);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
 		this.addWindowListener(new CloseWindowHandler(model));
@@ -105,6 +109,9 @@ public class DistribullyWindow extends JFrame implements IObserver {
 			this.remove(scrollPane);
 			determinePanelToShow();	
 			scrollPane = new JScrollPane(mainPanel);
+			if (scrollPane.equals(gamePanel)) {
+				scrollPane.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_NEVER);
+			}
 			this.add(scrollPane);
 			System.out.println("repaint of whole window");
 			this.revalidate();

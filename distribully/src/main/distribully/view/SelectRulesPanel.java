@@ -91,8 +91,8 @@ public class SelectRulesPanel extends DistribullyPanel implements IObserver {
 		String cardName = new Card(cardNumber, CardSuit.HEARTS).getCardName();
 		
 		DistribullyTextLabel cardNameLabel = new DistribullyTextLabel(cardName + ":");
-		cardNameLabel.setMinimumSize(new Dimension(400, 25));
-		cardNameLabel.setPreferredSize(new Dimension(400, 25));
+		cardNameLabel.setMinimumSize(new Dimension(400, 20));
+		cardNameLabel.setPreferredSize(new Dimension(400, 20));
 		rulePanel.add(cardNameLabel);
 		
 		//check if card has an associated rule, add it to the dropdown
@@ -102,7 +102,7 @@ public class SelectRulesPanel extends DistribullyPanel implements IObserver {
 		
 		Rule[] availableRuleArray = new Rule[availableRules.size()];
 		JComboBox<Rule> ruleDropdown = new JComboBox<Rule>(availableRules.toArray(availableRuleArray));
-		
+		ruleDropdown.setPreferredSize(new Dimension(200,20));
 		//check if card has an associated rule, select it in the dropdown
 		if (model.getChoosenRules().containsKey(cardNumber)) {
 			ruleDropdown.setSelectedItem((model.getChoosenRules().get(cardNumber)));

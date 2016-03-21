@@ -27,10 +27,37 @@ public class GeneralServerController {
 	
 	public GeneralServerController(){
 		this.init();
+		
 	}
 	
 	private void init() {
 		players = new ArrayList<Player>();
+		/*players.add(new Player("scroll", "ipje", 80));
+		players.add(new Player("scroll1", "ipje", 80));
+		players.add(new Player("scroll2", "ipje", 80));
+		players.add(new Player("scroll3", "ipje", 80));
+		players.add(new Player("scroll4", "ipje", 80));
+		players.add(new Player("scroll5", "ipje", 80));
+		players.add(new Player("scroll6", "ipje", 80));
+		players.add(new Player("scroll7", "ipje", 80));
+		players.add(new Player("scroll8", "ipje", 80));
+		players.add(new Player("scroll9", "ipje", 80));
+		players.add(new Player("scroll0", "ipje", 80));
+		players.add(new Player("scroll11", "ipje", 80));
+		players.add(new Player("scroll22", "ipje", 80));
+		players.add(new Player("scroll33", "ipje", 80));
+		players.add(new Player("scroll44", "ipje", 80));
+		players.add(new Player("scroll55", "ipje", 80));
+		players.add(new Player("scroll66", "ipje", 80));
+		players.add(new Player("scroll77", "ipje", 80));
+		players.add(new Player("scroll88", "ipje", 80));
+		players.add(new Player("scroll99", "ipje", 80));
+		players.add(new Player("scroll00", "ipje", 80));
+		players.add(new Player("scroll12", "ipje", 80));
+		players.add(new Player("scroll13", "ipje", 80));
+		players.add(new Player("scroll14", "ipje", 80));
+		players.add(new Player("scroll15", "ipje", 80));
+		players.add(new Player("scroll16", "ipje", 80));*/
 		gson = new Gson();
 		parser = new JsonParser();
 		get("/players", "application/json" , (request, response) -> getUserList(request, response)); //testing feature
