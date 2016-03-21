@@ -155,7 +155,7 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 	}
 	
 	@Override
-	public void update(IObservable observable) {
+	public void update(IObservable observable, Object changedObject) {
 		//System.out.println("player overview: received update of client list");
 		this.render();
 	}

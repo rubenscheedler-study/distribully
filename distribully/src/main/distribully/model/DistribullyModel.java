@@ -10,10 +10,10 @@ import distribully.model.rules.SkipTurnRule;
 
 public class DistribullyModel implements IObservable {
 	private ClientList onlinePlayerList;//contains the current list of online players copied from the server
-	
+
 	private ClientList gamePlayerList;//contains the players that are part of the game that this user is a part of.
-	
-	private String serverAddress = "http://82.72.30.166";
+
+	private String serverAddress = "http://82.73.233.237";
 	private int serverPort = 4567;
 	private String myIP;
 	private String currentHostName;
@@ -26,10 +26,10 @@ public class DistribullyModel implements IObservable {
 	private Stack stack;
 	private HashMap<Player,Card> topOfStacks;
 	private ArrayList<Card> hand;
-	
+
 	private ArrayList<Rule> allRules;
 	private HashMap<Integer,Rule> choosenRules;
-	
+
 	public DistribullyModel() {
 		this.stack = new Stack();
 		this.onlinePlayerList = new ClientList(serverAddress,serverPort);
@@ -44,9 +44,9 @@ public class DistribullyModel implements IObservable {
 		this.hand.add(new Card(5,CardSuit.CLUBS));
 		this.hand.add(new Card(12,CardSuit.HEARTS));
 	}
-	
-	
-	
+
+
+
 	private void fillAllRules() {
 		allRules.add(new DrawTwoRule(this.stack));
 		allRules.add(new SkipTurnRule(this.stack));
@@ -55,7 +55,7 @@ public class DistribullyModel implements IObservable {
 
 
 	private GameState GAME_STATE;
-	
+
 	/**
 	 * finds the player object corresponding with the user.
 	 * @return
@@ -63,7 +63,7 @@ public class DistribullyModel implements IObservable {
 	public Player getMe() {
 		return this.onlinePlayerList.getPlayerByNickname(nickname);
 	}
-	
+
 	public String getMyIP() {
 		return myIP;
 	}
@@ -85,8 +85,10 @@ public class DistribullyModel implements IObservable {
 	}
 
 	public void setGAME_STATE(GameState gAME_STATE) {
-		GAME_STATE = gAME_STATE;
-		this.notifyObservers();
+		if (GAME_STATE != gAME_STATE) {
+			GAME_STATE = gAME_STATE;
+			this.notifyObservers(GAME_STATE);
+		}
 	}
 
 	public ClientList getGamePlayerList() {
@@ -120,14 +122,13 @@ public class DistribullyModel implements IObservable {
 	public void setServerPort(int serverPort) {
 		this.serverPort = serverPort;
 	}
-	
+
 	public String getNickname() {
 		return nickname;
 	}
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
-		this.notifyObservers();
 	}
 
 	@Override
@@ -141,11 +142,11 @@ public class DistribullyModel implements IObservable {
 	}
 
 	@Override
-	public void notifyObservers() {
+	public void notifyObservers(Object changedObject) {
 		//System.out.println("notifying model observers (count=" + this.observers.size() + ")");
-		this.observers.forEach(observer -> observer.update(this));
+		this.observers.forEach(observer -> observer.update(this, changedObject));
 	}
-	
+
 	public HashMap<String, String> getInviteStates() {
 		return inviteStates;
 	}
@@ -153,14 +154,17 @@ public class DistribullyModel implements IObservable {
 	public void setInviteStates(HashMap<String, String> inviteStates) {
 		this.inviteStates = inviteStates;
 	}
-	
+
 	public void putInviteState(String key, String inviteState) {
-		this.inviteStates.put(key, inviteState);
-		this.notifyObservers();
+		if (!this.inviteStates.containsKey(key) || !this.inviteStates.get(key).equals(inviteState)) {
+			this.inviteStates.put(key, inviteState);
+			this.notifyObservers(this.inviteStates);
+		}
 	}
-	
+
 	/**
 	 * checks for all entries in the hashmap if the server still contains it in the game players. Drops it, if not.
+	 * TODO add NEW players as well?
 	 * @param gamePlayers
 	 */
 	public void updateInviteStatesByListState(ClientList gamePlayers) {
@@ -171,9 +175,13 @@ public class DistribullyModel implements IObservable {
 				toRemove.add(name);
 			}
 		}
-		//remove the them from the invitation states
+		//remove them from the invitation states
 		toRemove.forEach(name -> this.inviteStates.remove(name));
-		this.notifyObservers();
+		
+		
+		if (!toRemove.isEmpty()) {
+			this.notifyObservers(this.inviteStates);
+		}
 	}
 
 	public String getCurrentHostName() {
@@ -185,13 +193,13 @@ public class DistribullyModel implements IObservable {
 	}
 
 	public void setCardRule(int cardNumber, Rule rule) {
-		this.getChoosenRules().put(cardNumber, rule);
-		this.notifyObservers();
+		this.choosenRules.put(cardNumber, rule);
+		this.notifyObservers(this.choosenRules);
 	}
 
 	public void removeCardRule(int cardNumber) {
-		this.getChoosenRules().remove(cardNumber);
-		this.notifyObservers();
+		this.choosenRules.remove(cardNumber);
+		this.notifyObservers(this.choosenRules);
 	}
 
 	public ArrayList<Rule> getAllRules() {

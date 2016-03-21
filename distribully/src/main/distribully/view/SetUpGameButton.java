@@ -25,7 +25,7 @@ public class SetUpGameButton extends JMenuItem implements IObserver{
 	}
 
 	@Override
-	public void update(IObservable observable) {
+	public void update(IObservable observable, Object changedObject) {
 		this.setEnabled(container.getModel().getGAME_STATE() == GameState.NOT_PLAYING);
 	}
 
