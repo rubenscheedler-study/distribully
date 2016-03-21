@@ -19,7 +19,7 @@ public class LeaveLobbyHandler implements ActionListener  {
 		//set available for invites
 		model.getMe().setAvailable(true);
 		//kill the lobby thread
-		//DistribullyController.lobbyThread.setInLobby(false);
+		DistribullyController.lobbyThread.setInLobby(false);
 		//change game state
 		DistribullyController.waitForInviteThread = new WaitForInviteThread(model);
 		//set game state

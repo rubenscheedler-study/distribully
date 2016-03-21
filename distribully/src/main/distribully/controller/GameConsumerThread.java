@@ -70,7 +70,10 @@ public class GameConsumerThread extends Thread{
 			Consumer consumer = new MessageConsumer(channel);
 			channel.basicConsume(queueName, true, consumer);
 			System.out.println("host connected: " + playerName);
-		} catch (IOException | TimeoutException e) {
+		} catch (TimeoutException e) {
+			//Player has lost internet availability or rabbitMQ is not running -> remove from playerList
+			model.getGamePlayerList().getPlayers().remove(player);
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -102,7 +105,12 @@ public class GameConsumerThread extends Thread{
 					model.getGamePlayerList().getPlayers().removeIf(player -> player.getName().equals(playerNameLeave));
 					System.out.println(playerNameLeave + " left");
 					//TODO: view?
-					//TODO: if length <= 1 en zelf er wel in, back to main screen
+					if(model.getGamePlayerList().getPlayers().size() <= 1){
+						if(model.getGamePlayerList().getPlayers().stream().anyMatch(p -> p.getName() == model.getNickname())){
+							//YOU WON //TODO: Dit iets automatischer maken, niet alleen bij leave, mss bij elke refresh/actie?
+						}
+						//Redirect main screen, reboot al die threads enzo
+					}
 					break;
 				case "Rules":
 					JsonElement jeRule = parser.parse(new String(body));
@@ -148,8 +156,11 @@ public class GameConsumerThread extends Thread{
 				case "Win":
 					JsonObject jeWin = parser.parse(new String(body)).getAsJsonObject();
 					String playerWinner = jeWin.get("playerWinner").getAsString();
-					System.out.println(playerWinner + " has won."); //suite parse
-					//TODO: View
+					System.out.println(playerWinner + " has won.");
+					//TODO: popup
+					//TODO: Reset Hashmap of responses
+					//TODO: Back to main (threads, gamestate)
+					
 					break;
 				}
 	    }
