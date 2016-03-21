@@ -230,7 +230,7 @@ public class GameConsumerThread extends Thread{
 				TurnState updatedState = gson.fromJson(changedState, TurnState.class);
 				System.out.println("new suite on "+ stackPlayer +" is " + suit); //suite parse
 				model.getTopOfStacks().get(model.getGamePlayerList().getPlayerByNickname(stackPlayer)).setSuit(CardSuit.values()[suit]);
-				model.notifyObservers(model);
+				model.setTurnState(updatedState);
 				break;
 			case "InitStack":
 				JsonObject joStack = parser.parse(new String(body)).getAsJsonObject();
