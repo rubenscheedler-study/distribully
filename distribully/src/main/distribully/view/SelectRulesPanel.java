@@ -88,7 +88,7 @@ public class SelectRulesPanel extends DistribullyPanel implements IObserver {
 		DistribullyPanel rulePanel = new DistribullyPanel();
 		rulePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		
-		String cardName = new Card(cardNumber, CardSuit.HEARTS).getCardName();
+		String cardName = new Card(cardNumber, CardSuit.HEARTS).getCardName(); //Any suit works for this, we only need the name associated with the number
 		
 		DistribullyTextLabel cardNameLabel = new DistribullyTextLabel(cardName + ":");
 		cardNameLabel.setMinimumSize(new Dimension(400, 20));

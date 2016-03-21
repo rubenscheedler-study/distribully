@@ -1,14 +1,16 @@
 package distribully.model;
 
 public class TurnState {
-	String nextPlayer;
-	int toPick;
-	int direction;
+	private String nextPlayer;
+	private int toPick;
+	private int direction;
+	String action;
 	
-	public TurnState(String nextPlayer, int toPick, int direction){
+	public TurnState(String nextPlayer, int toPick, int direction, String action){
 		this.nextPlayer = nextPlayer;
 		this.toPick = toPick;
 		this.direction = direction;
+		this.action = action;
 	}
 
 	public String getNextPlayer() {
@@ -33,6 +35,14 @@ public class TurnState {
 
 	public void setDirection(int direction) {
 		this.direction = direction;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
 	}
 	
 }

@@ -131,47 +131,56 @@ public class GameConsumerThread extends Thread{
 					
 					model.setAndBroadCastTopOfStack();
 					model.generateNewHand();
-					//only one player may create the first turn object. We define this as the alphabetically first player
+					//Only one player may create the first turn object. We define this as the alphabetically first player
 					ArrayList<Player> toSort = new ArrayList<Player>();
 					toSort.addAll(model.getGamePlayerList().getPlayers());
 					Collections.sort(toSort, (p1, p2) -> p1.getName().compareTo(p2.getName()));
-					if (model.getNickname().equals(toSort.get(0).getName())) { //Someone has to do it
+					if (model.getNickname().equals(toSort.get(0).getName())) {
 						model.generateAndSendFirstTurnObject();
 					}
 					model.setGAME_STATE(GameState.IN_GAME);
 				}
 				break;
 			case "PlayCard":
-				JsonObject jeCard = parser.parse(new String(body)).getAsJsonObject();
-				int cardId = Integer.parseInt(jeCard.get("cardId").getAsString());
-				int cardSuit = Integer.parseInt(jeCard.get("cardSuit").getAsString());
-				String playerName = jeCard.get("playerName").getAsString();
-				System.out.println("Card "+ cardId + " from suite " + cardSuit +" played on stack of "+ playerName); //TODO cardSuite parser
+				JsonObject joCard = parser.parse(new String(body)).getAsJsonObject();
+				int cardId = Integer.parseInt(joCard.get("cardId").getAsString());
+				String stackOwner = joCard.get("stackOwner").getAsString();
+				System.out.println("Card "+ cardId +" played");
+				if(stackOwner.equals(model.getNickname())){
+					model.executeCard(cardId);
+				}
+				//TODO: reduce cardCount of currentplayer, staat in turnstate
 				//TODO: View
 				break;
 			case "NextTurn":
-				JsonObject jeTurn = parser.parse(new String(body)).getAsJsonObject();
-				String action = jeTurn.get("action").getAsString();
-				JsonObject turnState = jeTurn.get("turnState").getAsJsonObject();
+				JsonObject joTurn = parser.parse(new String(body)).getAsJsonObject();
+				String action = joTurn.get("action").getAsString();
+				JsonObject turnState = joTurn.get("turnState").getAsJsonObject();
 				TurnState newState = gson.fromJson(turnState, TurnState.class);
 				model.setTurnState(newState);
 				System.out.println("Next player is "+ newState.getNextPlayer() +" by action " + action);
 				//TODO: action handlen
 				//TODO: View
-				break;
+				break;				
+			case "Draw":
+				JsonObject joDraw= parser.parse(new String(body)).getAsJsonObject();
+				int amount = Integer.parseInt(joDraw.get("amount").getAsString());
+				System.out.println("Drawn " + amount + " cards");
+				//TODO: view
+				//TODO: Update counts, player is in turnstate
+				
 			case "ChooseSuit":
-				JsonObject jeSuit = parser.parse(new String(body)).getAsJsonObject();
-				int suit = Integer.parseInt(jeSuit.get("cardSuit").getAsString());
-				String playerNext = jeSuit.get("playerNextName").getAsString();
-				String playerCurrent = jeSuit.get("playerName").getAsString();
-				System.out.println("Next player is "+ playerNext +", new suite on "+ playerCurrent +" is " + suit); //suite parse
+				JsonObject joSuit = parser.parse(new String(body)).getAsJsonObject();
+				int suit = Integer.parseInt(joSuit.get("cardSuit").getAsString());
+				String stackPlayer = joSuit.get("stackPlayer").getAsString();
+				System.out.println("new suite on "+ stackPlayer +" is " + suit); //suite parse
 				//TODO: View
 				break;
 			case "InitStack":
-				JsonObject jeStack = parser.parse(new String(body)).getAsJsonObject();
-				int stackCardId = Integer.parseInt(jeStack.get("cardId").getAsString());
-				int stackSuit = Integer.parseInt(jeStack.get("cardSuit").getAsString());
-				String playerStackName = jeStack.get("playerName").getAsString();
+				JsonObject joStack = parser.parse(new String(body)).getAsJsonObject();
+				int stackCardId = Integer.parseInt(joStack.get("cardId").getAsString());
+				int stackSuit = Integer.parseInt(joStack.get("cardSuit").getAsString());
+				String playerStackName = joStack.get("playerName").getAsString();
 				System.out.println(playerStackName +" has top of stack " + stackSuit + " " + stackCardId);
 				//TODO: view
 				model.putTopOfStack(model.getGamePlayerList().getPlayerByNickname(playerStackName), new Card(stackCardId, CardSuit.values()[stackSuit]));
