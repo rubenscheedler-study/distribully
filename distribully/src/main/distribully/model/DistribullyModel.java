@@ -421,7 +421,7 @@ public class DistribullyModel implements IObservable {
 	}
 
 	public boolean isMyTurn() {
-		return this.getNickname().equals(this.getTurnState().getNextPlayer());
+		return this.getTurnState() != null && this.getNickname().equals(this.getTurnState().getNextPlayer());
 	}
 
 

@@ -176,7 +176,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 							|| selectedStackCard.getCard().getSuit() == selectedCard.getCard().getSuit()) {
 							
 							//remove card from hand
-							model.getHand().remove(selectedCard);//TODO notify?
+							model.getHand().remove(selectedCard.getCard());//TODO notify?
 							
 							ConnectionFactory factory = new ConnectionFactory();
 							factory.setHost(model.getMe().getIp());
