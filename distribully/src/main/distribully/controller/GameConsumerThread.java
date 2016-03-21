@@ -163,7 +163,7 @@ public class GameConsumerThread extends Thread{
 				
 				System.out.println("Next player is "+ newState.getNextPlayer() +" by action " + newState.getAction());
 				if(model.isMyTurn()){
-					if (newState.getAction().contains("choose Suit")){
+					if (newState.getAction().contains("choose suit")){
 						String suitCandidate = "";
 						int cardSuitIndex = -1;
 						while (suitCandidate.equals("")) {

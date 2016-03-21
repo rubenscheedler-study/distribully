@@ -321,7 +321,7 @@ public class DistribullyModel implements IObservable {
 		String nextPlayer = this.gamePlayerList.getPlayers().get(i).getName();
 		int direction = 1;
 		int toPick = 0;
-		TurnState turnState = new TurnState(nextPlayer,toPick,direction, "none");
+		TurnState turnState = new TurnState(nextPlayer,toPick,direction, "");
 
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(this.getMe().getIp());
@@ -362,7 +362,7 @@ public class DistribullyModel implements IObservable {
 		}else{
 			direction = this.getTurnState().getDirection();
 			toPick = this.getTurnState().getToPick();
-			turnState = new TurnState(getNextPlayer(),toPick,direction, "none");
+			turnState = new TurnState(getNextPlayer(),toPick,direction, "");
 
 		}
 		if(turnState.getToPick() == this.getTurnState().getToPick() && turnState.getToPick() > 0){
