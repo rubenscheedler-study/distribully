@@ -285,8 +285,9 @@ public class DistribullyModel implements IObservable {
 			JsonObject message = new JsonObject();
 			message.addProperty("cardId", card.getNumber());
 			message.addProperty("cardSuit", card.getSuit().getV());
+			message.addProperty("playerName", this.getNickname());
 
-			channel.basicPublish(this.getNickname(), "TopOfStack", null, message.toString().getBytes());
+			channel.basicPublish(this.getNickname(), "InitStack", null, message.toString().getBytes());
 			System.out.println(" [x] Sent '" + message + "'");
 
 			channel.close();

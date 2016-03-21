@@ -148,7 +148,7 @@ public class GameConsumerThread extends Thread{
 					System.out.println("Next player is "+ playerNext +", new suite on "+ playerCurrent +" is " + suit); //suite parse
 					//TODO: View
 					break;
-				case "TopOfStack":
+				case "InitStack":
 					JsonObject jeStack = parser.parse(new String(body)).getAsJsonObject();
 					int stackCardId = Integer.parseInt(jeStack.get("cardId").getAsString());
 					int stackSuit = Integer.parseInt(jeStack.get("cardSuit").getAsString());
