@@ -1,5 +1,6 @@
 package distribully.view;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -37,14 +38,19 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		//size of a rendered card:
 		int imageWidth = this.size.width/model.getHand().size();
 		int imageHeight = imageWidth * (726/500);//regular size of image
-		
+
 		//image is too high => resize to maximum allowed height
-		if (imageHeight > (this.size.height-30)) {
-			double shrinkFactor = imageHeight/(this.size.height-30);
-			imageWidth *= shrinkFactor;
-			imageHeight *= shrinkFactor;
+		if (imageHeight > (this.getSize().height*0.8)) {
+			double shrinkFactor = imageHeight/(this.getSize().height*0.8);
+			imageWidth /= shrinkFactor;
+			imageHeight /= shrinkFactor;
 		}
 		int i = 0;
+		
+		//1) draw the header "Your Hand"
+		g.setFont(this.headerFont);
+		g.setColor(new Color(230,230,230));
+		g.drawString("Your Hand", 40, 25);
 		for (Card c : model.getHand()) {
 			String imageName = "src/main/distribully/cards/" + c.getImage();
 			//System.out.println(System.getProperty("user.dir") + "|||" + imageName);
@@ -58,7 +64,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 			}
 			
 			
-			g.drawImage(img,imageWidth*i,0,imageWidth,imageHeight,null);
+			g.drawImage(img,40+(imageWidth/6)*i,40,imageWidth,imageHeight,null);
 			i++;
 		}
 	}

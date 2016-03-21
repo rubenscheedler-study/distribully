@@ -80,14 +80,14 @@ public class GameConsumerThread extends Thread{
 								DistribullyController.lobbyThread.setInLobby(false);
 							}
 							new ClientListUpdateHandler(model);
-							model.getGamePlayerList().getPlayers().forEach(player -> initPlayerExchange(player));
+							model.getGamePlayerList().getPlayers().forEach(p -> initPlayerExchange(p));
 							model.setGAME_STATE(GameState.SETTING_RULES);
 							
 							break;
 						case "Leave":
 							JsonElement jeLeave = parser.parse(new String(body));
 							String playerNameLeave = jeLeave.getAsJsonObject().get("playerName").toString();
-							model.getGamePlayerList().getPlayers().removeIf(player -> player.getName().equals(playerNameLeave));
+							model.getGamePlayerList().getPlayers().removeIf(p -> p.getName().equals(playerNameLeave));
 							System.out.println(playerNameLeave + " left");
 							break;
 						case "Rules":
