@@ -39,7 +39,6 @@ public class CardComponent extends DrawableComponent {
 		}
 		
 		if (selected) {
-			System.out.println("clicked in com");
 			g.setColor(Color.GREEN);
 			g.fillRoundRect(posX-5, posY-5, width+10, height+10, 10, 10);
 			g.setColor(Color.WHITE);
