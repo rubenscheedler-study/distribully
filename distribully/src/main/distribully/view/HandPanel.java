@@ -54,7 +54,6 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 	public void calculateAndSetSize() {
 		//width: 
 		int panelWidth = LEFT_OFFSET + ((model.getHand().size()-1)*CARD_VISIBLE_WIDTH) + IMAGE_WIDTH + RIGHT_MARGIN;
-		System.out.println(panelWidth);
 		this.setMinimumSize(new Dimension(panelWidth, this.size.height));
 		this.setPreferredSize(new Dimension(panelWidth, this.size.height));
 		this.setMaximumSize(new Dimension(panelWidth, this.size.height));
@@ -104,7 +103,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		boolean refreshStackComponents = this.stackCards.size() != model.getOnlinePlayerList().getPlayers().size();
 		int j = 0;
 		//4) draw top of stacks
-		for (Player player : model.getOnlinePlayerList().getPlayers()) {
+		for (Player player : model.getGamePlayerList().getPlayers()) {
 			g.drawString(player.getName(),LEFT_OFFSET+j*(IMAGE_WIDTH+15), TOP_OFFSET+30+IMAGE_HEIGHT+30);
 			CardComponent cardComponent;
 			if (refreshStackComponents) {

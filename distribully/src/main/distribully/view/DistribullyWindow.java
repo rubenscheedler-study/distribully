@@ -71,7 +71,6 @@ public class DistribullyWindow extends JFrame implements IObserver {
 
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				System.out.println("scroll event");
 				mainPanel.revalidate();
 				mainPanel.repaint();
 			}
