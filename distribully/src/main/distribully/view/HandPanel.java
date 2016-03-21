@@ -86,6 +86,13 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 			playCardComponent.draw(g);
 			drawCardsComponent.draw(g);
 		}
+		
+		//render action
+		if (model.getTurnState() != null) {
+			String actionString = model.getTurnState().getNextPlayer() + " played " + model.getTurnState().getAction();
+			g.drawString(actionString,LEFT_OFFSET+600,TOP_OFFSET);
+		}
+		
 		//2) draw the hand of the player
 
 		int i = 0;
