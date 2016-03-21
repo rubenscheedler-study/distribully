@@ -52,44 +52,6 @@ public class DistribullyModel implements IObservable {
 		this.hand.add(new Card(12,CardSuit.HEARTS));
 		this.hand.add(new Card(12,CardSuit.HEARTS));
 		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
-		this.hand.add(new Card(12,CardSuit.HEARTS));
 		
 	}
 
