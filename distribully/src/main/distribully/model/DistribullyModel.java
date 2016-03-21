@@ -363,16 +363,37 @@ public class DistribullyModel implements IObservable {
 		}else{
 			direction = this.getTurnState().getDirection();
 			toPick = this.getTurnState().getToPick();
-			if(this.getTurnState().getToPick() > 0){
-				turnState = new TurnState(this.getTurnState().getNextPlayer(),toPick,direction, "mustDraw");
-			} else{
-				int numPlayers = this.gamePlayerList.getPlayers().size();
-				int index = this.gamePlayerList.getPlayers().indexOf(gamePlayerList.getPlayerByNickname(this.getTurnState().getNextPlayer()));
-				nextPlayer = this.gamePlayerList.getPlayers().get((index + numPlayers + direction) % numPlayers ).getName(); //Ensure we stay in the range
-				turnState = new TurnState(nextPlayer,toPick,direction, "none");
+
+			int numPlayers = this.gamePlayerList.getPlayers().size();
+			int index = this.gamePlayerList.getPlayers().indexOf(gamePlayerList.getPlayerByNickname(this.getTurnState().getNextPlayer()));
+			nextPlayer = this.gamePlayerList.getPlayers().get((index + numPlayers + direction) % numPlayers ).getName(); //Ensure we stay in the range
+			turnState = new TurnState(nextPlayer,toPick,direction, "none");
+
+		}
+		if(turnState.getToPick() == this.getTurnState().getToPick()){
+			ConnectionFactory factory = new ConnectionFactory();
+			factory.setHost(this.getMe().getIp());
+			Connection connection;
+			try {
+				connection = factory.newConnection();
+
+				Channel channel = connection.createChannel();
+
+				channel.exchangeDeclare(this.getNickname(), "fanout");
+				JsonObject message = new JsonObject();
+				message.addProperty("drawAmount",  this.getTurnState().getToPick());
+
+				channel.basicPublish(this.getNickname(), "MustDraw", null, message.toString().getBytes());
+				System.out.println(" [x] Sent '" + message + "'");
+
+				channel.close();
+				connection.close();
+			} catch (IOException | TimeoutException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 		}
-		
+
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(this.getMe().getIp());
 		Connection connection;
@@ -398,8 +419,33 @@ public class DistribullyModel implements IObservable {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	public boolean isMyTurn() {
 		return this.getNickname().equals(this.getTurnState().getNextPlayer());
+	}
+
+
+
+	public void draw(int drawAmount) {
+		ConnectionFactory factory = new ConnectionFactory();
+		factory.setHost(this.getMe().getIp());
+		Connection connection;
+		try {
+			connection = factory.newConnection();
+			Channel channel = connection.createChannel();
+
+			channel.exchangeDeclare(this.getNickname(), "fanout");
+			JsonObject message = new JsonObject();
+			message.addProperty("amount", drawAmount);
+
+			channel.basicPublish(this.getNickname(), "HaveDrawn", null, message.toString().getBytes());
+			System.out.println(" [x] Sent '" + message + "'");
+
+			channel.close();
+			connection.close();
+		} catch (IOException | TimeoutException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 }

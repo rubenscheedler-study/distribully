@@ -97,7 +97,7 @@ public class GameConsumerThread extends Thread{
 		@Override
 		public void handleDelivery(String consumerTag, Envelope envelope,
 				AMQP.BasicProperties properties, byte[] body) throws IOException {
-			switch(envelope.getRoutingKey()){
+			switch(envelope.getRoutingKey()){ //Scope is not local within cases, means multiple slightly different variable names
 			case "Start":
 				System.out.println("Game is starting!");
 				if(DistribullyController.lobbyThread != null){
@@ -154,15 +154,25 @@ public class GameConsumerThread extends Thread{
 				break;
 			case "NextTurn":
 				JsonObject joTurn = parser.parse(new String(body)).getAsJsonObject();
-				String action = joTurn.get("action").getAsString();
 				JsonObject turnState = joTurn.get("turnState").getAsJsonObject();
 				TurnState newState = gson.fromJson(turnState, TurnState.class);
 				model.setTurnState(newState);
-				System.out.println("Next player is "+ newState.getNextPlayer() +" by action " + action);
-				//TODO: action handlen
-				//TODO: View
-				break;				
-			case "Draw":
+				System.out.println("Next player is "+ newState.getNextPlayer() +" by action " + newState.getAction());
+				if(model.isMyTurn()){
+					if (newState.getAction().equals("chooseSuit")){
+						//PopUp
+					}
+				}
+				//TODO: View updaten met de action
+				break;	
+			case "MustDraw":
+				JsonObject joMustDraw= parser.parse(new String(body)).getAsJsonObject();
+				int drawAmount = Integer.parseInt(joMustDraw.get("drawAmount").getAsString());
+				System.out.println("Must draw " + drawAmount + " cards");
+				if(model.isMyTurn()){
+					model.draw(drawAmount);
+				}				
+			case "HaveDrawn":
 				JsonObject joDraw= parser.parse(new String(body)).getAsJsonObject();
 				int amount = Integer.parseInt(joDraw.get("amount").getAsString());
 				System.out.println("Drawn " + amount + " cards");
@@ -174,6 +184,7 @@ public class GameConsumerThread extends Thread{
 				int suit = Integer.parseInt(joSuit.get("cardSuit").getAsString());
 				String stackPlayer = joSuit.get("stackPlayer").getAsString();
 				System.out.println("new suite on "+ stackPlayer +" is " + suit); //suite parse
+				model.getTopOfStacks().get(stackPlayer).setSuit(CardSuit.values()[suit]);
 				//TODO: View
 				break;
 			case "InitStack":
