@@ -44,6 +44,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		IMAGE_HEIGHT = (int)((size.height/2)*0.8);
 		IMAGE_WIDTH = (int) (500.0 * ((double)IMAGE_HEIGHT/726.0));
 		CARD_VISIBLE_WIDTH = (int)((double)IMAGE_WIDTH/5.75);
+		this.model.addObserver(this);
 		calculateAndSetSize();
 		handCards = new ArrayList<CardComponent>();
 		stackCards = new ArrayList<CardComponent>();
@@ -107,8 +108,11 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 			g.drawString(player.getName(),LEFT_OFFSET+j*(IMAGE_WIDTH+15), TOP_OFFSET+30+IMAGE_HEIGHT+30);
 			CardComponent cardComponent;
 			if (refreshStackComponents) {
-
-				cardComponent = new CardComponent(LEFT_OFFSET+j*(IMAGE_WIDTH+15),TOP_OFFSET+30+IMAGE_HEIGHT+30,IMAGE_WIDTH,IMAGE_HEIGHT,Card.getARandomCard(),IMAGE_WIDTH);
+				Card topCard = null;
+				if (model.getTopOfStacks().containsKey(player)) {
+					topCard = model.getTopOfStacks().get(player);
+				}
+				cardComponent = new CardComponent(LEFT_OFFSET+j*(IMAGE_WIDTH+15),TOP_OFFSET+30+IMAGE_HEIGHT+40,IMAGE_WIDTH,IMAGE_HEIGHT,topCard,IMAGE_WIDTH);
 				this.stackCards.add(cardComponent);
 			} else {
 				cardComponent = this.stackCards.get(j);

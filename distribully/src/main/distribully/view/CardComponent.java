@@ -30,7 +30,11 @@ public class CardComponent {
 	}
 	
 	public void draw(Graphics g, boolean selected) {
-		String imageName = card.getImage();
+		String imageName = "src/main/distribully/cards/emptycard.png";
+		if (card != null) {
+			imageName = card.getImage();
+		}
+		
 		//System.out.println(System.getProperty("user.dir") + "|||" + imageName);
 		File image = new File(imageName);
 		BufferedImage img = null;
