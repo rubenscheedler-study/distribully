@@ -113,7 +113,7 @@ public class GameConsumerThread extends Thread{
 				model.getGamePlayerList().getPlayers().removeIf(player -> player.getName().equals(playerNameLeave));
 				System.out.println(playerNameLeave + " left");
 				
-				//TODO: view?
+				//TODO: view
 				if(model.getGamePlayerList().getPlayers().size() <= 1){
 					if(model.getGamePlayerList().getPlayers().stream().anyMatch(p -> p.getName() == model.getNickname())){
 						//YOU WON //TODO: Dit iets automatischer maken, niet alleen bij leave, mss bij elke refresh/actie?
@@ -161,11 +161,10 @@ public class GameConsumerThread extends Thread{
 				model.setTurnState(newState);
 				System.out.println("Next player is "+ newState.getNextPlayer() +" by action " + newState.getAction());
 				if(model.isMyTurn()){
-					if (newState.getAction().equals("chooseSuit")){
+					if (newState.getAction().contains("choose Suit")){
 						//PopUp
 					}
 				}
-				//TODO: View updaten met de action
 				break;
 				
 			case "MustDraw":
