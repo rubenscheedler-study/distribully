@@ -64,7 +64,7 @@ public class GameConsumerThread extends Thread{
 			Connection connection = factory.newConnection();
 			Channel channel = connection.createChannel();
 			if(model.getCurrentHostName().equals(model.getNickname()) && model.getNickname().equals(playerName)){
-				channel.queueDelete(queueName);
+				//channel.queueDelete(queueName);
 			}
 			channel.queueDeclare(queueName, false, false, false, null);
 			channel.exchangeDeclare(playerName, "fanout");
