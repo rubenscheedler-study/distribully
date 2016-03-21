@@ -76,7 +76,6 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		super.paintComponent(g);
 
 		calculateAndSetSize();
-		System.out.println("repaint handpanel");
 
 		//1) draw the header "Your Hand"
 		g.setFont(this.headerFont);
@@ -106,12 +105,8 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 			CardComponent cardComponent;
 			if (refreshHandComponents) {
 				int ind = model.getHand().indexOf(c);
-				System.out.println("refresh!" + ind);
 
 				int visibleWidth = ind == (model.getHand().size()-1) ? IMAGE_WIDTH : CARD_VISIBLE_WIDTH;
-				if (visibleWidth == IMAGE_WIDTH) {
-					System.out.println("full range!");
-				}
 				cardComponent = new CardComponent(LEFT_OFFSET+CARD_VISIBLE_WIDTH*i,TOP_OFFSET+15,IMAGE_WIDTH,IMAGE_HEIGHT,c,visibleWidth);
 				this.handCards.add(cardComponent);
 			} else {
