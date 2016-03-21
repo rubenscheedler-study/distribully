@@ -64,7 +64,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		super.paintComponent(g);
 
 		calculateAndSetSize();
-
+		System.out.println("repaint handpanel");
 
 		//1) draw the header "Your Hand"
 		g.setFont(this.headerFont);
@@ -100,7 +100,8 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		//3 draw header "Current Stack of Players"
 		g.drawString("Current Stacks of Players:",LEFT_OFFSET,TOP_OFFSET+30+IMAGE_HEIGHT);
 
-		boolean refreshStackComponents = this.stackCards.size() != model.getOnlinePlayerList().getPlayers().size();
+		boolean refreshStackComponents = true || this.stackCards.size() != model.getOnlinePlayerList().getPlayers().size();
+		this.stackCards = new ArrayList<CardComponent>();
 		int j = 0;
 		//4) draw top of stacks
 		for (Player player : model.getGamePlayerList().getPlayers()) {
@@ -123,32 +124,38 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 
 	@Override
 	public void update(IObservable observable, Object changedObject) {
+		System.out.println("observer update");
 		this.repaint();
 	}
 
 	class CardClickListener extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			System.out.println("click:" + e.getX() + "," + e.getY() + "|handcards:" + handCards.size());
 			for (CardComponent component : handCards) {
 
 				if (component.wasClicked(e.getX(), e.getY())) {
-					System.out.println("HIT");
-					selectedCard = component;
+					if (selectedCard != null && selectedCard.equals(component)) {//unselected if already selected
+						selectedCard = null;
+					} else {
+						selectedCard = component;
+					}
 					break;
 				}
 			}
 
 			for (CardComponent component : stackCards) {//TODO validate
 				if (component.wasClicked(e.getX(), e.getY())) {
-					System.out.println("HIT");
-					selectedStackCard = component;
+					if (selectedStackCard != null && selectedStackCard.equals(component)) {//unselected if already selected
+						selectedStackCard = null;
+					} else {
+						selectedStackCard = component;
+					}
 					break;
 				}
 			}
 
 			//TODO if both are set, GO GO GO
-			if (selectedStackCard != null && selectedStackCard != null) {
+			if (selectedStackCard != null && selectedCard != null) {
 				System.out.println("GO GO GO");
 			}
 			revalidate();
