@@ -3,6 +3,7 @@ package distribully.controller;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -20,6 +21,7 @@ import distribully.model.Card;
 import distribully.model.CardSuit;
 import distribully.model.DistribullyModel;
 import distribully.model.Player;
+import distribully.model.TurnState;
 
 public class GameConsumerThread extends Thread{
 
@@ -82,9 +84,11 @@ public class GameConsumerThread extends Thread{
 
 	class MessageConsumer extends DefaultConsumer{
 		JsonParser parser;
+		Gson gson;
 		public MessageConsumer(Channel channel) {
 			super(channel);
 			parser = new JsonParser();
+			gson = new Gson();
 		}
 
 		@Override
@@ -136,8 +140,11 @@ public class GameConsumerThread extends Thread{
 			case "NextTurn":
 				JsonObject jeTurn = parser.parse(new String(body)).getAsJsonObject();
 				String action = jeTurn.get("action").getAsString();
-				String playerNameNext = jeTurn.get("playerName").getAsString();
-				System.out.println("Next player is "+ playerNameNext +" by action " + action);
+				JsonObject turnState = jeTurn.get("turnState").getAsJsonObject();
+				TurnState newState = gson.fromJson(turnState, TurnState.class);
+				
+				System.out.println("Next player is "+ newState.getNextPlayer() +" by action " + action);
+				//TODO: action handlen
 				//TODO: View
 				break;
 			case "ChooseSuit":
