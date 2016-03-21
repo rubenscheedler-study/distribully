@@ -197,6 +197,7 @@ public class ClientList extends ConnectingComponent implements IObservable {
 		if (!this.playersListEquals(playerList)) {
 			this.players.removeAll(players);
 			playerList.forEach(player -> this.players.add(player));
+			
 			//System.out.println("updated list of players:" + players.size() + "," + observers.size());
 			this.notifyObservers(this);
 		}
