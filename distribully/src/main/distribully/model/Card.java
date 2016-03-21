@@ -38,19 +38,19 @@ public class Card {
 		if (number > 10) {//map to the right textual name
 			switch (number) {
 			case 11:
-				name += "ace";
+				name += "Ace";
 				break;
 			case 12:
-				name += "jack";
+				name += "Jack";
 				break;
 			case 13:
-				name += "queen";
+				name += "Queen";
 				break;
 			case 14:
-				name += "king";
+				name += "King";
 				break;
 			default:
-				name += number;//easier to detect the problem than empty string
+				name += number;//easier to detect the problem than when using empty string
 				break;
 			}
 
