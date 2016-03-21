@@ -3,7 +3,6 @@ package distribully.controller;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.rabbitmq.client.AMQP;
