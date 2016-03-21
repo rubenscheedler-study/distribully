@@ -158,8 +158,12 @@ public class GameConsumerThread extends Thread{
 				TurnState newState = gson.fromJson(turnState, TurnState.class);
 				model.setTurnState(newState);
 				System.out.println("Next player is "+ newState.getNextPlayer() +" by action " + newState.getAction());
-				//TODO: action handlen
-				//TODO: View
+				if(model.isMyTurn()){
+					if (newState.getAction().equals("chooseSuit")){
+						//PopUp
+					}
+				}
+				//TODO: View updaten met de action
 				break;	
 			case "MustDraw":
 				JsonObject joMustDraw= parser.parse(new String(body)).getAsJsonObject();
