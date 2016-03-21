@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+
 import javax.imageio.ImageIO;
 
 import distribully.model.Card;
@@ -16,7 +17,6 @@ public class CardComponent {
 	private int width;
 	private int height;
 	private Card card;
-	private boolean clicked;
 	private int actualWidth;
 	
 	public CardComponent(int posX, int posY, int width, int height, Card card, int actualWidth) {
@@ -25,11 +25,11 @@ public class CardComponent {
 		this.width = width;
 		this.height = height;
 		this.card = card;
-		this.clicked = false;
 		this.actualWidth = actualWidth;
+
 	}
 	
-	public void draw(Graphics g) {
+	public void draw(Graphics g, boolean selected) {
 		String imageName = card.getImage();
 		//System.out.println(System.getProperty("user.dir") + "|||" + imageName);
 		File image = new File(imageName);
@@ -41,7 +41,7 @@ public class CardComponent {
 			e.printStackTrace();
 		}
 		
-		if (clicked) {
+		if (selected) {
 			System.out.println("clicked in com");
 			g.setColor(Color.GREEN);
 			g.fillRoundRect(posX-5, posY-5, width+10, height+10, 10, 10);
@@ -59,31 +59,16 @@ public class CardComponent {
 	public boolean wasClicked(int x, int y) {
 		return x >= posX && x < (posX + actualWidth) && y >= posY && y < (posY + height);
 	}
-	
-	public void setClicked(boolean clicked) {
-		this.clicked = clicked;
-	}
-	
-	public void click() {
-		System.out.println("click()");
-		this.clicked = !this.clicked;
-	}
-	
-	public Card getCard() {
-		return this.card;
-	}
-	
-	public String toString() {
-		return "[posX:" + posX + ",posY:" + posY + ",width:" + width + ",height:" + height + "]";
-	}
 
+
+
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + actualWidth;
 		result = prime * result + ((card == null) ? 0 : card.hashCode());
-		result = prime * result + (clicked ? 1231 : 1237);
 		result = prime * result + height;
 		result = prime * result + posX;
 		result = prime * result + posY;
@@ -107,8 +92,6 @@ public class CardComponent {
 				return false;
 		} else if (!card.equals(other.card))
 			return false;
-		if (clicked != other.clicked)
-			return false;
 		if (height != other.height)
 			return false;
 		if (posX != other.posX)
@@ -119,4 +102,14 @@ public class CardComponent {
 			return false;
 		return true;
 	}
+
+	public Card getCard() {
+		return this.card;
+	}
+	
+	public String toString() {
+		return "[posX:" + posX + ",posY:" + posY + ",width:" + width + ",height:" + height + "]";
+	}
+
+
 }

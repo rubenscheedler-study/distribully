@@ -1,14 +1,20 @@
 package distribully.model;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Card {
 	private int number;//ace=11,jack=12,queen=13,king=14
 	private CardSuit suit;
+	private long uniqueMaker;
 	
 	public Card(int number, CardSuit suit) {
 		this.setNumber(number);
 		this.setSuit(suit);
+		
+		Random randomno = new Random();
+		long value = randomno.nextLong();
+		uniqueMaker = value;
 	}
 
 	public int getNumber() {
@@ -128,6 +134,7 @@ public class Card {
 		int result = 1;
 		result = prime * result + number;
 		result = prime * result + ((suit == null) ? 0 : suit.hashCode());
+		result = prime * result + (int) (uniqueMaker ^ (uniqueMaker >>> 32));
 		return result;
 	}
 
@@ -144,6 +151,9 @@ public class Card {
 			return false;
 		if (suit != other.suit)
 			return false;
+		if (uniqueMaker != other.uniqueMaker)
+			return false;
 		return true;
 	}
+
 }

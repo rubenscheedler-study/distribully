@@ -81,14 +81,19 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		for (Card c : model.getHand()) {
 			CardComponent cardComponent;
 			if (refreshHandComponents) {
-				System.out.println("refresh!");
-				int visibleWidth = model.getHand().indexOf(c) == (model.getHand().size()-1) ? IMAGE_WIDTH : CARD_VISIBLE_WIDTH;
+				int ind = model.getHand().indexOf(c);
+				System.out.println("refresh!" + ind);
+				
+				int visibleWidth = ind == (model.getHand().size()-1) ? IMAGE_WIDTH : CARD_VISIBLE_WIDTH;
+				if (visibleWidth == IMAGE_WIDTH) {
+					System.out.println("full range!");
+				}
 				cardComponent = new CardComponent(LEFT_OFFSET+CARD_VISIBLE_WIDTH*i,TOP_OFFSET+15,IMAGE_WIDTH,IMAGE_HEIGHT,c,visibleWidth);
 				this.handCards.add(cardComponent);
 			} else {
 				cardComponent = this.handCards.get(i);
 			}
-			cardComponent.draw(g);
+			cardComponent.draw(g, selectedCard != null && selectedCard.equals(cardComponent));
 			i++;
 		}
 
@@ -108,7 +113,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 			} else {
 				cardComponent = this.stackCards.get(j);
 			}
-			cardComponent.draw(g);
+			cardComponent.draw(g, selectedStackCard != null && selectedStackCard.equals(cardComponent));
 			j++;
 		}
 	}
@@ -121,29 +126,21 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 	class CardClickListener extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			System.out.println("click:" + e.getX() + "," + e.getY());
+			System.out.println("click:" + e.getX() + "," + e.getY() + "|handcards:" + handCards.size());
 			for (CardComponent component : handCards) {
 
 				if (component.wasClicked(e.getX(), e.getY())) {
 					System.out.println("HIT");
-					if (selectedCard != null && !selectedCard.equals(component)) {
-						System.out.println("toggling old selected card");
-						selectedCard.click();
-					} else {
-						selectedCard = component;
-					}
-					component.click();
+					selectedCard = component;
+					break;
 				}
 			}
 
 			for (CardComponent component : stackCards) {//TODO validate
 				if (component.wasClicked(e.getX(), e.getY())) {
-					if (selectedStackCard != null && !selectedStackCard.equals(component)) {
-						selectedStackCard.click();//unselected this card
-					} else {
-						selectedStackCard = component;
-					}
-					component.click();
+					System.out.println("HIT");
+					selectedStackCard = component;
+					break;
 				}
 			}
 
