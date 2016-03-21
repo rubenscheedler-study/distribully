@@ -1,16 +1,21 @@
 package distribully.model.rules;
 
-import distribully.model.Stack;
+import distribully.model.DistribullyModel;
+import distribully.model.TurnState;
 
 public class PlayAgainRule extends Rule {
 
-	public PlayAgainRule(Stack stack) {
-		super(stack);
+	public PlayAgainRule(DistribullyModel model) {
+		super(model);
 	}
 
 	@Override
-	public void execute() {
-
+	public TurnState execute() {
+		TurnState turnState = new TurnState(model.getTurnState().getNextPlayer(),model.getTurnState().getToPick(),model.getTurnState().getDirection(),model.getTurnState().getAction());
+		
+		turnState.setNextPlayer(rotateTurn(0));
+		turnState.setAction("play again");
+		return turnState;
 	}
 
 	@Override

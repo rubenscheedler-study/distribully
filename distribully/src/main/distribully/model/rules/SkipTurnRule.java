@@ -1,16 +1,21 @@
 package distribully.model.rules;
 
-import distribully.model.Stack;
+import distribully.model.DistribullyModel;
+import distribully.model.TurnState;
 
 public class SkipTurnRule extends Rule {
 
-	public SkipTurnRule(Stack stack) {
-		super(stack);
+	public SkipTurnRule(DistribullyModel model) {
+		super(model);
 	}
 
 	@Override
-	public void execute() {
+	public TurnState execute() {
+		TurnState turnState = new TurnState(model.getTurnState().getNextPlayer(),model.getTurnState().getToPick(),model.getTurnState().getDirection(),model.getTurnState().getAction());
 
+		turnState.setNextPlayer(rotateTurn(turnState.getDirection()*2));
+		turnState.setAction("skip a player");
+		return turnState;
 	}
 
 	@Override

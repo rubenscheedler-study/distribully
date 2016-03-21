@@ -1,16 +1,24 @@
 package distribully.model.rules;
 
-import distribully.model.Stack;
+import distribully.model.DistribullyModel;
+import distribully.model.TurnState;
 
 public class DrawFiveRule extends Rule {
 
-	public DrawFiveRule(Stack stack) {
-		super(stack);
+	public DrawFiveRule(DistribullyModel model) {
+		super(model);
 	}
 
 	@Override
-	public void execute() {
+	public TurnState execute() {
+		TurnState turnState = new TurnState(model.getTurnState().getNextPlayer(),model.getTurnState().getToPick(),model.getTurnState().getDirection(),model.getTurnState().getAction());
 
+
+		
+		turnState.setNextPlayer(rotateTurn(turnState.getDirection()));
+		turnState.setAction("drawing 5");
+		turnState.setToPick(turnState.getToPick()+5);
+		return turnState;
 	}
 
 	@Override
