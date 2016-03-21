@@ -1,6 +1,7 @@
 package distribully.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import distribully.controller.GameState;
@@ -95,12 +96,13 @@ public class DistribullyModel implements IObservable {
 
 
 	private void fillAllRules() {
-		allRules.add(new DrawTwoRule(this.stack)); //TODO: alfa
+		allRules.add(new DrawTwoRule(this.stack));
 		allRules.add(new SkipTurnRule(this.stack));
 		allRules.add(new ChooseSuiteRule(this.stack));
 		allRules.add(new DrawFiveRule(this.stack));
 		allRules.add(new PlayAgainRule(this.stack));
 		allRules.add(new RevertTurnOrderRule(this.stack));
+		Collections.sort(allRules, (rule1, rule2) -> rule1.toString().compareTo(rule2.toString()));
 	}
 
 

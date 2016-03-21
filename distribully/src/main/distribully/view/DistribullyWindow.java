@@ -53,7 +53,7 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		selectRulesPanel = new SelectRulesPanel(this,this.getSize());
 		gamePanel = new HandPanel(model,this.getSize());
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
 		this.addWindowListener(new CloseWindowHandler(model));
 		

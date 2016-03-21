@@ -21,26 +21,27 @@ public class JoinClientListHandler {
 	
 	public JoinClientListHandler(DistribullyWindow frame) {
 		this.frame = frame;
-		String choosenNickname = "";
+		String chosenNickname = "";
 
 		do {
-			choosenNickname = askUserForName().trim();
+			chosenNickname = askUserForName();
 			
-			if (choosenNickname == null) { //user does not want to pick a username => close application
+			if (chosenNickname == null) { //user does not want to pick a username => close application
 				frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 				return;
 			}
+			chosenNickname = chosenNickname.trim();
 			
-			if (choosenNickname.contains(" ") || !nicknameAvailable(choosenNickname)) {
-				choosenNickname = "";
+			if (chosenNickname.contains(" ") || !nicknameAvailable(chosenNickname)) {
+				chosenNickname = "";
 			}
 			
 		}
-		while (choosenNickname.equals(""));
+		while (chosenNickname.equals(""));
 		
 		//check if name is unique
-		System.out.println("setting model nickname:" + choosenNickname);
-		frame.getModel().setNickname(choosenNickname);
+		System.out.println("setting model nickname:" + chosenNickname);
+		frame.getModel().setNickname(chosenNickname);
 		//this update is required to fetch the current user from the server as well:
 		new ClientListUpdateHandler(frame.getModel());
 		DistribullyController.waitForInviteThread = new WaitForInviteThread(frame.getModel());

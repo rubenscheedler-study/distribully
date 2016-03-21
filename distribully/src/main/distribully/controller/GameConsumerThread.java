@@ -3,8 +3,8 @@ package distribully.controller;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
@@ -46,8 +46,12 @@ public class GameConsumerThread extends Thread{
 
 	public void run(){
 		while(playing){
-			
+			//TODO : WAT DAN
 		}
+	}
+	
+	public void setPlaying(boolean playing){
+		this.playing = playing;
 	}
 
 	private void initPlayerExchange(Player player){
@@ -89,20 +93,48 @@ public class GameConsumerThread extends Thread{
 					new ClientListUpdateHandler(model);
 					model.getGamePlayerList().getPlayers().forEach(player -> initPlayerExchange(player));
 					model.setGAME_STATE(GameState.SETTING_RULES);
-					
 					break;
 				case "Leave":
 					JsonElement jeLeave = parser.parse(new String(body));
 					String playerNameLeave = jeLeave.getAsJsonObject().get("playerName").toString();
 					model.getGamePlayerList().getPlayers().removeIf(player -> player.getName().equals(playerNameLeave));
 					System.out.println(playerNameLeave + " left");
+					//TODO: view?
 					break;
 				case "Rules":
 					JsonElement jeRule = parser.parse(new String(body));
 					String playerNameRule = jeRule.getAsJsonObject().get("playerName").toString();
 					System.out.println("Rules from  "+ playerNameRule + " received");
+					//TODO: View
 					break;
 				case "PlayCard":
+					JsonObject jeCard = parser.parse(new String(body)).getAsJsonObject();
+					int cardId = Integer.parseInt(jeCard.get("cardId").toString());
+					int cardSuite = Integer.parseInt(jeCard.get("cardSuite").toString());
+					String playerName = jeCard.get("playerName").toString();
+					System.out.println("Card "+ cardId + " from suite " + cardSuite +" played on stack of "+ playerName); //TODO cardSuite parser
+					//TODO: View
+					break;
+				case "NextTurn":
+					JsonObject jeTurn = parser.parse(new String(body)).getAsJsonObject();
+					String action = jeTurn.get("action").toString();
+					String playerNameNext = jeTurn.get("playerName").toString();
+					System.out.println("Next player is "+ playerNameNext +" by action " + action);
+					//TODO: View
+					break;
+				case "ChooseSuite":
+					JsonObject jeSuite = parser.parse(new String(body)).getAsJsonObject();
+					int suite = Integer.parseInt(jeSuite.get("cardSuite").toString());
+					String playerNext = jeSuite.get("playerNextName").toString();
+					String playerCurrent = jeSuite.get("playerName").toString();
+					System.out.println("Next player is "+ playerNext +", new suite on "+ playerCurrent +" is " + suite); //suite parse
+					//TODO: View
+					break;
+				case "Win":
+					JsonObject jeWin = parser.parse(new String(body)).getAsJsonObject();
+					String playerWinner = jeWin.get("playerWinner").toString();
+					System.out.println(playerWinner + " has won."); //suite parse
+					//TODO: View
 					break;
 				}
 	    }
