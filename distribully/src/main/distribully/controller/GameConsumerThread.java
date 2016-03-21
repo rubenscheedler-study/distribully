@@ -134,16 +134,8 @@ public class GameConsumerThread extends Thread{
 					//only one player may create the first turn object. We define this as the alphabetically first player
 					ArrayList<Player> toSort = new ArrayList<Player>();
 					toSort.addAll(model.getGamePlayerList().getPlayers());
-					Collections.sort(toSort, new Comparator<Player>() {
-
-						@Override
-						public int compare(Player first, Player second) {
-							return first.getName().compareTo(second.getName());
-						}
-						
-						
-					});
-					if (model.getNickname().equals(toSort.get(0).getName())) {
+					Collections.sort(toSort, (p1, p2) -> p1.getName().compareTo(p2.getName()));
+					if (model.getNickname().equals(toSort.get(0).getName())) { //Someone has to do it
 						model.generateAndSendFirstTurnObject();
 					}
 					model.setGAME_STATE(GameState.IN_GAME);
