@@ -62,8 +62,11 @@ public class LeaveGameHandler implements ActionListener  {
 				channel.close();
 				connection.close();
 			} catch (IOException | TimeoutException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null,
+					    "Something went wrong leaving the game.",
+					    "Error",
+					    JOptionPane.ERROR_MESSAGE);
+				logger.error("Something went wrong leaving the game.");
 			}
 			
 			new BackToMainPageHandler(model);

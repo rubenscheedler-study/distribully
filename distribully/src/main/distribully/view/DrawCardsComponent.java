@@ -7,7 +7,6 @@ public class DrawCardsComponent extends DrawableComponent {
 
 	public DrawCardsComponent(int posX, int posY, int width, int height) {
 		super(posX, posY, width, height);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

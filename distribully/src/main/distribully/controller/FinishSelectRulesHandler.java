@@ -60,8 +60,11 @@ public class FinishSelectRulesHandler  implements ActionListener {
 				channel.close();
 				connection.close();
 			} catch (IOException | TimeoutException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				logger.error("Gamerules could not be sent.");
+				JOptionPane.showMessageDialog(null,
+					    "Something went wrong when sending rules.",
+					    "Error",
+					    JOptionPane.ERROR_MESSAGE);
 			}
 		}else{
 			JOptionPane.showMessageDialog(null,

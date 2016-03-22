@@ -215,8 +215,12 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 								channel.close();
 								connection.close();
 							} catch (IOException | TimeoutException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
+								JOptionPane.showMessageDialog(null,
+									    "Something went wrong sending a card.",
+									    "Error",
+									    JOptionPane.ERROR_MESSAGE);
+								logger.error("Something went wrong sending a card.");
+								model.getHand().add(selectedCard.getCard());
 							}
 							
 						} else {

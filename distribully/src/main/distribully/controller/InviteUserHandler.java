@@ -3,6 +3,8 @@ package distribully.controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JOptionPane;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +28,10 @@ public class InviteUserHandler implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		Player player = model.getOnlinePlayerList().getPlayers().stream().filter(x -> x.getName().equals(name)).findFirst().get();
 		if(player == null){
-			//TODO: afvangen bitch
+			JOptionPane.showMessageDialog(null,
+		    "Player no longer exists.",
+		    "Error",
+		    JOptionPane.ERROR_MESSAGE);
 		}else{
 			logger.info("creating invite thread...");
 			InviteThread thread = new InviteThread(player, model);

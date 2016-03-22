@@ -38,7 +38,8 @@ public class WaitForInviteThread extends Thread {
 					clientSocket = serverSocket.accept();
 					new Connection(clientSocket);
 				} catch (SocketException e) {
-					//TODO: ooit hier iets mee doen
+					logger.error("SocketException in waitForInvite thread.");
+					listen = false;
 				}
 
 			}
@@ -62,7 +63,8 @@ public class WaitForInviteThread extends Thread {
 				serverSocket.close();
 			}
 		}catch(Exception e){
-			//Will always throw exception if the thread is waiting for a response. TODO: Ignore?.
+			//Will always throw exception if the thread is waiting for a response.
+			logger.debug("WaitforInviteThread socket was interrupted");
 		}
 	}
 
@@ -88,7 +90,7 @@ public class WaitForInviteThread extends Thread {
 				if (model.getGAME_STATE() == GameState.NOT_PLAYING) {
 					int acceptedInvite = JOptionPane.showConfirmDialog (null, "You received a game invitation from " + hostName + ". Would you like to accept?", "Game Invitation",JOptionPane.YES_NO_OPTION);
 					if (acceptedInvite == JOptionPane.YES_OPTION) {
-						out.writeUTF("Accepted"); //TODO: Afvangen wanneer dit crasht/ niet aankomt
+						out.writeUTF("Accepted");
 
 						//not available to invites anymore:
 						model.getMe().setAvailable(false);
