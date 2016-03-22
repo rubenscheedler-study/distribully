@@ -2,7 +2,11 @@ package distribully.controller;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
+
 import javax.swing.JOptionPane;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import distribully.model.DistribullyModel;
 import distribully.view.*;
@@ -11,6 +15,7 @@ public class DistribullyController {
 	
 	DistribullyWindow view;
 	DistribullyModel model;
+	private static Logger logger;
 	public static WaitForInviteThread waitForInviteThread = null;
 	public static LobbyThread lobbyThread = null;
 	public static UpdateGameHostThread updateGameHostThread = null;
@@ -23,7 +28,8 @@ public class DistribullyController {
 		view = new DistribullyWindow(model);
 		askUserForPort();
 		new JoinClientListHandler(view);
-		
+		logger = LoggerFactory.getLogger("controller.DistribullyController");
+		logger.info("Started application");
 	}
 	
 	public static void main(String[] args) {
@@ -64,6 +70,5 @@ public class DistribullyController {
 		
 		model.setMyPort(Integer.parseInt(portString));
 		
-	}
-	
+	}	
 }

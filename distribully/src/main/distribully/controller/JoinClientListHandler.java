@@ -3,11 +3,14 @@ package distribully.controller;
 
 import java.awt.event.WindowEvent;
 
+
 import javax.swing.JOptionPane;
 
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.http.HttpMethod;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -17,9 +20,11 @@ import distribully.view.DistribullyWindow;
 
 public class JoinClientListHandler {
 	
-	DistribullyWindow frame;
+	private DistribullyWindow frame;
+	private static Logger logger;
 	
 	public JoinClientListHandler(DistribullyWindow frame) {
+		logger = LoggerFactory.getLogger("controller.JoinclientList");
 		this.frame = frame;
 		String chosenNickname = "";
 
@@ -51,7 +56,7 @@ public class JoinClientListHandler {
 		while (chosenNickname.equals(""));
 		
 		//check if name is unique
-		System.out.println("setting model nickname:" + chosenNickname);
+		logger.info("setting model nickname:" + chosenNickname);
 		frame.getModel().setNickname(chosenNickname);
 		//this update is required to fetch the current user from the server as well:
 		new ClientListUpdateHandler(frame.getModel());
@@ -80,7 +85,7 @@ public class JoinClientListHandler {
 		
 		if (response.getStatus() == 201) {
 			JsonParser jsonParser = new JsonParser();
-			System.out.println(response.getContentAsString());
+			logger.info(response.getContentAsString());
 			JsonElement jsonElement = jsonParser.parse(response.getContentAsString());
 			JsonObject jsonObject = jsonElement.getAsJsonObject();
 			String myAddress = jsonObject.get("ip").getAsString();

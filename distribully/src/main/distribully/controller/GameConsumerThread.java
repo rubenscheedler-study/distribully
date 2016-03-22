@@ -3,10 +3,12 @@ package distribully.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.concurrent.TimeoutException;
 
 import javax.swing.JOptionPane;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -30,10 +32,12 @@ import distribully.model.TurnState;
 
 public class GameConsumerThread extends Thread{
 
-	DistribullyModel model;
-	String queueName;
-	boolean playing;
+	private DistribullyModel model;
+	private static Logger logger;
+	private String queueName;
+	private volatile boolean playing;
 	public GameConsumerThread(DistribullyModel model){
+		logger = LoggerFactory.getLogger("controller.GameConsumerThread");
 		this.model = model;
 		new ClientListUpdateHandler(model); //Ensure the playerList is up to date
 		queueName = model.getNickname();
@@ -44,7 +48,7 @@ public class GameConsumerThread extends Thread{
 				    hostName + " aborted the game that you were invited for. \n",
 				    "No game to join",
 				    JOptionPane.WARNING_MESSAGE);
-			System.out.println("host left before accept");
+			logger.error("host left before accept");
 			new BackToMainPageHandler(model);
 			return;
 		}
@@ -86,7 +90,7 @@ public class GameConsumerThread extends Thread{
 			channel.queuePurge(queueName);
 			Consumer consumer = new MessageConsumer(channel);
 			channel.basicConsume(queueName, true, consumer);
-			System.out.println("host connected: " + playerName);
+			logger.info("host connected: " + playerName);
 		} catch (TimeoutException e) {
 			//Player has lost internet availability or rabbitMQ is not running -> remove from playerList
 			model.getGamePlayerList().getPlayers().remove(player);
@@ -145,7 +149,7 @@ public class GameConsumerThread extends Thread{
 		private void handleWin(String body) {
 			JsonObject jo = parser.parse(body).getAsJsonObject();
 			String playerWinner = jo.get("playerWinner").getAsString();
-			System.out.println(playerWinner + " has won.");
+			logger.info(playerWinner + " has won.");
 			//TODO: popup
 			//TODO: Reset Hashmap of responses
 			//TODO: Back to main (threads, gamestate)			
@@ -156,7 +160,7 @@ public class GameConsumerThread extends Thread{
 			int cardId = Integer.parseInt(jo.get("cardId").getAsString());
 			int suit = Integer.parseInt(jo.get("cardSuit").getAsString());
 			String playerName = jo.get("playerName").getAsString();
-			System.out.println(playerName +" has top of stack " + suit + " " + cardId);
+			logger.info(playerName +" has top of stack " + suit + " " + cardId);
 			model.putTopOfStack(model.getGamePlayerList().getPlayerByNickname(playerName), new Card(cardId, CardSuit.values()[suit]));
 		}
 
@@ -165,7 +169,7 @@ public class GameConsumerThread extends Thread{
 			int suit = Integer.parseInt(jo.get("cardSuit").getAsString());
 			JsonObject turnState = jo.get("turnState").getAsJsonObject();
 			TurnState newState = gson.fromJson(turnState, TurnState.class);
-			System.out.println("new suite on is " + suit); //suite parse
+			logger.info("new suite on is " + suit); //suite parse
 			model.getTopOfStacks().get(model.getGamePlayerList().getPlayerByNickname(newState.getLastStack())).setSuit(CardSuit.values()[suit]);
 			model.setTurnState(newState);
 		}
@@ -173,7 +177,7 @@ public class GameConsumerThread extends Thread{
 		private void handleHaveDrawn(String body) {
 			JsonObject jo= parser.parse(body).getAsJsonObject();
 			int amount = Integer.parseInt(jo.get("amount").getAsString());
-			System.out.println("Drawn " + amount + " cards");
+			logger.info("Drawn " + amount + " cards");
 			JsonObject turnState = jo.get("turnState").getAsJsonObject();
 			TurnState newState = gson.fromJson(turnState, TurnState.class);
 			model.setTurnState(newState);
@@ -184,7 +188,7 @@ public class GameConsumerThread extends Thread{
 			int drawAmount = Integer.parseInt(jo.get("drawAmount").getAsString());
 			JsonObject turnState = jo.get("turnState").getAsJsonObject();
 			TurnState nextState = gson.fromJson(turnState, TurnState.class); //The state that will be used after the user has drawn cards
-			System.out.println("Must draw " + drawAmount + " cards");
+			logger.info("Must draw " + drawAmount + " cards");
 			if(model.isMyTurn()){
 				model.draw(drawAmount, nextState);
 			}	
@@ -199,7 +203,7 @@ public class GameConsumerThread extends Thread{
 			TurnState newState = gson.fromJson(turnState, TurnState.class);
 			model.setTurnState(newState);
 
-			System.out.println("Next player is "+ newState.getNextPlayer() +" by action " + newState.getAction());
+			logger.info("Next player is "+ newState.getNextPlayer() +" by action " + newState.getAction());
 			if(model.isMyTurn()){
 				if (newState.isChooseSuit()){
 					String suitCandidate = "";
@@ -240,7 +244,7 @@ public class GameConsumerThread extends Thread{
 			int cardId = Integer.parseInt(jo.get("cardId").getAsString());
 			int suiteId = Integer.parseInt(jo.get("suitId").getAsString());
 			String stackOwner = jo.get("stackOwner").getAsString();
-			System.out.println("Card "+ cardId +" played");
+			logger.info("Card "+ cardId +" played");
 			if(stackOwner.equals(model.getNickname())){
 				model.executeCard(cardId);
 			}
@@ -250,9 +254,11 @@ public class GameConsumerThread extends Thread{
 		private void handleRules(String body) {
 			JsonElement je = parser.parse(body);
 			String playerName= je.getAsJsonObject().get("playerName").getAsString();
-			System.out.println("Rules from  "+ playerName + " received");
+			logger.info("Rules from  "+ playerName + " received");
+			Player player = model.getGamePlayerList().getPlayerByNickname(playerName);
+			player.setReadyToPlay(true);
 			model.getGamePlayerList().setPlayerReadyState(playerName,true);
-			if(model.getGamePlayerList().getPlayers().stream().allMatch(p->p.isReadyToPlay())){
+			if(model.getGamePlayerList().getPlayers().stream().allMatch(p->p.isReadyToPlay() && model.getGAME_STATE() == GameState.WAITING_FOR_GAMESTART)){
 				handleReady();
 			}
 		}
@@ -273,17 +279,15 @@ public class GameConsumerThread extends Thread{
 		private void handleLeave(String body) {
 			JsonElement je = parser.parse(body);
 			String playerName = je.getAsJsonObject().get("playerName").getAsString();
-			System.out.println(playerName + " left");
+			logger.info(playerName + " left");
 			JsonObject jo = parser.parse(body).getAsJsonObject();
 			JsonObject turnState = jo.get("turnState").getAsJsonObject();
 			TurnState newState = gson.fromJson(turnState, TurnState.class);
 			model.setTurnState(newState);//Ensure the setUpdate happens before the remove, to prevent async errors
-			System.out.println("leave:"+playerName);
 			model.getGamePlayerList().removePlayerByPlayerName(playerName);
 			if(model.getGamePlayerList().getPlayers().stream().allMatch(p->p.isReadyToPlay()) && model.getGAME_STATE() == GameState.WAITING_FOR_GAMESTART){
 				handleReady();
 			}
-			//TODO: check Ready bij rulesSelect
 			//TODO: view
 			if(model.getGamePlayerList().getPlayers().size() <= 1){
 				if(model.getGamePlayerList().getPlayers().stream().anyMatch(p -> p.getName() == model.getNickname())){
@@ -294,7 +298,7 @@ public class GameConsumerThread extends Thread{
 		}
 
 		private void handleStart() {
-			System.out.println("Game is starting!");
+			logger.info("Game is starting!");
 			if(DistribullyController.lobbyThread != null){
 				DistribullyController.lobbyThread.setInLobby(false);
 			}

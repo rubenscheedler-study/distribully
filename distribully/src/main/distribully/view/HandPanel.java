@@ -2,20 +2,17 @@ package distribully.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonObject;
 import com.rabbitmq.client.Channel;
@@ -48,8 +45,10 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 	
 	private PlayCardComponent playCardComponent;
 	private DrawCardsComponent drawCardsComponent;
+	private static Logger logger;
 
 	public HandPanel(DistribullyModel model, Dimension size) {
+		logger = LoggerFactory.getLogger("view.HandPanel");
 		this.model = model;
 		this.size = size;
 		IMAGE_HEIGHT = (int)((size.height/2)*0.8);
@@ -149,7 +148,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 
 	@Override
 	public void update(IObservable observable, Object changedObject) {
-		System.out.println("observer update");
+		logger.info("observer update");
 		this.repaint();
 	}
 
@@ -212,7 +211,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 								}
 								message.addProperty("stackOwner", ownerName);
 								channel.basicPublish(model.getNickname(), "PlayCard", null, message.toString().getBytes());
-								System.out.println(" [x] Sent '" + message + "'");
+								logger.info(" [x] Sent '" + message + "'");
 
 								channel.close();
 								connection.close();

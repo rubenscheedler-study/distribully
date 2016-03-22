@@ -1,33 +1,34 @@
 package distribully.controller;
 
-import java.net.ServerSocket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import distribully.model.DistribullyModel;
 
 public class UpdateGameHostThread extends Thread {
 	private volatile boolean isSettingUpGame = false;
-	ServerSocket serverSocket;
-	DistribullyModel model;
-	String hostName;
+	private DistribullyModel model;
+	private static Logger logger;
 	
 	public UpdateGameHostThread(DistribullyModel model) {
+		logger = LoggerFactory.getLogger("controller.UpdateGameHostThread");
 		this.model = model;
 		isSettingUpGame = true;
 		this.start();
 	}
 	public void run() {
-		System.out.println("Starting update game host thread for playerstatus only...");
+		logger.info("Starting update game host thread for playerstatus only...");
 		while (isSettingUpGame) {
 			model.getGamePlayerList().fillWithGamePlayers(model.getNickname());
 			model.updateInviteStatesByListState(model.getGamePlayerList());
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				System.out.println("GameHostThread interrupted during sleep!");
+				logger.error("GameHostThread interrupted during sleep!");
 				e.printStackTrace();
 			}			
 		}
-		System.out.println("No longer inviting players.");
+		logger.info("No longer inviting players.");
 	}
 	public void setIsSettingUpGame(boolean isSettingUpGame){
 		this.isSettingUpGame = isSettingUpGame;

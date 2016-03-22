@@ -3,10 +3,7 @@ package distribully.view;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.util.ArrayList;
-
-
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -25,7 +22,6 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 	private Dimension size;
 	
 	public PlayerOverviewPanel(DistribullyModel model, Dimension size) {
-		System.out.println("created player overview panel:" + size.getWidth() + "," + size.getHeight());
 		this.model = model;
 		this.size = size;
 		model.getOnlinePlayerList().addObserver(this);
@@ -44,13 +40,8 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		} else {
 			players = model.getOnlinePlayerList().getPlayers();
 		}
-		
-		
-		
-		//System.out.println("render::playerCount:" + players.size());
-		//remove self from the list of available players
-		//players.removeIf(player -> player.getName().equals(model.getNickname()));
-				
+
+		//remove self from the list of available players		
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setMinimumSize(size);
 		this.setPreferredSize(size);
@@ -163,7 +154,6 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 	
 	@Override
 	public void update(IObservable observable, Object changedObject) {
-		//System.out.println("player overview: received update of client list");
 		this.render();
 	}
 }

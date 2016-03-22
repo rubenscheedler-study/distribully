@@ -7,6 +7,9 @@ import static spark.Spark.post;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -16,11 +19,12 @@ import spark.Request;
 import spark.Response;
 
 public class PlayerServerController {
-	Gson gson;
-	HashMap<String, ArrayList<Player>> players;
-	JsonParser parser;
-
+	private Gson gson;
+	private HashMap<String, ArrayList<Player>> players;
+	private JsonParser parser;
+	private static Logger logger;
 	public PlayerServerController(){
+		logger = LoggerFactory.getLogger("server.PlayerServerController");
 		this.init();
 	}
 
@@ -45,7 +49,6 @@ public class PlayerServerController {
 			returnObject.addProperty("Message", "Game name is missing.");
 			return returnObject;
 		}
-		//System.out.println("Playerlist requested");
 		if(players.containsKey(gameName)){
 			response.status(200);
 			return parser.parse(gson.toJson(players.get(gameName))).getAsJsonArray();
@@ -78,7 +81,7 @@ public class PlayerServerController {
 
 		players.get(gameName).add(player);
 		response.status(201);
-		System.out.println("User " + player.getName()+ " added to game: " + gameName);
+		logger.info("User " + player.getName()+ " added to game: " + gameName);
 		returnObject.addProperty("Message", player.getName() + " has been added");
 		return returnObject;
 	}
@@ -99,7 +102,7 @@ public class PlayerServerController {
 		ArrayList<Player> list = new ArrayList<Player>();
 		list.add(player);
 		players.put(gameName, list);
-		System.out.println("Game created");
+		logger.info("Game created");
 		response.status(201);
 		return returnObject;
 	}
@@ -133,7 +136,7 @@ public class PlayerServerController {
 			returnObject.addProperty("Message", "Game is now empty and therefore removed.");
 			return returnObject;
 		}
-		System.out.println("User " + playerString+ " removed from game: " + gameName);
+		logger.info("User " + playerString+ " removed from game: " + gameName);
 		response.status(200);
 		returnObject.addProperty("Message", "Player "+ playerString +" was removed.");
 		return returnObject;

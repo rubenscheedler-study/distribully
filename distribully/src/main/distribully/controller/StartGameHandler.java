@@ -5,6 +5,9 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -13,9 +16,11 @@ import distribully.model.DistribullyModel;
 
 public class StartGameHandler implements ActionListener  {
 
-	DistribullyModel model;
+	private DistribullyModel model;
+	private static Logger logger;
 	public StartGameHandler(DistribullyModel model) {
 		this.model = model;
+		logger = LoggerFactory.getLogger("controller.StartGameHandler");
 	}
 	
 	@Override
@@ -34,7 +39,7 @@ public class StartGameHandler implements ActionListener  {
 			channel.exchangeDeclare(model.getNickname(), "fanout");
 
 			channel.basicPublish(model.getNickname(), "Start", null, null);
-			System.out.println(" [x] Sent gameStart");
+			logger.info("Sent gameStart");
 
 			channel.close();
 			connection.close();

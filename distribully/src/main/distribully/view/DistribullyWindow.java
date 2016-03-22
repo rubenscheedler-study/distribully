@@ -1,10 +1,7 @@
 package distribully.view;
 
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.ScrollPane;
 import java.awt.Toolkit;
-import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -12,6 +9,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static javax.swing.ScrollPaneConstants.*;
 
 import distribully.controller.ClientListUpdateHandler;
@@ -24,14 +25,13 @@ import distribully.model.IObserver;
 public class DistribullyWindow extends JFrame implements IObserver {
 
 	private static final long serialVersionUID = -6180030798589552918L;
-	Logger logger = Logger.getLogger("DistribullyWindow");
+	private static Logger logger;
 	
 	//model
 	private DistribullyModel model;
 	
 	//view components
 	private JPanel mainPanel;
-	private Font font;
 	private PlayerOverviewPanel playerOverviewPanel;
 	private SelectRulesPanel selectRulesPanel;
 	private WaitingForGameStartPanel waitingForGameStartPanel;
@@ -41,14 +41,14 @@ public class DistribullyWindow extends JFrame implements IObserver {
 	
 	public DistribullyWindow(DistribullyModel model) {
 		this.model = model;
-		
+		logger = LoggerFactory.getLogger("view.DistribullyWindow");
 		//get the size of the monitor
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		screenSize.height -= 100;
 		//window properties
 		this.setSize(screenSize.width, screenSize.height);
 		this.setVisible(true);
-		this.setTitle("Distribully v0.1");
+		this.setTitle("Distribully");
 		model.addObserver(this);
 		//init of menu
 		this.setJMenuBar(new DistribullyMenu(this.model));
@@ -88,11 +88,10 @@ public class DistribullyWindow extends JFrame implements IObserver {
 	}
 	
 	public void setMainPanel(JPanel content) {
-		System.out.println(this.getComponentCount());
 		this.remove(scrollPane);
 		this.mainPanel = content;
 		this.add(mainPanel);
-		System.out.println("updated main panel");
+		logger.info("updated main panel");
 		this.revalidate();
 		this.repaint();
 	}
@@ -113,7 +112,7 @@ public class DistribullyWindow extends JFrame implements IObserver {
 				scrollPane.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_NEVER);
 			}
 			this.add(scrollPane);
-			System.out.println("repaint of whole window");
+			logger.info("repaint of whole window");
 			this.revalidate();
 			this.repaint();
 		} 

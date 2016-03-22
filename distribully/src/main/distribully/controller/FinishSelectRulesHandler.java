@@ -5,7 +5,11 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+
 import javax.swing.JOptionPane;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonObject;
 import com.rabbitmq.client.Channel;
@@ -17,8 +21,10 @@ import distribully.model.DistribullyModel;
 public class FinishSelectRulesHandler  implements ActionListener {
 
 	private DistribullyModel model;
+	private Logger logger;
 	public FinishSelectRulesHandler(DistribullyModel model) {
 		this.model = model;	
+		logger = LoggerFactory.getLogger("controller.FinishRulesHandler");
 	}
 
 	@Override
@@ -39,7 +45,7 @@ public class FinishSelectRulesHandler  implements ActionListener {
 				String x = message.toString();
 
 				channel.basicPublish(model.getNickname(), "Rules", null, x.getBytes());
-				System.out.println(" [x] Sent '" + message + "'");
+				logger.info(" [x] Sent '" + message + "'");
 				if(model.getGAME_STATE() != GameState.IN_GAME){ //Since the queue may update the state before this does, this is needed.
 					model.setGAME_STATE(GameState.WAITING_FOR_GAMESTART);
 					/*if (!model.getGamePlayerList().getPlayers().contains(model.getMe())) {
