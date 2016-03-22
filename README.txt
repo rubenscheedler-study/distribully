@@ -1,3 +1,5 @@
+RabbitMQ must be installed
+
 To access the server externally, open port 4567 (SparkJava default http://sparkjava.com/documentation.html)
 To use rabbitMQ externally, open port 5672 (rabbitMQ default https://www.rabbitmq.com/configure.html)
 
