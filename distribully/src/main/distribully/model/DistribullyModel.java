@@ -46,6 +46,8 @@ public class DistribullyModel implements IObservable {
 
 	private TurnState turnState;
 
+	private boolean isReadyToWin;
+	
 	public DistribullyModel() {
 		this.stack = new Stack();
 		this.onlinePlayerList = new ClientList(serverAddress,serverPort);
@@ -57,7 +59,7 @@ public class DistribullyModel implements IObservable {
 		fillAllRules();
 		hand = new ArrayList<Card>(Collections.synchronizedList(new ArrayList<Card>()));
 		topOfStacks = new HashMap<Player,Card>();
-
+		setReadyToWin(false);
 	}
 
 
@@ -429,6 +431,9 @@ public class DistribullyModel implements IObservable {
 
 	public void draw(int drawAmount, TurnState nextTurn) {
 		//update model according to action
+		
+		isReadyToWin = false;
+		
 		//draw the cards, add them to the hand
 		for (int i = 0; i < drawAmount; i++) {
 			hand.add(Card.getARandomCard());
@@ -504,5 +509,17 @@ public class DistribullyModel implements IObservable {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+	}
+
+
+
+	public boolean isReadyToWin() {
+		return isReadyToWin;
+	}
+
+
+
+	public void setReadyToWin(boolean isReadyToWin) {
+		this.isReadyToWin = isReadyToWin;
 	}
 }

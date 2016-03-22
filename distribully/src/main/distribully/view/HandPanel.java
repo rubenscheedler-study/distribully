@@ -187,7 +187,11 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 							
 							//remove card from hand
 							model.getHand().remove(selectedCard.getCard());//TODO notify?
-							
+						
+							//check if hand is empty, then the player is ready to win
+							if (model.getHand().isEmpty()) {
+								model.setReadyToWin(true);
+							}
 							ConnectionFactory factory = new ConnectionFactory();
 							factory.setHost(model.getMe().getIp());
 							Connection connection;
