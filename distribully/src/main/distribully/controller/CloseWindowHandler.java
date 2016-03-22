@@ -7,12 +7,15 @@ import java.util.concurrent.TimeoutException;
 
 import javax.swing.JOptionPane;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
 import distribully.model.DistribullyModel;
+import distribully.model.TurnState;
 
 public class CloseWindowHandler extends WindowAdapter {
 
@@ -41,6 +44,10 @@ public class CloseWindowHandler extends WindowAdapter {
 
 					JsonObject message = new JsonObject();
 					message.addProperty("playerName", model.getNickname());
+					Gson gson = new Gson();
+					JsonParser parser = new JsonParser();
+					JsonObject turnState = parser.parse(gson .toJson(new TurnState(model.getNextPlayer(), 0, model.getTurnState().getDirection(), model.getNickname() + " has left the game.", false, ""))).getAsJsonObject();
+					message.add("turnState", turnState);
 
 					channel.basicPublish(model.getNickname(), "Leave", null, message.toString().getBytes());
 					System.out.println(" [x] Sent '" + message + "'");

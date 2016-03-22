@@ -265,7 +265,10 @@ public class GameConsumerThread extends Thread{
 			String playerName = je.getAsJsonObject().get("playerName").getAsString();
 			model.getGamePlayerList().removePlayerByPlayerName(playerName);
 			System.out.println(playerName + " left");
-
+			JsonObject jo = parser.parse(body).getAsJsonObject();
+			JsonObject turnState = jo.get("turnState").getAsJsonObject();
+			TurnState newState = gson.fromJson(turnState, TurnState.class);
+			model.setTurnState(newState);
 			//TODO: view
 			if(model.getGamePlayerList().getPlayers().size() <= 1){
 				if(model.getGamePlayerList().getPlayers().stream().anyMatch(p -> p.getName() == model.getNickname())){
