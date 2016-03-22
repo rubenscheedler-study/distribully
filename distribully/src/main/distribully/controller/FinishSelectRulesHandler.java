@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -17,8 +18,11 @@ import distribully.model.DistribullyModel;
 public class FinishSelectRulesHandler  implements ActionListener {
 
 	private DistribullyModel model;
+	private Logger logger;
 	public FinishSelectRulesHandler(DistribullyModel model) {
 		this.model = model;	
+		logger = Logger.getLogger("controller.FinishRulesHandler");
+		logger.setParent(Logger.getLogger("controller.DistribullyController"));
 	}
 
 	@Override
@@ -39,7 +43,7 @@ public class FinishSelectRulesHandler  implements ActionListener {
 				String x = message.toString();
 
 				channel.basicPublish(model.getNickname(), "Rules", null, x.getBytes());
-				System.out.println(" [x] Sent '" + message + "'");
+				logger.fine(" [x] Sent '" + message + "'");
 				if(model.getGAME_STATE() != GameState.IN_GAME){ //Since the queue may update the state before this does, this is needed.
 					model.setGAME_STATE(GameState.WAITING_FOR_GAMESTART);
 				}

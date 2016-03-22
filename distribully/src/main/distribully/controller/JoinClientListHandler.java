@@ -2,6 +2,7 @@ package distribully.controller;
 
 
 import java.awt.event.WindowEvent;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -17,9 +18,12 @@ import distribully.view.DistribullyWindow;
 
 public class JoinClientListHandler {
 	
-	DistribullyWindow frame;
+	private DistribullyWindow frame;
+	private static Logger logger;
 	
 	public JoinClientListHandler(DistribullyWindow frame) {
+		logger = Logger.getLogger("controller.JoinclientList");
+		logger.setParent(Logger.getLogger("controller.DistribullyController"));
 		this.frame = frame;
 		String chosenNickname = "";
 
@@ -51,7 +55,7 @@ public class JoinClientListHandler {
 		while (chosenNickname.equals(""));
 		
 		//check if name is unique
-		System.out.println("setting model nickname:" + chosenNickname);
+		logger.fine("setting model nickname:" + chosenNickname);
 		frame.getModel().setNickname(chosenNickname);
 		//this update is required to fetch the current user from the server as well:
 		new ClientListUpdateHandler(frame.getModel());
@@ -80,7 +84,7 @@ public class JoinClientListHandler {
 		
 		if (response.getStatus() == 201) {
 			JsonParser jsonParser = new JsonParser();
-			System.out.println(response.getContentAsString());
+			logger.fine(response.getContentAsString());
 			JsonElement jsonElement = jsonParser.parse(response.getContentAsString());
 			JsonObject jsonObject = jsonElement.getAsJsonObject();
 			String myAddress = jsonObject.get("ip").getAsString();

@@ -4,6 +4,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -21,8 +22,11 @@ public class CloseWindowHandler extends WindowAdapter {
 
 	DistribullyModel model;
 
+	private static Logger logger;
 	public CloseWindowHandler(DistribullyModel model){
 		this.model = model;
+		logger = Logger.getLogger("controller.CloseWindowHandler");
+		logger.setParent(Logger.getLogger("controller.DistribullyController"));
 	}
 	@Override
 	public void windowClosing(WindowEvent e)
@@ -52,8 +56,7 @@ public class CloseWindowHandler extends WindowAdapter {
 					message.add("turnState", turnState);
 
 					channel.basicPublish(model.getNickname(), "Leave", null, message.toString().getBytes());
-					System.out.println(" [x] Sent '" + message + "'");
-
+					logger.fine(" [x] Sent '" + message + "'");
 					channel.close();
 					connection.close();
 				} catch (IOException | TimeoutException e1) {
@@ -70,7 +73,7 @@ public class CloseWindowHandler extends WindowAdapter {
 		} else if (model.getGAME_STATE() == GameState.INVITING_USERS) {
 			model.getGamePlayerList().deleteGameList(model.getNickname());//=current host name
 		}
-		System.out.println("Closed game");
+		logger.fine("Closed game");
 		System.exit(0);
 
 	}

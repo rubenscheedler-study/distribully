@@ -1,6 +1,8 @@
 package distribully.controller;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -11,6 +13,7 @@ public class DistribullyController {
 	
 	DistribullyWindow view;
 	DistribullyModel model;
+	private static Logger logger;
 	public static WaitForInviteThread waitForInviteThread = null;
 	public static LobbyThread lobbyThread = null;
 	public static UpdateGameHostThread updateGameHostThread = null;
@@ -23,7 +26,9 @@ public class DistribullyController {
 		view = new DistribullyWindow(model);
 		askUserForPort();
 		new JoinClientListHandler(view);
-		
+		logger = Logger.getLogger("controller.DistribullyController");
+		logger.setUseParentHandlers(false);
+		logger.setLevel(Level.FINE);
 	}
 	
 	public static void main(String[] args) {

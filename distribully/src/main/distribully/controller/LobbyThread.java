@@ -1,6 +1,6 @@
 package distribully.controller;
 
-import java.net.ServerSocket;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -8,23 +8,24 @@ import distribully.model.DistribullyModel;
 
 public class LobbyThread extends Thread {
 	private volatile boolean inLobby = false;
-	ServerSocket serverSocket;
-	DistribullyModel model;
-	String hostName;
+	private DistribullyModel model;
+	private static Logger logger;
 
 	public LobbyThread(DistribullyModel model) {
 		this.model = model;
+		logger = Logger.getLogger("controller.LobbyThread");
+		logger.setParent(Logger.getLogger("controller.DistribullyController"));
 		inLobby = true;
 		this.start();
 	}
 	public void run() {
-		System.out.println("Starting lobby...");
+		logger.fine("Starting lobby...");
 		while (inLobby) {
 			if(model.getGamePlayerList().fillWithGamePlayers(model.getCurrentHostName())){
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					System.out.println("Lobbythread interrupted during sleep!");
+					logger.warning("Lobbythread interrupted during sleep!");
 					e.printStackTrace();
 				}			
 			}else{
@@ -37,7 +38,7 @@ public class LobbyThread extends Thread {
 					    JOptionPane.WARNING_MESSAGE);
 			}
 		}
-		System.out.println("No longer in lobby.");
+		logger.fine("No longer in lobby.");
 	}
 	public void setInLobby(boolean inLobby){
 		this.inLobby = inLobby;

@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -19,9 +20,12 @@ import distribully.model.TurnState;
 
 public class LeaveGameHandler implements ActionListener  {
 
-	DistribullyModel model;
+	private DistribullyModel model;
+	private static Logger logger;
 	public LeaveGameHandler(DistribullyModel model) {
 		this.model = model;
+		logger = Logger.getLogger("controller.LeaveGameHandler");
+		logger.setParent(Logger.getLogger("controller.DistribullyController"));
 	}
 
 	@Override
@@ -51,7 +55,7 @@ public class LeaveGameHandler implements ActionListener  {
 				message.add("turnState", turnState);
 
 				channel.basicPublish(model.getNickname(), "Leave", null, message.toString().getBytes());
-				System.out.println(" [x] Sent '" + message + "'");
+				logger.fine(" [x] Sent '" + message + "'");
 
 				channel.close();
 				connection.close();

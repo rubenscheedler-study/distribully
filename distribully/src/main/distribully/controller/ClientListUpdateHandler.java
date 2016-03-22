@@ -2,6 +2,7 @@ package distribully.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -19,7 +20,10 @@ import distribully.model.Player;
 
 public class ClientListUpdateHandler {
 	
+	private static Logger logger;
 	public ClientListUpdateHandler(DistribullyModel model) {
+		logger = Logger.getLogger("controller.ClientListUpdateHandler");
+		logger.setParent(Logger.getLogger("controller.DistribullyController"));
 		HttpClient client = new HttpClient();
 		ContentResponse response = null;
 		try {
@@ -38,7 +42,7 @@ public class ClientListUpdateHandler {
 		//TODO: handle response
 		
 		JsonParser jsonParser = new JsonParser();
-		System.out.println(response.getContentAsString());
+		logger.fine(response.getContentAsString());
 		JsonElement je = jsonParser.parse(response.getContentAsString());
 		JsonArray ja = je.getAsJsonArray();
 		
