@@ -25,7 +25,6 @@ public class UpdateGameHostThread extends Thread {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				logger.error("GameHostThread interrupted during sleep!");
-				e.printStackTrace();
 			}			
 		}
 		logger.info("No longer inviting players.");

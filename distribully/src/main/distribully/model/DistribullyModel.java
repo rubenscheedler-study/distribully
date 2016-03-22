@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
+
+import javax.swing.JOptionPane;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +46,7 @@ public class DistribullyModel implements IObservable {
 
 	private String nickname;
 	private HashMap<Player,Card> topOfStacks;
-	private ArrayList<Card> hand;
+	private List<Card> hand;
 
 	private ArrayList<Rule> allRules;
 	private HashMap<Integer,Rule> chosenRules;
@@ -61,7 +64,7 @@ public class DistribullyModel implements IObservable {
 		allRules = new ArrayList<Rule>();
 		chosenRules = new HashMap<Integer,Rule>();
 		fillAllRules();
-		hand = new ArrayList<Card>(Collections.synchronizedList(new ArrayList<Card>()));
+		hand = Collections.synchronizedList(new ArrayList<Card>());
 		topOfStacks = new HashMap<Player,Card>();
 		setReadyToWin(false);
 	}
@@ -255,17 +258,9 @@ public class DistribullyModel implements IObservable {
 		notifyObservers(this);
 	}
 
-	public ArrayList<Card> getHand() {
+	public List<Card> getHand() {
 		return hand;
 	}
-
-
-
-	public void setHand(ArrayList<Card> hand) {
-		this.hand = hand;
-	}
-
-
 
 	public void setAndBroadCastTopOfStack() {
 		ConnectionFactory factory = new ConnectionFactory();
@@ -291,8 +286,11 @@ public class DistribullyModel implements IObservable {
 			channel.close();
 			connection.close();
 		} catch (IOException | TimeoutException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+				    "Something went wrong broadcasting the top of stack.",
+				    "Error",
+				    JOptionPane.ERROR_MESSAGE);
+			logger.error("Something went wrong broadcasting the top of stack.");
 		}
 	}
 
@@ -348,8 +346,11 @@ public class DistribullyModel implements IObservable {
 			channel.close();
 			connection.close();
 		} catch (IOException | TimeoutException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+				    "Something went wrong selecting the first player.",
+				    "Error",
+				    JOptionPane.ERROR_MESSAGE);
+			logger.error("Something went wrong selecting the first player.");
 		}
 	}
 
@@ -391,8 +392,11 @@ public class DistribullyModel implements IObservable {
 				channel.close();
 				connection.close();
 			} catch (IOException | TimeoutException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null,
+					    "Something went wrong forcing someone to draw cards.",
+					    "Error",
+					    JOptionPane.ERROR_MESSAGE);
+				logger.error("Something went wrong forcing someone to draw card.");
 			}
 		}
 		else{
@@ -417,8 +421,11 @@ public class DistribullyModel implements IObservable {
 				channel.close();
 				connection.close();
 			} catch (IOException | TimeoutException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null,
+					    "Something went wrong handling a card.",
+					    "Error",
+					    JOptionPane.ERROR_MESSAGE);
+				logger.error("Something went wrong handling a card.");
 			}
 		}
 
@@ -466,8 +473,11 @@ public class DistribullyModel implements IObservable {
 			channel.close();
 			connection.close();
 		} catch (IOException | TimeoutException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+				    "Something went wrong broadcasting the drawing of cards.",
+				    "Error",
+				    JOptionPane.ERROR_MESSAGE);
+			logger.error("Something went wrong broadcasting the drawing of cards.");
 		}
 	}
 
@@ -515,8 +525,11 @@ public class DistribullyModel implements IObservable {
 			channel.close();
 			connection.close();
 		} catch (IOException | TimeoutException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+				    "Something went wrong broadcasting the new suit of the stack.",
+				    "Error",
+				    JOptionPane.ERROR_MESSAGE);
+			logger.error("Something went wrong broadcasting the suit of stack.");
 		}
 	}
 
@@ -540,8 +553,11 @@ public class DistribullyModel implements IObservable {
 			channel.close();
 			connection.close();
 		} catch (IOException | TimeoutException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+				    "Something went wrong broadcasting a win.",
+				    "Error",
+				    JOptionPane.ERROR_MESSAGE);
+			logger.error("Something went wrong broadcasting a win.");
 		}
 	}
 

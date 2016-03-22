@@ -79,7 +79,7 @@ public class WaitForInviteThread extends Thread {
 				out = new DataOutputStream(clientSocket.getOutputStream());
 				this.handle();
 			} catch (IOException ioException) {
-				ioException.printStackTrace();
+				logger.error("Could not initiate datastreams.");
 			}
 		}
 		private void handle() {
@@ -108,12 +108,12 @@ public class WaitForInviteThread extends Thread {
 					out.writeUTF("Rejected");
 				}
 			} catch (IOException ioException) {
-				ioException.printStackTrace();
+				logger.error("Could not handle invite.");
 			} finally {
 				try {
 					clientSocket.close();
 				} catch (IOException ioException) {
-					ioException.printStackTrace();
+					logger.debug("Socket in waitForInviteThread interrupted");
 				}
 			}
 		}

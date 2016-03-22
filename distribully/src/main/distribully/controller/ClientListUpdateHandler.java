@@ -29,6 +29,7 @@ public class ClientListUpdateHandler {
 		try {
 			client.start();
 			response = client.newRequest(model.getServerAddress() + ":" + model.getServerPort() + "/players").method(HttpMethod.GET).send();
+			client.stop();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,
 					"The server is currently offline. \n"

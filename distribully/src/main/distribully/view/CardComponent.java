@@ -6,19 +6,24 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import distribully.model.Card;
 
 public class CardComponent extends DrawableComponent {
 	private Card card;
 	private int actualWidth;
+	private static Logger logger;
 	
 	public CardComponent(int posX, int posY, int width, int height, Card card, int actualWidth) {
 		super(posX,posY,width,height);
 		this.card = card;
 		this.actualWidth = actualWidth;
+		logger = LoggerFactory.getLogger("view.CardComponent");
 
 	}
 	
@@ -34,7 +39,11 @@ public class CardComponent extends DrawableComponent {
 		try {
 			img = ImageIO.read(image);
 		} catch(IOException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+				    "Something went wrong leaving the game.",
+				    "Error",
+				    JOptionPane.ERROR_MESSAGE);
+			logger.error("Could not load card images.");
 		}
 		
 		if (selected) {

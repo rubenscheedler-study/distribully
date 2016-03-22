@@ -30,12 +30,11 @@ import distribully.model.DistribullyModel;
 import distribully.model.Player;
 import distribully.model.TurnState;
 
-public class GameConsumerThread extends Thread{
+public class GameConsumerThread{
 
 	private DistribullyModel model;
 	private static Logger logger;
 	private String queueName;
-	private volatile boolean playing;
 	public GameConsumerThread(DistribullyModel model){
 		logger = LoggerFactory.getLogger("controller.GameConsumerThread");
 		this.model = model;
@@ -52,28 +51,7 @@ public class GameConsumerThread extends Thread{
 			new BackToMainPageHandler(model);
 			return;
 		}
-		playing = true;
-		try {
-			initPlayerExchange(host);
-		} catch (ShutdownSignalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ConsumerCancelledException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		this.start();
-
-	}
-
-	public void run(){
-		while(playing){
-			//TODO : WAT DAN
-		}
-	}
-
-	public void setPlaying(boolean playing){
-		this.playing = playing;
+		initPlayerExchange(host);
 	}
 
 	private void initPlayerExchange(Player player){
@@ -95,8 +73,11 @@ public class GameConsumerThread extends Thread{
 			//Player has lost internet availability or rabbitMQ is not running -> remove from playerList
 			model.getGamePlayerList().getPlayers().remove(player);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+				    "Something went wrong when connecting to a host.",
+				    "Error",
+				    JOptionPane.ERROR_MESSAGE);
+			logger.error("Something went wrong when connecting to host "+ playerName +".");
 		}
 	}
 
@@ -150,9 +131,12 @@ public class GameConsumerThread extends Thread{
 			JsonObject jo = parser.parse(body).getAsJsonObject();
 			String playerWinner = jo.get("playerWinner").getAsString();
 			logger.info(playerWinner + " has won.");
-			//TODO: popup
-			//TODO: Reset Hashmap of responses
-			//TODO: Back to main (threads, gamestate)			
+			JOptionPane.showMessageDialog(null,
+				    playerWinner + " has won!",
+				    "Game over",
+				    JOptionPane.PLAIN_MESSAGE);
+			model.getInviteStates().clear();
+			new BackToMainPageHandler(model);	
 		}
 
 		private void handleInitStack(String body) {
@@ -270,7 +254,7 @@ public class GameConsumerThread extends Thread{
 			ArrayList<Player> toSort = new ArrayList<Player>();
 			toSort.addAll(model.getGamePlayerList().getPlayers());
 			Collections.sort(toSort, (p1, p2) -> p1.getName().compareTo(p2.getName()));
-			if (model.getNickname().equals(toSort.get(0).getName())) { //Afvangen dat 0 wel moet bestaan
+			if (model.getNickname().equals(toSort.get(0).getName())) { //Can only get here when there are players, so 0 always exists.
 				model.generateAndSendFirstTurnObject();
 			}
 			model.setGAME_STATE(GameState.IN_GAME);

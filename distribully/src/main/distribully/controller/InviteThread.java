@@ -66,14 +66,14 @@ public class InviteThread extends Thread{
 		} catch (SocketException e) {//Socked closed from the outside, don't update the view.
 			model.putInviteState(player.getName(), "Unreachable");
 		} catch (IOException e) {
-			e.printStackTrace();
+			model.putInviteState(player.getName(), "Unreachable");
 		}finally {
 			DistribullyController.InviteThreadList.remove(this);
 			if (s != null){
 				try {
 					s.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.debug("Socket was interrupted in inviteThread.");
 				}
 			}
 		}

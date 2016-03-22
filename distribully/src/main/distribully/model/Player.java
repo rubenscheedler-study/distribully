@@ -1,5 +1,7 @@
 package distribully.model;
 
+import javax.swing.JOptionPane;
+
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.http.HttpMethod;
@@ -68,7 +70,11 @@ public class Player extends ConnectingComponent implements Comparable<Player> {
 					.send();
 			client.stop();
 		} catch (Exception e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+				    "Something went wrong updating your availability.",
+				    "Error",
+				    JOptionPane.ERROR_MESSAGE);
+			logger.error("Something went wrong updating your availability.");
 		}
 		if(response.getStatus() != 200){ //400 or 403
 			logger.error("Setting availability failed.");
@@ -81,6 +87,7 @@ public class Player extends ConnectingComponent implements Comparable<Player> {
 		try {
 			client.start();
 			response = client.newRequest(this.serverAddress + ":" + this.serverPort + "/players/" + this.name).method(HttpMethod.DELETE).send();
+			client.stop();
 		} catch (Exception e) {
 			logger.error("Something went wrong while sending the request for deleting yourself");
 			return;

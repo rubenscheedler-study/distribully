@@ -53,7 +53,12 @@ public class CloseWindowHandler extends WindowAdapter {
 					Gson gson = new Gson();
 					JsonParser parser = new JsonParser();
 					//If getNxtPlayer is null, game hasn't started, so return any player as it will be overwritten anyway. Most convenient is our own name.
-					TurnState newState = new TurnState(model.getNextPlayer(), 0, (model.getTurnState() == null)? 1 : model.getTurnState().getDirection(), model.getNickname() + " has left the game.", false, "");
+					TurnState newState;
+					if(model.getTurnState() == null){
+						newState = new TurnState(model.getNickname(), 0, 1, model.getNickname() + " has left the game.", false, "");
+					}else{
+						newState = new TurnState((model.isMyTurn())? model.getNextPlayer() : model.getTurnState().getNextPlayer(), 0, model.getTurnState().getDirection(), model.getNickname() + " has left the game.", false, "");
+					}
 					JsonObject turnState = parser.parse(gson.toJson(newState)).getAsJsonObject();
 					message.add("turnState", turnState);
 

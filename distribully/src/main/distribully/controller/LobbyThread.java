@@ -28,7 +28,6 @@ public class LobbyThread extends Thread {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					logger.error("Lobbythread interrupted during sleep!");
-					e.printStackTrace();
 				}			
 			}else{
 				inLobby = false;

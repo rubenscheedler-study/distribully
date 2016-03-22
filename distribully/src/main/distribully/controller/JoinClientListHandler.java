@@ -80,7 +80,12 @@ public class JoinClientListHandler {
 					.send();
 			client.stop();
 		} catch (Exception e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+				    "Could not validate username",
+				    "Error",
+				    JOptionPane.ERROR_MESSAGE);
+			logger.error("Could not validate username");
+			System.exit(69); //Service unavailable
 		}
 		
 		if (response.getStatus() == 201) {
@@ -91,7 +96,7 @@ public class JoinClientListHandler {
 			String myAddress = jsonObject.get("ip").getAsString();
 			frame.getModel().setMyIP(myAddress);
 			return true;
-		} else {
+		} else { //Doesn't matter what the response is, the result is the same.
 			return false;
 		}
 	}

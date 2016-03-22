@@ -42,7 +42,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 	private ArrayList<CardComponent> stackCards;
 	private CardComponent selectedCard;
 	private CardComponent selectedStackCard;
-	
+
 	private PlayCardComponent playCardComponent;
 	private DrawCardsComponent drawCardsComponent;
 	private static Logger logger;
@@ -86,13 +86,13 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 			playCardComponent.draw(g);
 			drawCardsComponent.draw(g);
 		}
-		
+
 		//render action
 		if (model.getTurnState() != null) {
 			String actionString = model.getTurnState().getAction();
 			g.drawString(actionString,LEFT_OFFSET+600,TOP_OFFSET);
 		}	
-		
+
 		//2) draw the hand of the player
 
 		int i = 0;
@@ -118,7 +118,6 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		//3 draw header "Current Stack of Players"
 		g.drawString("Current Stacks of Players:",LEFT_OFFSET,TOP_OFFSET+30+IMAGE_HEIGHT);
 
-		boolean refreshStackComponents = true || this.stackCards.size() != model.getOnlinePlayerList().getPlayers().size();
 		this.stackCards = new ArrayList<CardComponent>();
 		int j = 0;
 		//4) draw top of stacks
@@ -129,18 +128,16 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 			}
 			g.drawString(player.getName(),LEFT_OFFSET+j*(IMAGE_WIDTH+15), TOP_OFFSET+30+IMAGE_HEIGHT+30);
 			g.setColor(oldColor);
-			
+
 			CardComponent cardComponent;
-			if (refreshStackComponents) {
-				Card topCard = null;
-				if (model.getTopOfStacks().containsKey(player)) {
-					topCard = model.getTopOfStacks().get(player);
-				}
-				cardComponent = new CardComponent(LEFT_OFFSET+j*(IMAGE_WIDTH+15),TOP_OFFSET+30+IMAGE_HEIGHT+40,IMAGE_WIDTH,IMAGE_HEIGHT,topCard,IMAGE_WIDTH);
-				this.stackCards.add(cardComponent);
-			} else {
-				cardComponent = this.stackCards.get(j);
+
+			Card topCard = null;
+			if (model.getTopOfStacks().containsKey(player)) {
+				topCard = model.getTopOfStacks().get(player);
 			}
+			cardComponent = new CardComponent(LEFT_OFFSET+j*(IMAGE_WIDTH+15),TOP_OFFSET+30+IMAGE_HEIGHT+40,IMAGE_WIDTH,IMAGE_HEIGHT,topCard,IMAGE_WIDTH);
+			this.stackCards.add(cardComponent);
+
 			cardComponent.draw(g, selectedStackCard != null && selectedStackCard.equals(cardComponent));
 			j++;
 		}
@@ -181,11 +178,11 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 				if (playCardComponent.wasClicked(e.getX(), e.getY()))  {
 					if (selectedStackCard != null && selectedCard != null) {
 						if (selectedStackCard.getCard().getNumber() == selectedCard.getCard().getNumber()
-							|| selectedStackCard.getCard().getSuit() == selectedCard.getCard().getSuit()) {
-							
+								|| selectedStackCard.getCard().getSuit() == selectedCard.getCard().getSuit()) {
+
 							//remove card from hand
 							model.getHand().remove(selectedCard.getCard());
-						
+
 							//check if hand is empty, then the player is ready to win
 							if (model.getHand().isEmpty()) {
 								model.setReadyToWin(true);
@@ -216,32 +213,32 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 								connection.close();
 							} catch (IOException | TimeoutException e1) {
 								JOptionPane.showMessageDialog(null,
-									    "Something went wrong sending a card.",
-									    "Error",
-									    JOptionPane.ERROR_MESSAGE);
+										"Something went wrong sending a card.",
+										"Error",
+										JOptionPane.ERROR_MESSAGE);
 								logger.error("Something went wrong sending a card.");
 								model.getHand().add(selectedCard.getCard());
 							}
-							
+
 						} else {
 							JOptionPane.showMessageDialog(null,
-							          "The card you selected may not be played on that stack.",
-							          "Invalid play",
-							          JOptionPane.WARNING_MESSAGE);
+									"The card you selected may not be played on that stack.",
+									"Invalid play",
+									JOptionPane.WARNING_MESSAGE);
 						}
 					} else {
 						JOptionPane.showMessageDialog(null,
-						          "Please choose a card to play and a stack to play it on.",
-						          "Incomplete Selection",
-						          JOptionPane.WARNING_MESSAGE);
+								"Please choose a card to play and a stack to play it on.",
+								"Incomplete Selection",
+								JOptionPane.WARNING_MESSAGE);
 					}
 				}
-				
+
 				if (drawCardsComponent.wasClicked(e.getX(),e.getY())) {
 					TurnState toSend = model.getTurnState();
 					int toDraw = model.getTurnState().getToPick()+1;
 					toSend.setNextPlayer(model.getNextPlayer());
-					toSend.setAction(model.getNickname() + " has drawn "+ toDraw+" cards.");
+					toSend.setAction(model.getNickname() + " has drawn "+ toDraw+" card(s).");
 					toSend.setToPick(0);
 					model.draw(toDraw, toSend);
 				}

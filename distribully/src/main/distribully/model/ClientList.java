@@ -111,6 +111,7 @@ public class ClientList extends ConnectingComponent implements IObservable {
 					.method(HttpMethod.POST)
 					.param("player",gson.toJson(player))
 					.send();
+			client.stop();
 		} catch (Exception e) {
 			logger.error("Something went wrong when sending the request to add an user.");
 			return;
