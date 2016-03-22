@@ -21,7 +21,7 @@ public class PlayCardHandler { //Broadcast which card you played
 		message.addProperty("suitId", card.getSuit().getV());
 		String ownerName = "";
 		for (Player owner : model.getTopOfStacks().keySet()) {
-			if (model.getTopOfStacks().get(owner).equals(card)) {
+			if (model.getTopOfStacks().get(owner).equals(stackCard)) {
 				ownerName = owner.getName();
 			}
 		}
