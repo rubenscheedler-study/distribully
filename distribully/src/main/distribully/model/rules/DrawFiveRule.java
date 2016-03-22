@@ -11,7 +11,7 @@ public class DrawFiveRule extends Rule {
 
 	@Override
 	public TurnState execute() {
-		TurnState turnState = new TurnState(model.getTurnState().getNextPlayer(),model.getTurnState().getToPick(),model.getTurnState().getDirection(),model.getTurnState().getAction());
+		TurnState turnState = new TurnState(model.getTurnState().getNextPlayer(),model.getTurnState().getToPick(),model.getTurnState().getDirection(),model.getTurnState().getAction(),false,"");
 
 
 		
