@@ -244,7 +244,7 @@ public class GameConsumerThread extends Thread{
 			System.out.println("Rules from  "+ playerName + " received");
 			Player player = model.getGamePlayerList().getPlayerByNickname(playerName);
 			player.setReadyToPlay(true);
-			if(model.getGamePlayerList().getPlayers().stream().allMatch(p->p.isReadyToPlay())){
+			if(model.getGamePlayerList().getPlayers().stream().allMatch(p->p.isReadyToPlay() && model.getGAME_STATE() == GameState.WAITING_FOR_GAMESTART)){
 				handleReady();
 			}
 		}
@@ -274,7 +274,6 @@ public class GameConsumerThread extends Thread{
 			if(model.getGamePlayerList().getPlayers().stream().allMatch(p->p.isReadyToPlay()) && model.getGAME_STATE() == GameState.WAITING_FOR_GAMESTART){
 				handleReady();
 			}
-			//TODO: check Ready bij rulesSelect
 			//TODO: view
 			if(model.getGamePlayerList().getPlayers().size() <= 1){
 				if(model.getGamePlayerList().getPlayers().stream().anyMatch(p -> p.getName() == model.getNickname())){
