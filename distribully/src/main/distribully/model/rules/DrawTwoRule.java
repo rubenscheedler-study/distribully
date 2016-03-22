@@ -15,7 +15,7 @@ public class DrawTwoRule extends Rule {
 		
 		turnState.setNextPlayer(rotateTurn(turnState.getDirection()));
 		turnState.setToPick(turnState.getToPick()+2);
-		turnState.setAction(model.getTurnState().getNextPlayer() + " played 'draw 2'. The total draw count now stands at: " + turnState.getToPick() + ".");
+		turnState.setAction(model.getTurnState().getNextPlayer() + " made the next person draw 2 more. The total draw count now stands at: " + turnState.getToPick() + ".");
 		return turnState;
 	}
 
