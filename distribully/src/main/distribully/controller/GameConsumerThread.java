@@ -19,10 +19,8 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Consumer;
-import com.rabbitmq.client.ConsumerCancelledException;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
-import com.rabbitmq.client.ShutdownSignalException;
 
 import distribully.model.Card;
 import distribully.model.CardSuit;

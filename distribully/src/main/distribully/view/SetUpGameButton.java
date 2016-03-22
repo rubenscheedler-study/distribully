@@ -1,14 +1,9 @@
-
 package distribully.view;
-
 
 import javax.swing.JMenuItem;
 
-import distribully.controller.GameState;
 import distribully.controller.SetUpGameHandler;
 import distribully.model.DistribullyModel;
-import distribully.model.IObservable;
-import distribully.model.IObserver;
 
 public class SetUpGameButton extends JMenuItem{
 

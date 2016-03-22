@@ -20,13 +20,10 @@ import distribully.model.rules.Rule;
 public class SelectRulesPanel extends DistribullyPanel implements IObserver {
 
 	private static final long serialVersionUID = -7807476804456336016L;
-	
-	private DistribullyWindow view;
 	private DistribullyModel model;
 	private Dimension size;
 	
 	public SelectRulesPanel(DistribullyWindow window, Dimension size) {
-		this.view = window;
 		this.model = window.getModel();
 		this.model.addObserver(this);
 		this.size = size;

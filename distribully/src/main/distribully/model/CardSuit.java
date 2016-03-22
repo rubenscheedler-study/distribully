@@ -21,19 +21,4 @@ public enum CardSuit {
 	public int getV() {
 		return this.v;
 	}
-	
-	CardSuit getSuit(int suit) {
-		switch (suit) {
-		case 0:
-			return this.HEARTS;
-		case 1:
-			return this.DIAMONDS;
-		case 2:
-			return this.CLUBS;
-		case 3:
-			return this.SPADES;
-		default:
-			return null;
-		}
-	}
 }

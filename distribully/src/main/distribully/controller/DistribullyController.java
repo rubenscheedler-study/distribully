@@ -2,9 +2,6 @@ package distribully.controller;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
-
-import javax.swing.JOptionPane;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

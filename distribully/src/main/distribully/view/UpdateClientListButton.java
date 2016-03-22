@@ -12,19 +12,14 @@ public class UpdateClientListButton extends JMenuItem {
 
 	private static final long serialVersionUID = -5658507871936425835L;
 
-	private DistribullyModel model;
-	public UpdateClientListButton(DistribullyModel model) {
-		this.model = model;
-		
+	public UpdateClientListButton(DistribullyModel model) {		
 		this.setText("Refresh Available Player List");
 		this.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new ClientListUpdateHandler(model);
-				
 			}
-			
 		});
 	}
 }
