@@ -7,7 +7,7 @@ import distribully.model.DistribullyModel;
 
 public class LeaveLobbyHandler implements ActionListener  {
 
-	DistribullyModel model;
+	private DistribullyModel model;
 	public LeaveLobbyHandler(DistribullyModel model) {
 		this.model = model;
 	}
