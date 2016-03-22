@@ -43,7 +43,11 @@ public class FinishSelectRulesHandler  implements ActionListener {
 				if(model.getGAME_STATE() != GameState.IN_GAME){ //Since the queue may update the state before this does, this is needed.
 					model.setGAME_STATE(GameState.WAITING_FOR_GAMESTART);
 					if (!model.getGamePlayerList().getPlayers().contains(model.getMe())) {
-						
+						JOptionPane.showMessageDialog(null,
+							    "The game already started without you. \n",
+							    "Can not join game",
+							    JOptionPane.WARNING_MESSAGE);
+						new BackToMainPageHandler(model);
 					}
 				}
 

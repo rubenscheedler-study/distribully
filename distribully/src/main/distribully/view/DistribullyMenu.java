@@ -32,6 +32,8 @@ public class DistribullyMenu extends JMenuBar implements IObserver {
 		
 		if (gameState == GameState.NOT_PLAYING) {
 			this.add(startGameItem);
+		} 
+		if (gameState == GameState.NOT_PLAYING || gameState == GameState.INVITING_USERS) {
 			this.add(updateClientListButton);
 		}
 		if (gameState == GameState.IN_GAME || gameState == GameState.SETTING_RULES || gameState == GameState.WAITING_FOR_GAMESTART) {
