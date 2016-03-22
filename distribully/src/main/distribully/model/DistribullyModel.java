@@ -55,7 +55,7 @@ public class DistribullyModel implements IObservable {
 		allRules = new ArrayList<Rule>();
 		chosenRules = new HashMap<Integer,Rule>();
 		fillAllRules();
-		hand = new ArrayList<Card>();
+		hand = new ArrayList<Card>(Collections.synchronizedList(new ArrayList<Card>()));
 		topOfStacks = new HashMap<Player,Card>();
 
 	}
