@@ -4,9 +4,12 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Logger;
+
 
 import javax.swing.JOptionPane;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -25,8 +28,7 @@ public class CloseWindowHandler extends WindowAdapter {
 	private static Logger logger;
 	public CloseWindowHandler(DistribullyModel model){
 		this.model = model;
-		logger = Logger.getLogger("controller.CloseWindowHandler");
-		logger.setParent(Logger.getLogger("controller.DistribullyController"));
+		logger = LoggerFactory.getLogger("controller.CloseWindowHandler");
 	}
 	@Override
 	public void windowClosing(WindowEvent e)
@@ -56,7 +58,7 @@ public class CloseWindowHandler extends WindowAdapter {
 					message.add("turnState", turnState);
 
 					channel.basicPublish(model.getNickname(), "Leave", null, message.toString().getBytes());
-					logger.fine(" [x] Sent '" + message + "'");
+					logger.info(" [x] Sent '" + message + "'");
 					channel.close();
 					connection.close();
 				} catch (IOException | TimeoutException e1) {
@@ -73,7 +75,7 @@ public class CloseWindowHandler extends WindowAdapter {
 		} else if (model.getGAME_STATE() == GameState.INVITING_USERS) {
 			model.getGamePlayerList().deleteGameList(model.getNickname());//=current host name
 		}
-		logger.fine("Closed game");
+		logger.info("Closed game");
 		System.exit(0);
 
 	}

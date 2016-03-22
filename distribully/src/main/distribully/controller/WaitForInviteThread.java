@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import distribully.model.DistribullyModel;
 
@@ -23,14 +25,13 @@ public class WaitForInviteThread extends Thread {
 		this.model = model;
 		this.port = model.getMyPort();
 		listen = true;
-		logger = Logger.getLogger("controller.WaitForInviteThread");
-		logger.setParent(Logger.getLogger("controller.DistribullyController"));
+		logger = LoggerFactory.getLogger("controller.WaitForInviteThread");
 		this.start();
 	}
 	public void run() {
 		try {
 			serverSocket = new ServerSocket(port);
-			logger.fine("Server is listening for invites...");
+			logger.info("Server is listening for invites...");
 			while (listen) {
 				Socket clientSocket;
 				try {
@@ -41,7 +42,7 @@ public class WaitForInviteThread extends Thread {
 				}
 
 			}
-			logger.fine("Stopped waiting for invites.");
+			logger.info("Stopped waiting for invites.");
 			serverSocket.close();
 		}
 		catch (IOException ioException) {

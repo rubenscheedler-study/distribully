@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -51,8 +53,7 @@ public class DistribullyModel implements IObservable {
 	private boolean isReadyToWin;
 
 	public DistribullyModel() {
-		logger = Logger.getLogger("model.DistribullyModel");
-		logger.setParent(Logger.getLogger("controller.DistribullyController"));
+		logger = LoggerFactory.getLogger("model.DistribullyModel");
 		this.onlinePlayerList = new ClientList(serverAddress,serverPort);
 		this.gamePlayerList = new ClientList(serverAddress, serverPort);
 		observers = new ArrayList<IObserver>();
@@ -286,7 +287,7 @@ public class DistribullyModel implements IObservable {
 			message.addProperty("playerName", this.getNickname());
 
 			channel.basicPublish(this.getNickname(), "InitStack", null, message.toString().getBytes());
-			logger.fine(" [x] Sent '" + message + "'");
+			logger.info(" [x] Sent '" + message + "'");
 
 			channel.close();
 			connection.close();
@@ -343,7 +344,7 @@ public class DistribullyModel implements IObservable {
 			message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
 
 			channel.basicPublish(this.getNickname(), "NextTurn", null, message.toString().getBytes());
-			logger.fine(" [x] Sent '" + message + "'");
+			logger.info(" [x] Sent '" + message + "'");
 
 			channel.close();
 			connection.close();
@@ -386,7 +387,7 @@ public class DistribullyModel implements IObservable {
 
 
 				channel.basicPublish(this.getNickname(), "MustDraw", null, message.toString().getBytes());
-				logger.fine(" [x] Sent '" + message + "'");
+				logger.info(" [x] Sent '" + message + "'");
 
 				channel.close();
 				connection.close();
@@ -412,7 +413,7 @@ public class DistribullyModel implements IObservable {
 				message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
 
 				channel.basicPublish(this.getNickname(), "NextTurn", null, message.toString().getBytes());
-				logger.fine(" [x] Sent '" + message + "'");
+				logger.info(" [x] Sent '" + message + "'");
 
 				channel.close();
 				connection.close();
@@ -461,7 +462,7 @@ public class DistribullyModel implements IObservable {
 			message.addProperty("amount", drawAmount);
 
 			channel.basicPublish(this.getNickname(), "HaveDrawn", null, message.toString().getBytes());
-			logger.fine(" [x] Sent '" + message + "'");
+			logger.info(" [x] Sent '" + message + "'");
 
 			channel.close();
 			connection.close();
@@ -510,7 +511,7 @@ public class DistribullyModel implements IObservable {
 			message.addProperty("cardSuit", cardSuitIndex);
 
 			channel.basicPublish(this.getNickname(), "ChooseSuit", null, message.toString().getBytes());
-			logger.fine(" [x] Sent '" + message + "'");
+			logger.info(" [x] Sent '" + message + "'");
 
 			channel.close();
 			connection.close();
@@ -535,7 +536,7 @@ public class DistribullyModel implements IObservable {
 			message.addProperty("playerWinner", getNickname());
 
 			channel.basicPublish(this.getNickname(), "Win", null, message.toString().getBytes());
-			logger.fine(" [x] Sent '" + message + "'");
+			logger.info(" [x] Sent '" + message + "'");
 
 			channel.close();
 			connection.close();

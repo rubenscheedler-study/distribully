@@ -4,9 +4,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Logger;
+
 
 import javax.swing.JOptionPane;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -24,8 +27,7 @@ public class LeaveGameHandler implements ActionListener  {
 	private static Logger logger;
 	public LeaveGameHandler(DistribullyModel model) {
 		this.model = model;
-		logger = Logger.getLogger("controller.LeaveGameHandler");
-		logger.setParent(Logger.getLogger("controller.DistribullyController"));
+		logger = LoggerFactory.getLogger("controller.LeaveGameHandler");
 	}
 
 	@Override
@@ -55,7 +57,7 @@ public class LeaveGameHandler implements ActionListener  {
 				message.add("turnState", turnState);
 
 				channel.basicPublish(model.getNickname(), "Leave", null, message.toString().getBytes());
-				logger.fine(" [x] Sent '" + message + "'");
+				logger.info(" [x] Sent '" + message + "'");
 
 				channel.close();
 				connection.close();

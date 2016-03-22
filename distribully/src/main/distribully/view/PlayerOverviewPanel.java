@@ -4,7 +4,6 @@ package distribully.view;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -21,11 +20,8 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 	//private ArrayList<Player> playerRows = new ArrayList<Player>();
 	private DistribullyModel model;
 	private Dimension size;
-	private static Logger logger;
 	
 	public PlayerOverviewPanel(DistribullyModel model, Dimension size) {
-		logger = Logger.getLogger("view.PlayerOverviewPanel");
-		logger.setParent(Logger.getLogger("controller.DistribullyController"));
 		this.model = model;
 		this.size = size;
 		model.getOnlinePlayerList().addObserver(this);

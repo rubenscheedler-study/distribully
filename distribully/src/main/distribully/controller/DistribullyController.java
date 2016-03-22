@@ -1,10 +1,12 @@
 package distribully.controller;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 import javax.swing.JOptionPane;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import distribully.model.DistribullyModel;
 import distribully.view.*;
@@ -26,9 +28,8 @@ public class DistribullyController {
 		view = new DistribullyWindow(model);
 		askUserForPort();
 		new JoinClientListHandler(view);
-		logger = Logger.getLogger("controller.DistribullyController");
-		logger.setUseParentHandlers(false);
-		logger.setLevel(Level.FINE);
+		logger = LoggerFactory.getLogger("controller.DistribullyController");
+		logger.info("Started application");
 	}
 	
 	public static void main(String[] args) {
@@ -69,6 +70,5 @@ public class DistribullyController {
 		
 		model.setMyPort(Integer.parseInt(portString));
 		
-	}
-	
+	}	
 }

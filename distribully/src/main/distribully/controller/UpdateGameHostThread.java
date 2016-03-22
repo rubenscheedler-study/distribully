@@ -1,6 +1,7 @@
 package distribully.controller;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import distribully.model.DistribullyModel;
 
@@ -10,25 +11,24 @@ public class UpdateGameHostThread extends Thread {
 	private static Logger logger;
 	
 	public UpdateGameHostThread(DistribullyModel model) {
-		logger = Logger.getLogger("controller.UpdateGameHostThread");
-		logger.setParent(Logger.getLogger("controller.DistribullyController"));
+		logger = LoggerFactory.getLogger("controller.UpdateGameHostThread");
 		this.model = model;
 		isSettingUpGame = true;
 		this.start();
 	}
 	public void run() {
-		logger.fine("Starting update game host thread for playerstatus only...");
+		logger.info("Starting update game host thread for playerstatus only...");
 		while (isSettingUpGame) {
 			model.getGamePlayerList().fillWithGamePlayers(model.getNickname());
 			model.updateInviteStatesByListState(model.getGamePlayerList());
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				logger.warning("GameHostThread interrupted during sleep!");
+				logger.error("GameHostThread interrupted during sleep!");
 				e.printStackTrace();
 			}			
 		}
-		logger.fine("No longer inviting players.");
+		logger.info("No longer inviting players.");
 	}
 	public void setIsSettingUpGame(boolean isSettingUpGame){
 		this.isSettingUpGame = isSettingUpGame;

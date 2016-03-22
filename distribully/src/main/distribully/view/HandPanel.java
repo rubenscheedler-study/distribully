@@ -8,9 +8,11 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonObject;
 import com.rabbitmq.client.Channel;
@@ -46,8 +48,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 	private static Logger logger;
 
 	public HandPanel(DistribullyModel model, Dimension size) {
-		logger = Logger.getLogger("view.HandPanel");
-		logger.setParent(Logger.getLogger("controller.DistribullyController"));
+		logger = LoggerFactory.getLogger("view.HandPanel");
 		this.model = model;
 		this.size = size;
 		IMAGE_HEIGHT = (int)((size.height/2)*0.8);
@@ -147,7 +148,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 
 	@Override
 	public void update(IObservable observable, Object changedObject) {
-		logger.fine("observer update");
+		logger.info("observer update");
 		this.repaint();
 	}
 
@@ -210,7 +211,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 								}
 								message.addProperty("stackOwner", ownerName);
 								channel.basicPublish(model.getNickname(), "PlayCard", null, message.toString().getBytes());
-								logger.fine(" [x] Sent '" + message + "'");
+								logger.info(" [x] Sent '" + message + "'");
 
 								channel.close();
 								connection.close();

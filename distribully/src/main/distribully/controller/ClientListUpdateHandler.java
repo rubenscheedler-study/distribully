@@ -2,13 +2,14 @@ package distribully.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.http.HttpMethod;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -22,8 +23,7 @@ public class ClientListUpdateHandler {
 	
 	private static Logger logger;
 	public ClientListUpdateHandler(DistribullyModel model) {
-		logger = Logger.getLogger("controller.ClientListUpdateHandler");
-		logger.setParent(Logger.getLogger("controller.DistribullyController"));
+		logger = LoggerFactory.getLogger("controller.ClientListUpdateHandler");
 		HttpClient client = new HttpClient();
 		ContentResponse response = null;
 		try {
@@ -42,7 +42,7 @@ public class ClientListUpdateHandler {
 		//TODO: handle response
 		
 		JsonParser jsonParser = new JsonParser();
-		logger.fine(response.getContentAsString());
+		logger.info(response.getContentAsString());
 		JsonElement je = jsonParser.parse(response.getContentAsString());
 		JsonArray ja = je.getAsJsonArray();
 		
