@@ -42,7 +42,6 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 	public HandPanel(DistribullyModel model, Dimension size) {
 		this.model = model;
 		this.size = size;
-		System.out.println("handsize"+size);
 		IMAGE_HEIGHT = (int)((size.height/2)*0.8);
 		IMAGE_WIDTH = (int) (500.0 * ((double)IMAGE_HEIGHT/726.0));
 		CARD_VISIBLE_WIDTH = (int)((double)IMAGE_WIDTH/5.75);
@@ -179,6 +178,8 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 							if (model.getHand().isEmpty()) {
 								model.setReadyToWin(true);
 							}
+							
+							
 
 							JsonObject message = new JsonObject();
 							message.addProperty("cardId",  selectedCard.getCard().getNumber());
@@ -189,9 +190,17 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 									ownerName = owner.getName();
 								}
 							}
+							
+							
 							message.addProperty("stackOwner", ownerName);
-
+							
+							//unselected current selection
+							selectedStackCard = null;
+							selectedCard = null;
+							
 							new ProducerHandler(message.toString(), "PlayCard" ,model.getMe());
+							
+							
 						} else {
 							JOptionPane.showMessageDialog(null,
 									"The card you selected may not be played on that stack.",
