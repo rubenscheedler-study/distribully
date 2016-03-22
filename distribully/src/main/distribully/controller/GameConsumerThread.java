@@ -99,155 +99,190 @@ public class GameConsumerThread extends Thread{
 		@Override
 		public void handleDelivery(String consumerTag, Envelope envelope,
 				AMQP.BasicProperties properties, byte[] body) throws IOException {
-			switch(envelope.getRoutingKey()){ //Scope is not local within cases, means multiple slightly different variable names
+			switch(envelope.getRoutingKey()){
 			case "Start":
-				System.out.println("Game is starting!");
-				if(DistribullyController.lobbyThread != null){
-					DistribullyController.lobbyThread.setInLobby(false);
-				}
-				new ClientListUpdateHandler(model);
-				model.getGamePlayerList().getPlayers().forEach(player -> initPlayerExchange(player));
-				model.setGAME_STATE(GameState.SETTING_RULES);
+				handleStart();
 				break;
 			case "Leave":
-				JsonElement jeLeave = parser.parse(new String(body));
-				String playerNameLeave = jeLeave.getAsJsonObject().get("playerName").getAsString();
-				model.getGamePlayerList().removePlayerByPlayerName(playerNameLeave);
-				System.out.println(playerNameLeave + " left");
-
-				//TODO: view
-				if(model.getGamePlayerList().getPlayers().size() <= 1){
-					if(model.getGamePlayerList().getPlayers().stream().anyMatch(p -> p.getName() == model.getNickname())){
-						//YOU WON //TODO: Dit iets automatischer maken, niet alleen bij leave, mss bij elke refresh/actie?
-					}
-					//Redirect main screen, reboot al die threads enzo
-				}
+				handleLeave(new String(body));
 				break;
 			case "Rules":
-				JsonElement jeRule = parser.parse(new String(body));
-				String playerNameRule = jeRule.getAsJsonObject().get("playerName").getAsString();
-				System.out.println("Rules from  "+ playerNameRule + " received");
-				Player player = model.getGamePlayerList().getPlayerByNickname(playerNameRule);
-				player.setReadyToPlay(true);
-				if(model.getGamePlayerList().getPlayers().stream().allMatch(p->p.isReadyToPlay())){
-
-					model.setAndBroadCastTopOfStack();
-					model.generateNewHand();
-					//Only one player may create the first turn object. We define this as the alphabetically first player
-					ArrayList<Player> toSort = new ArrayList<Player>();
-					toSort.addAll(model.getGamePlayerList().getPlayers());
-					Collections.sort(toSort, (p1, p2) -> p1.getName().compareTo(p2.getName()));
-					if (model.getNickname().equals(toSort.get(0).getName())) {
-						model.generateAndSendFirstTurnObject();
-					}
-					model.setGAME_STATE(GameState.IN_GAME);
-				}
+				handleRules(new String(body));
 				break;
 			case "PlayCard":
-				JsonObject joCard = parser.parse(new String(body)).getAsJsonObject();
-				int cardId = Integer.parseInt(joCard.get("cardId").getAsString());
-				int suiteId = Integer.parseInt(joCard.get("suitId").getAsString());
-				String stackOwner = joCard.get("stackOwner").getAsString();
-				System.out.println("Card "+ cardId +" played");
-				if(stackOwner.equals(model.getNickname())){
-					model.executeCard(cardId);
-				}
-				model.putTopOfStack(model.getGamePlayerList().getPlayerByNickname(stackOwner),new Card(cardId, CardSuit.values()[suiteId]));
-				//TODO: reduce cardCount of currentplayer, die staat in turnstate
-				//TODO: View
+				handleCard(new String(body));
 				break;
 			case "NextTurn":
-				if(model.isReadyToWin()){
-					model.broadcastWin();
-				}
-				JsonObject joTurn = parser.parse(new String(body)).getAsJsonObject();
-				JsonObject turnState = joTurn.get("turnState").getAsJsonObject();
-				TurnState newState = gson.fromJson(turnState, TurnState.class);
-				model.setTurnState(newState);
-
-				System.out.println("Next player is "+ newState.getNextPlayer() +" by action " + newState.getAction());
-				if(model.isMyTurn()){
-					if (newState.isChooseSuit()){
-						String suitCandidate = "";
-						int cardSuitIndex = -1;
-						while (suitCandidate.equals("")) {
-							suitCandidate = JOptionPane.showInputDialog(null,
-									"Choose a new suit for this stack from: \n"
-											+ "hearts, diamonds, clubs, spades",
-											"Choose a New Suit",
-											JOptionPane.QUESTION_MESSAGE).toLowerCase();
-							switch (suitCandidate) {
-							case "hearts":
-								cardSuitIndex = 0;
-								break;
-							case "diamonds" :
-								cardSuitIndex = 1;
-								break;
-							case "clubs":
-								cardSuitIndex = 2;
-								break;
-							case "spades":
-								cardSuitIndex = 3;
-								break;
-							default:
-								suitCandidate = "";
-								break;
-							}
-						}
-
-						model.broadcastStackSuit(cardSuitIndex);
-					}
-				}		
+				handleNextTurn(new String(body));
 				break;
 			case "MustDraw":
-				JsonObject joMustDraw= parser.parse(new String(body)).getAsJsonObject();
-				int drawAmount = Integer.parseInt(joMustDraw.get("drawAmount").getAsString());
-				JsonObject nextState = joMustDraw.get("turnState").getAsJsonObject();
-				TurnState nextTurn = gson.fromJson(nextState, TurnState.class);
-				System.out.println("Must draw " + drawAmount + " cards");
-				if(model.isMyTurn()){
-					model.draw(drawAmount, nextTurn);
-				}	
+				handleMustDraw(new String(body));
 				break;
-
 			case "HaveDrawn":
-				JsonObject joDraw= parser.parse(new String(body)).getAsJsonObject();
-				int amount = Integer.parseInt(joDraw.get("amount").getAsString());
-				System.out.println("Drawn " + amount + " cards");
-				JsonObject changeState = joDraw.get("turnState").getAsJsonObject();
-				TurnState updateState = gson.fromJson(changeState, TurnState.class);
-				model.setTurnState(updateState);
-				//TODO: view
-				//TODO: Update counts, player is in turnstate
+				handleHaveDrawn(new String(body));
 				break;
-
 			case "ChooseSuit":
-				JsonObject joSuit = parser.parse(new String(body)).getAsJsonObject();
-				int suit = Integer.parseInt(joSuit.get("cardSuit").getAsString());
-				JsonObject changedState = joSuit.get("turnState").getAsJsonObject();
-				TurnState updatedState = gson.fromJson(changedState, TurnState.class);
-				System.out.println("new suite on is " + suit); //suite parse
-				model.getTopOfStacks().get(model.getGamePlayerList().getPlayerByNickname(updatedState.getLastStack())).setSuit(CardSuit.values()[suit]);
-				model.setTurnState(updatedState);
+				handleChooseSuit(new String(body));
 				break;
 			case "InitStack":
-				JsonObject joStack = parser.parse(new String(body)).getAsJsonObject();
-				int stackCardId = Integer.parseInt(joStack.get("cardId").getAsString());
-				int stackSuit = Integer.parseInt(joStack.get("cardSuit").getAsString());
-				String playerStackName = joStack.get("playerName").getAsString();
-				System.out.println(playerStackName +" has top of stack " + stackSuit + " " + stackCardId);
-				model.putTopOfStack(model.getGamePlayerList().getPlayerByNickname(playerStackName), new Card(stackCardId, CardSuit.values()[stackSuit]));
+				handleInitStack(new String(body));
 				break;
 			case "Win":
-				JsonObject jeWin = parser.parse(new String(body)).getAsJsonObject();
-				String playerWinner = jeWin.get("playerWinner").getAsString();
-				System.out.println(playerWinner + " has won.");
-				//TODO: popup
-				//TODO: Reset Hashmap of responses
-				//TODO: Back to main (threads, gamestate)
-
+				handleWin(new String(body));
 				break;
 			}
+		}
+
+		private void handleWin(String body) {
+			JsonObject jo = parser.parse(body).getAsJsonObject();
+			String playerWinner = jo.get("playerWinner").getAsString();
+			System.out.println(playerWinner + " has won.");
+			//TODO: popup
+			//TODO: Reset Hashmap of responses
+			//TODO: Back to main (threads, gamestate)			
+		}
+
+		private void handleInitStack(String body) {
+			JsonObject jo = parser.parse(body).getAsJsonObject();
+			int cardId = Integer.parseInt(jo.get("cardId").getAsString());
+			int suit = Integer.parseInt(jo.get("cardSuit").getAsString());
+			String playerName = jo.get("playerName").getAsString();
+			System.out.println(playerName +" has top of stack " + suit + " " + cardId);
+			model.putTopOfStack(model.getGamePlayerList().getPlayerByNickname(playerName), new Card(cardId, CardSuit.values()[suit]));
+		}
+
+		private void handleChooseSuit(String body) {
+			JsonObject jo = parser.parse(body).getAsJsonObject();
+			int suit = Integer.parseInt(jo.get("cardSuit").getAsString());
+			JsonObject turnState = jo.get("turnState").getAsJsonObject();
+			TurnState newState = gson.fromJson(turnState, TurnState.class);
+			System.out.println("new suite on is " + suit); //suite parse
+			model.getTopOfStacks().get(model.getGamePlayerList().getPlayerByNickname(newState.getLastStack())).setSuit(CardSuit.values()[suit]);
+			model.setTurnState(newState);
+		}
+
+		private void handleHaveDrawn(String body) {
+			JsonObject jo= parser.parse(body).getAsJsonObject();
+			int amount = Integer.parseInt(jo.get("amount").getAsString());
+			System.out.println("Drawn " + amount + " cards");
+			JsonObject turnState = jo.get("turnState").getAsJsonObject();
+			TurnState newState = gson.fromJson(turnState, TurnState.class);
+			model.setTurnState(newState);
+		}
+
+		private void handleMustDraw(String body) {
+			JsonObject jo= parser.parse(body).getAsJsonObject();
+			int drawAmount = Integer.parseInt(jo.get("drawAmount").getAsString());
+			JsonObject turnState = jo.get("turnState").getAsJsonObject();
+			TurnState nextState = gson.fromJson(turnState, TurnState.class); //The state that will be used after the user has drawn cards
+			System.out.println("Must draw " + drawAmount + " cards");
+			if(model.isMyTurn()){
+				model.draw(drawAmount, nextState);
+			}	
+			
+		}
+
+		private void handleNextTurn(String body) {
+			if(model.isReadyToWin()){
+				model.broadcastWin();
+			}
+			JsonObject jo = parser.parse(body).getAsJsonObject();
+			JsonObject turnState = jo.get("turnState").getAsJsonObject();
+			TurnState newState = gson.fromJson(turnState, TurnState.class);
+			model.setTurnState(newState);
+
+			System.out.println("Next player is "+ newState.getNextPlayer() +" by action " + newState.getAction());
+			if(model.isMyTurn()){
+				if (newState.isChooseSuit()){
+					String suitCandidate = "";
+					int cardSuitIndex = -1;
+					while (suitCandidate.equals("")) {
+						suitCandidate = JOptionPane.showInputDialog(null,
+								"Choose a new suit for this stack from: \n"
+										+ "hearts, diamonds, clubs, spades",
+										"Choose a New Suit",
+										JOptionPane.QUESTION_MESSAGE).toLowerCase();
+						switch (suitCandidate) {
+						case "hearts":
+							cardSuitIndex = 0;
+							break;
+						case "diamonds" :
+							cardSuitIndex = 1;
+							break;
+						case "clubs":
+							cardSuitIndex = 2;
+							break;
+						case "spades":
+							cardSuitIndex = 3;
+							break;
+						default:
+							suitCandidate = "";
+							break;
+						}
+					}
+
+					model.broadcastStackSuit(cardSuitIndex);
+				}
+			}		
+		}
+
+		private void handleCard(String body) {
+
+			JsonObject jo = parser.parse(body).getAsJsonObject();
+			int cardId = Integer.parseInt(jo.get("cardId").getAsString());
+			int suiteId = Integer.parseInt(jo.get("suitId").getAsString());
+			String stackOwner = jo.get("stackOwner").getAsString();
+			System.out.println("Card "+ cardId +" played");
+			if(stackOwner.equals(model.getNickname())){
+				model.executeCard(cardId);
+			}
+			model.putTopOfStack(model.getGamePlayerList().getPlayerByNickname(stackOwner),new Card(cardId, CardSuit.values()[suiteId]));
+		}
+
+		private void handleRules(String body) {
+			JsonElement je = parser.parse(body);
+			String playerName= je.getAsJsonObject().get("playerName").getAsString();
+			System.out.println("Rules from  "+ playerName + " received");
+			Player player = model.getGamePlayerList().getPlayerByNickname(playerName);
+			player.setReadyToPlay(true);
+			if(model.getGamePlayerList().getPlayers().stream().allMatch(p->p.isReadyToPlay())){
+
+				model.setAndBroadCastTopOfStack();
+				model.generateNewHand();
+				//Only one player may create the first turn object. We define this as the alphabetically first player
+				ArrayList<Player> toSort = new ArrayList<Player>();
+				toSort.addAll(model.getGamePlayerList().getPlayers());
+				Collections.sort(toSort, (p1, p2) -> p1.getName().compareTo(p2.getName()));
+				if (model.getNickname().equals(toSort.get(0).getName())) {
+					model.generateAndSendFirstTurnObject();
+				}
+				model.setGAME_STATE(GameState.IN_GAME);
+			}
+		}
+
+		private void handleLeave(String body) {
+			JsonElement je = parser.parse(body);
+			String playerName = je.getAsJsonObject().get("playerName").getAsString();
+			model.getGamePlayerList().removePlayerByPlayerName(playerName);
+			System.out.println(playerName + " left");
+
+			//TODO: view
+			if(model.getGamePlayerList().getPlayers().size() <= 1){
+				if(model.getGamePlayerList().getPlayers().stream().anyMatch(p -> p.getName() == model.getNickname())){
+					//YOU WON //TODO: Dit iets automatischer maken, niet alleen bij leave, mss bij elke refresh/actie?
+				}
+				//Redirect main screen, reboot al die threads enzo
+			}
+		}
+
+		private void handleStart() {
+			System.out.println("Game is starting!");
+			if(DistribullyController.lobbyThread != null){
+				DistribullyController.lobbyThread.setInLobby(false);
+			}
+			new ClientListUpdateHandler(model);
+			model.getGamePlayerList().getPlayers().forEach(player -> initPlayerExchange(player));
+			model.setGAME_STATE(GameState.SETTING_RULES);			
 		}
 	}
 }
