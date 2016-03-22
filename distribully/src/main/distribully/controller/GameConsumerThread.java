@@ -124,7 +124,7 @@ public class GameConsumerThread{
 				    playerWinner + " has won!",
 				    "Game over",
 				    JOptionPane.PLAIN_MESSAGE);
-			model.getInviteStates().clear();
+
 			new BackToMainPageHandler(model);	
 		}
 
@@ -269,6 +269,10 @@ public class GameConsumerThread{
 				DistribullyController.lobbyThread.setInLobby(false);
 			}
 			new ClientListUpdateHandler(model);
+			
+			model.getInviteStates().clear();
+			model.getChoosenRules().clear();
+			
 			model.getGamePlayerList().getPlayers().forEach(player -> initPlayerExchange(player));
 			model.setGAME_STATE(GameState.SETTING_RULES);			
 		}
