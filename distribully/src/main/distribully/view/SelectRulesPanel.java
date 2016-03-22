@@ -26,7 +26,8 @@ public class SelectRulesPanel extends DistribullyPanel implements IObserver {
 	public SelectRulesPanel(DistribullyWindow window, Dimension size) {
 		this.model = window.getModel();
 		this.model.addObserver(this);
-		this.size = size;
+		Dimension s = new Dimension(size.width,15*20);
+		this.size = s;
 		this.render();
 	}
 	
@@ -83,13 +84,17 @@ public class SelectRulesPanel extends DistribullyPanel implements IObserver {
 		availableRules.addAll(rules);
 		
 		DistribullyPanel rulePanel = new DistribullyPanel();
-		rulePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		
+		rulePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		rulePanel.setMinimumSize(new Dimension(this.size.width, 25));
+		rulePanel.setPreferredSize(new Dimension(this.size.width, 25));
+		rulePanel.setMaximumSize(new Dimension(this.size.width, 25));
 		String cardName = new Card(cardNumber, CardSuit.HEARTS).getCardName(); //Any suit works for this, we only need the name associated with the number
 		
 		DistribullyTextLabel cardNameLabel = new DistribullyTextLabel(cardName + ":");
-		cardNameLabel.setMinimumSize(new Dimension(400, 20));
-		cardNameLabel.setPreferredSize(new Dimension(400, 20));
+		cardNameLabel.setMinimumSize(new Dimension(400, 25));
+		cardNameLabel.setPreferredSize(new Dimension(400, 25));
+		cardNameLabel.setMaximumSize(new Dimension(400, 25));
 		rulePanel.add(cardNameLabel);
 		
 		//check if card has an associated rule, add it to the dropdown
@@ -99,7 +104,9 @@ public class SelectRulesPanel extends DistribullyPanel implements IObserver {
 		
 		Rule[] availableRuleArray = new Rule[availableRules.size()];
 		JComboBox<Rule> ruleDropdown = new JComboBox<Rule>(availableRules.toArray(availableRuleArray));
-		ruleDropdown.setPreferredSize(new Dimension(200,20));
+		ruleDropdown.setMinimumSize(new Dimension(200, 25));
+		ruleDropdown.setPreferredSize(new Dimension(200, 25));
+		ruleDropdown.setMaximumSize(new Dimension(200, 25));
 		//check if card has an associated rule, select it in the dropdown
 		if (model.getChoosenRules().containsKey(cardNumber)) {
 			ruleDropdown.setSelectedItem((model.getChoosenRules().get(cardNumber)));

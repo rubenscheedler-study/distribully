@@ -51,7 +51,9 @@ public class CloseWindowHandler extends WindowAdapter {
 				return; //User does not want to close
 			}
 		}
-		model.getMe().deleteFromServer();
+		if (model.getMe() != null) {
+			model.getMe().deleteFromServer();
+		}
 		if(model.getGAME_STATE() == GameState.IN_LOBBY){
 			model.getGamePlayerList().deleteFromGame(model.getNickname(),model.getCurrentHostName());
 		} else if (model.getGAME_STATE() == GameState.INVITING_USERS) {

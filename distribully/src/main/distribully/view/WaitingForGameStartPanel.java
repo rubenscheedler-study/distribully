@@ -32,9 +32,16 @@ public class WaitingForGameStartPanel extends DistribullyPanel implements IObser
 	
 	public void render() {
 		this.removeAll();
-		
+		DistribullyPanel headerPanel = new DistribullyPanel();
+		Dimension s = new Dimension(this.size.width,40);
+		headerPanel.setMinimumSize(s);
+		headerPanel.setPreferredSize(s);
+		headerPanel.setMaximumSize(s);
+		headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		DistribullyTextLabel header = new DistribullyTextLabel("Waiting For Everyone to Choose Rules...");
-		this.add(header);
+		headerPanel.add(header);
+		this.add(headerPanel);
+		
 		
 		for (Player player : model.getGamePlayerList().getPlayers()) {
 			this.add(getPlayerPanel(player));
@@ -62,5 +69,6 @@ public class WaitingForGameStartPanel extends DistribullyPanel implements IObser
 	@Override
 	public void update(IObservable observable, Object changedObject) {
 		this.render();
+		System.out.println("update waiting for players");
 	}
 }

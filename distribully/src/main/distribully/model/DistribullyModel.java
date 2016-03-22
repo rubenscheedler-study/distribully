@@ -24,6 +24,8 @@ public class DistribullyModel implements IObservable {
 
 	private ClientList gamePlayerList;//contains the players that are part of the game that this user is a part of.
 
+	private GameState GAME_STATE;
+	
 	private String serverAddress = "http://82.73.233.237";//82.73.233.237/82.72.30.166
 	private final int serverPort = 4567;
 	private String myIP;
@@ -70,8 +72,6 @@ public class DistribullyModel implements IObservable {
 	}
 
 
-
-	private GameState GAME_STATE;
 
 	/**
 	 * finds the player object corresponding with the user.
@@ -250,7 +250,7 @@ public class DistribullyModel implements IObservable {
 		return hand;
 	}
 
-	public void setAndBroadCastTopOfStack() {
+	public void setAndBroadCastTopOfStack() {//move it
 
 		Card card = Card.getARandomCard();
 
@@ -285,7 +285,7 @@ public class DistribullyModel implements IObservable {
 
 
 
-	public void generateAndSendFirstTurnObject() {
+	public void generateAndSendFirstTurnObject() {//move it
 		int i = (int)(Math.random()*(double)this.gamePlayerList.getPlayers().size());
 		String nextPlayer = this.gamePlayerList.getPlayers().get(i).getName();
 		int direction = 1;
@@ -302,7 +302,7 @@ public class DistribullyModel implements IObservable {
 
 
 
-	public void executeCard(int cardId) {
+	public void executeCard(int cardId) {//move it
 		int direction = 1;
 		int toPick = 0;
 		TurnState turnState;
@@ -340,7 +340,7 @@ public class DistribullyModel implements IObservable {
 
 
 
-	public void draw(int drawAmount, TurnState nextTurn) {
+	public void draw(int drawAmount, TurnState nextTurn) {//move it
 		//update model according to action
 
 		isReadyToWin = false;
@@ -378,7 +378,7 @@ public class DistribullyModel implements IObservable {
 
 
 
-	public void broadcastStackSuit(int cardSuitIndex) {
+	public void broadcastStackSuit(int cardSuitIndex) {//move it
 		TurnState turnState = new TurnState(getNextPlayer(),this.turnState.getToPick(),this.turnState.getDirection(),this.getNickname() + " changed the suit of the stack of " + this.getTurnState().getLastStack() + ".", false, this.getTurnState().getLastStack());
 		Gson gson = new Gson();
 		JsonParser parser = new JsonParser();

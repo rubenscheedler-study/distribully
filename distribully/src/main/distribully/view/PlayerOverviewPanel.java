@@ -40,7 +40,7 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		} else {
 			players = model.getOnlinePlayerList().getPlayers();
 		}
-
+		size.height = Math.max(players.size()*40 + 80,size.height);//make sure panel is high enough
 		//remove self from the list of available players		
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setMinimumSize(size);
