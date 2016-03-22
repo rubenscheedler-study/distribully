@@ -257,6 +257,7 @@ public class GameConsumerThread extends Thread{
 			logger.info("Rules from  "+ playerName + " received");
 			Player player = model.getGamePlayerList().getPlayerByNickname(playerName);
 			player.setReadyToPlay(true);
+			model.getGamePlayerList().setPlayerReadyState(playerName,true);
 			if(model.getGamePlayerList().getPlayers().stream().allMatch(p->p.isReadyToPlay() && model.getGAME_STATE() == GameState.WAITING_FOR_GAMESTART)){
 				handleReady();
 			}
