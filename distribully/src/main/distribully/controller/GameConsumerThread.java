@@ -47,7 +47,7 @@ public class GameConsumerThread extends Thread{
 				    hostName + " aborted the game that you were invited for. \n",
 				    "No game to join",
 				    JOptionPane.WARNING_MESSAGE);
-			System.out.println("host left before accept");
+			logger.warning("host left before accept");
 			new BackToMainPageHandler(model);
 			return;
 		}
