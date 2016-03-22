@@ -27,7 +27,7 @@ public class DistribullyController {
 		model.setGAME_STATE(GameState.NOT_PLAYING);
 		view = new DistribullyWindow(model);
 		new AskPortHandler(model);
-		new JoinClientListHandler(view);
+		new AskUsernameHandler(model);
 		logger = LoggerFactory.getLogger("controller.DistribullyController");
 		logger.info("Started application");
 	}
