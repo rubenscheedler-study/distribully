@@ -46,11 +46,18 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		this.setPreferredSize(size);
 		this.setMaximumSize(size);
 		
-		
+		this.add(getHeaderPanel());
 		if (players.size() == 1) {
-			this.add(new JLabel("No available players"));
+			DistribullyPanel p = new DistribullyPanel();
+			p.setMinimumSize(new Dimension(this.size.width,30));
+			p.setPreferredSize(new Dimension(this.size.width,30));
+			p.setMaximumSize(new Dimension(this.size.width,30));
+			p.setLayout(new FlowLayout(FlowLayout.LEFT));
+			DistribullyTextLabel l = new DistribullyTextLabel("No available players");
+			p.add(l);
+			this.add(p);
 		} else {
-			this.add(getHeaderPanel());
+			
 			
 			for (Player p : players) {
 				//Do not render self in the general overview
