@@ -10,4 +10,5 @@ When running, make sure the firewall is not blocking the ports. Windows firewall
 --------
 
 When using an external IP, make sure to use the included config file for RabbitMQ. The default config does not allow unauthorized connections from external ip's. (https://www.rabbitmq.com/access-control.html)
+This config on windows should be placed in %APPDATA%/RabbitMQ. There will probably already be an example config there.
 On windows, after updating the config, remove and install the service, then start both server and service. This is the only way to update the config in use on windows. (https://www.rabbitmq.com/configure.html) 
