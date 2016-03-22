@@ -7,7 +7,7 @@ import distribully.model.DistribullyModel;
 import distribully.model.Player;
 
 public class PlayCardHandler { //Broadcast which card you played
-	public PlayCardHandler(Card card, DistribullyModel model){
+	public PlayCardHandler(Card card, Card stackCard, DistribullyModel model){
 		//Remove card from hand
 		model.getHand().remove(card);
 
@@ -21,7 +21,7 @@ public class PlayCardHandler { //Broadcast which card you played
 		message.addProperty("suitId", card.getSuit().getV());
 		String ownerName = "";
 		for (Player owner : model.getTopOfStacks().keySet()) {
-			if (model.getTopOfStacks().get(owner).equals(card)) {
+			if (model.getTopOfStacks().get(owner).equals(stackCard)) {
 				ownerName = owner.getName();
 			}
 		}
