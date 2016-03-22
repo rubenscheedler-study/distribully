@@ -20,10 +20,11 @@ public class FinishSelectRulesHandler  implements ActionListener {
 		if(model.getChoosenRules().size() == model.getAllRules().size()){ //Are all rules assigned?
 			JsonObject message = new JsonObject();
 			message.addProperty("playerName", model.getNickname());
-			new ProducerHandler(message.toString(), "Rules", model.getMe());
+			
 			if(model.getGAME_STATE() != GameState.IN_GAME){ //Since the queue may update the state before this does, this is needed.
 				model.setGAME_STATE(GameState.WAITING_FOR_GAMESTART);
 			}
+			new ProducerHandler(message.toString(), "Rules", model.getMe());
 		}else{
 			JOptionPane.showMessageDialog(null,
 					"Every rule must be assigned.",

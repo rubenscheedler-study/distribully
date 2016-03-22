@@ -5,6 +5,9 @@ import java.awt.FlowLayout;
 
 import javax.swing.BoxLayout;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import distribully.model.DistribullyModel;
 import distribully.model.IObservable;
 import distribully.model.IObserver;
@@ -15,10 +18,13 @@ public class WaitingForGameStartPanel extends DistribullyPanel implements IObser
 	private static final long serialVersionUID = -4781135704384241776L;
 	private DistribullyModel model;
 	private Dimension size;
-
+	private static Logger logger;
+	
 	public WaitingForGameStartPanel(DistribullyModel model, Dimension size) {
 		this.model = model;
 		this.size = size;
+		
+		logger = LoggerFactory.getLogger("view.WaitingForGameStartPanel");
 		
 		this.model.addObserver(this);
 		this.model.getGamePlayerList().addObserver(this);
@@ -69,6 +75,6 @@ public class WaitingForGameStartPanel extends DistribullyPanel implements IObser
 	@Override
 	public void update(IObservable observable, Object changedObject) {
 		this.render();
-		System.out.println("update waiting for players");
+		logger.info("update waiting for players panel");
 	}
 }
