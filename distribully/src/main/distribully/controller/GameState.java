@@ -1,7 +1,4 @@
 package distribully.controller;
-
-
-
 public enum GameState {
 	NOT_PLAYING (0),
 	INVITING_USERS (1),
@@ -12,12 +9,8 @@ public enum GameState {
 	
 	private int v;
 
-	public int getV() {
+	public int getV() { //Get the int value of the current gameState
 		return v;
-	}
-
-	public void setV(int v) {
-		this.v = v;
 	}
 
 	GameState(int v) {

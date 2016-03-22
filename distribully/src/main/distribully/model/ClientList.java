@@ -19,7 +19,7 @@ import com.google.gson.JsonParser;
 
 public class ClientList extends ConnectingComponent implements IObservable {
 	private ArrayList<Player> players;
-	//list of observers
+	//List of observers
 	private ArrayList<IObserver> observers = new ArrayList<IObserver>();
 	private static Logger logger;
 	
@@ -49,9 +49,8 @@ public class ClientList extends ConnectingComponent implements IObservable {
 	}
 
 	
-	/**
+	/*
 	 * Fills the list with the game players on the server of the game owned by hostName
-	 * @param hostName
 	 */
 	public boolean fillWithGamePlayers(String hostName) {
 		HttpClient client = new HttpClient();
@@ -75,17 +74,15 @@ public class ClientList extends ConnectingComponent implements IObservable {
 			Gson gson = new Gson();
 			Player[] players = gson.fromJson(ja, Player[].class);
 			ArrayList<Player> playerList  = new ArrayList<Player>(Arrays.asList(players));
-			System.out.println("PL:"+playerList);
-			//only update the list if it's different
+			//Only update the list if it's different
 			boolean listsAreEqual = this.playersListEquals(playerList);
 			if (!listsAreEqual) {
 				this.players.removeAll(this.players);
 				this.players.addAll(playerList);
 				this.notifyObservers(this);
 			} 
-
 			return true;
-		} else if(response.getStatus() == 403){
+		} else if(response.getStatus() == 403){ //Game does not exist, just empty your list
 			this.players.removeAll(this.players);
 			return false;
 		} else{
@@ -93,18 +90,13 @@ public class ClientList extends ConnectingComponent implements IObservable {
 		}
 	}
 	
-	/**
+	/*
 	 * Adds the player to this clientlist and to the game player server list
-	 * @param player
 	 */
 	public void addGamePlayer(Player player, String hostName) {
-		
-		
 		HttpClient client = new HttpClient();
 		ContentResponse response = null;
-		
 		Gson gson = new Gson();
-		
 		try {
 			client.start();
 			response = client.newRequest(this.serverAddress + ":" + this.serverPort + "/game/" + hostName)
@@ -125,16 +117,14 @@ public class ClientList extends ConnectingComponent implements IObservable {
 		}
 	}
 	
-	/**
-	 * creates a list on the server under this hostName. Does not modify any instance of ClientList.
-	 * @param hostName
+	/*
+	 * Creates a list on the server under this hostName. Does not modify any instance of ClientList.
 	 */
 	public void createGameList(Player host) {
 		HttpClient client = new HttpClient();
 		ContentResponse response = null;
 		
 		Gson gson = new Gson();
-		
 		try {
 			client.start();
 			response = client.newRequest(this.serverAddress + ":" + this.serverPort + "/createGame/" + host.getName())
@@ -150,8 +140,6 @@ public class ClientList extends ConnectingComponent implements IObservable {
 		if (response.getStatus() != 200) {
 			logger.error("Something went wrong when creating a game.");
 		}
-		
-		
 	}
 	
 	public void deleteGameList(String hostName) {
@@ -174,9 +162,8 @@ public class ClientList extends ConnectingComponent implements IObservable {
 		}		
 	}
 	
-	/**
+	/*
 	 * overwrites the current player list with the received playerList
-	 * @param playerList
 	 */
 	public void setPlayers(ArrayList<Player> playerList) {
 		if (!this.playersListEquals(playerList)) {
@@ -195,8 +182,7 @@ public class ClientList extends ConnectingComponent implements IObservable {
 		return null;
 	}
 
-
-
+	//Delete yourself from the playerList
 	public void deleteFromGame(String playerName, String hostName) {
 		HttpClient client = new HttpClient();
 		ContentResponse response;
@@ -211,7 +197,6 @@ public class ClientList extends ConnectingComponent implements IObservable {
 		if(response.getStatus() != 200){//400 or 403
 			logger.error("Something went wrong when deleting an user.");
 		}
-		
 	}
 	
 	public void removePlayerByPlayerName(String playerName) {
@@ -220,16 +205,15 @@ public class ClientList extends ConnectingComponent implements IObservable {
 	}
 
 	public boolean playersListEquals(ArrayList<Player> otherPlayerList) {
-		Collections.sort(otherPlayerList, new PlayerComperator());
+		Collections.sort(otherPlayerList, (player1, player2) -> player1.getName().compareTo(player2.getName()));
 		
 		if (this.players.size() != otherPlayerList.size()) {
 			return false;
 		}
-		
 		//check if current list and new list are not equal
 		boolean listsAreEqual = true;
 		for (int i = 0; i < this.players.size(); i++) {
-			listsAreEqual = listsAreEqual && (this.players.get(i).equals(otherPlayerList.get(i)));
+			listsAreEqual = listsAreEqual && (this.players.get(i).equals(otherPlayerList.get(i))); //Check if true for all
 		}
 		
 		return listsAreEqual;

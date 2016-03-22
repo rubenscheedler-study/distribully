@@ -1,7 +1,6 @@
 package distribully.model;
 
 public enum CardSuit {
-	
 	HEARTS (0),
 	DIAMONDS (1),
 	CLUBS (2),
@@ -13,12 +12,7 @@ public enum CardSuit {
 		v = val;
 	}
 	
-	public static boolean areSameColor(CardSuit first, CardSuit second) {
-		return ((first.getV() & 2) == (second.getV() & 2)) //return true if both cards are red or both cards are black
-			|| ((first.getV() & 4) == (second.getV() & 4));
-	}
-	
-	public int getV() {
+	public int getV() { //Get int associated with the suit
 		return this.v;
 	}
 }

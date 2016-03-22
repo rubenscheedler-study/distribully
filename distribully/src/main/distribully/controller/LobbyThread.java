@@ -1,7 +1,5 @@
 package distribully.controller;
 
-
-
 import javax.swing.JOptionPane;
 
 import org.slf4j.Logger;
@@ -30,9 +28,8 @@ public class LobbyThread extends Thread {
 					logger.error("Lobbythread interrupted during sleep!");
 				}			
 			}else{
-				inLobby = false;
-				model.setGAME_STATE(GameState.NOT_PLAYING);
-				DistribullyController.waitForInviteThread = new WaitForInviteThread(model);
+				inLobby = false; //No players in this game (game has closed)
+				new BackToMainPageHandler(model);
 				JOptionPane.showMessageDialog(null,
 					    "Lobby has been closed",
 					    "Lobby closed",

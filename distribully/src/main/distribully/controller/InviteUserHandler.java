@@ -21,7 +21,6 @@ public class InviteUserHandler implements ActionListener {
 		this.model = model;
 		name = username;
 		logger = LoggerFactory.getLogger("controller.InviteUserHandler");
-		
 	}
 	
 	@Override
@@ -34,8 +33,8 @@ public class InviteUserHandler implements ActionListener {
 		    JOptionPane.ERROR_MESSAGE);
 		}else{
 			logger.info("creating invite thread...");
-			InviteThread thread = new InviteThread(player, model);
-			DistribullyController.InviteThreadList.add(thread);
+			InviteThread thread = new InviteThread(player, model); 
+			DistribullyController.InviteThreadList.add(thread); //Invite the player. Thread this, since we don't want to wait
 			model.putInviteState(name, "waiting for response...");
 		}
 		

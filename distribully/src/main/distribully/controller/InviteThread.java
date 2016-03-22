@@ -54,7 +54,7 @@ public class InviteThread extends Thread{
 			String data = in.readUTF();
 			if(data.equals("Accepted")){ 
 				model.putInviteState(player.getName(), "Accepted");
-				//store this player on the game player list on the server
+				//Store this player on the game player list on the server
 				model.getGamePlayerList().addGamePlayer(player, model.getNickname());
 			}else{
 				model.putInviteState(player.getName(), "Rejected");
@@ -65,10 +65,10 @@ public class InviteThread extends Thread{
 			model.putInviteState(player.getName(), "Rejected");
 		} catch (SocketException e) {//Socked closed from the outside, don't update the view.
 			model.putInviteState(player.getName(), "Unreachable");
-		} catch (IOException e) {
+		} catch (IOException e) { //Port is not open
 			model.putInviteState(player.getName(), "Unreachable");
 		}finally {
-			DistribullyController.InviteThreadList.remove(this);
+			DistribullyController.InviteThreadList.remove(this); //No longer is this thread inviting
 			if (s != null){
 				try {
 					s.close();

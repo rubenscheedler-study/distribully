@@ -29,8 +29,8 @@ public class LeaveGameHandler implements ActionListener  {
 
 			JsonObject message = new JsonObject();
 			message.addProperty("playerName", model.getNickname());
-			//If getNxtPlayer is null, game hasn't started, so return any player as it will be overwritten anyway. Most convenient is our own name.
-			TurnState newState;
+			//If getNextPlayer is null, game hasn't started, so return any player as it will be overwritten anyway. Most convenient is our own name.
+			TurnState newState; //Select someone to takeOver your turn, if it is your turn. Else tell everyone the player doesn't change because you leave
 			if(model.getTurnState() == null){
 				newState = new TurnState(model.getNickname(), 0, 1, model.getNickname() + " has left the game.", false, "");
 			}else{
@@ -38,8 +38,8 @@ public class LeaveGameHandler implements ActionListener  {
 			}
 			JsonObject turnState = parser.parse(gson.toJson(newState)).getAsJsonObject();
 			message.add("turnState", turnState);
-			new ProducerHandler(message.toString(), "Leave", model.getMe());
-			new BackToMainPageHandler(model);
+			new ProducerHandler(message.toString(), "Leave", model.getMe()); //Tell everyone you left
+			new BackToMainPageHandler(model); //Return to the main page
 		}
 	}
 }

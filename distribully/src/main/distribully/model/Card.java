@@ -1,20 +1,20 @@
 package distribully.model;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class Card {
 	private int number;//ace=11,jack=12,queen=13,king=14
 	private CardSuit suit;
-	private long uniqueMaker;
+	private long uniqueIdentifier;
 	
 	public Card(int number, CardSuit suit) {
 		this.setNumber(number);
 		this.setSuit(suit);
 		
-		Random randomno = new Random();
-		long value = randomno.nextLong();
-		uniqueMaker = value;
+		Random randomNum = new Random();
+		long value = randomNum.nextLong();
+		//Since in this game the user can have multiples of the same card, we must generate an unique identifier to differentiate
+		uniqueIdentifier = value; 
 	}
 
 	public int getNumber() {
@@ -35,7 +35,7 @@ public class Card {
 	
 	public String getCardName() {
 		String name = "";
-		if (number > 10) {//map to the right textual name
+		if (number > 10) {//Map to the right textual name
 			switch (number) {
 			case 11:
 				name += "Ace";
@@ -50,7 +50,7 @@ public class Card {
 				name += "King";
 				break;
 			default:
-				name += number;//easier to detect the problem than when using empty string
+				name += number;//Should never be hit
 				break;
 			}
 
@@ -87,44 +87,10 @@ public class Card {
 		return img + ".png";
 	}
 	
-	public ArrayList<Card> getFullDeck() {
-		ArrayList<Card> deck = new ArrayList<Card>();
-		
-		for (int i = 2; i < 15; i++) {
-			deck.add(new Card(i,CardSuit.CLUBS));
-		}
-		for (int i = 2; i < 15; i++) {
-			deck.add(new Card(i,CardSuit.DIAMONDS));
-		}
-		for (int i = 2; i < 15; i++) {
-			deck.add(new Card(i,CardSuit.HEARTS));
-		}
-		for (int i = 2; i < 15; i++) {
-			deck.add(new Card(i,CardSuit.SPADES));
-		}
-		
-		return deck;
-	}
-	
 	public static Card getARandomCard() {
 		int cardIndex = (int)(2.0 + (Math.random()*12.0));
 		int cardSuitIndex = (int)(Math.random()*3.0);
-		CardSuit suit;
-		switch (cardSuitIndex) {
-		case 0:
-			suit = CardSuit.CLUBS;
-			break;
-		case 1:
-			suit = CardSuit.DIAMONDS;
-			break;
-		case 2:
-			suit = CardSuit.HEARTS;
-			break;
-		case 3:
-		default:
-			suit = CardSuit.SPADES;
-			break;
-		}
+		CardSuit suit = CardSuit.values()[cardSuitIndex];
 		return new Card(cardIndex,suit);
 	}
 
@@ -134,7 +100,7 @@ public class Card {
 		int result = 1;
 		result = prime * result + number;
 		result = prime * result + ((suit == null) ? 0 : suit.hashCode());
-		result = prime * result + (int) (uniqueMaker ^ (uniqueMaker >>> 32));
+		result = prime * result + (int) (uniqueIdentifier ^ (uniqueIdentifier >>> 32));
 		return result;
 	}
 
@@ -151,12 +117,8 @@ public class Card {
 			return false;
 		if (suit != other.suit)
 			return false;
-		if (uniqueMaker != other.uniqueMaker)
+		if (uniqueIdentifier != other.uniqueIdentifier)
 			return false;
 		return true;
-	}
-
-	public boolean isSameCard(Card other) {
-		return other.getNumber() == this.number && other.getSuit() == this.suit;
 	}
 }

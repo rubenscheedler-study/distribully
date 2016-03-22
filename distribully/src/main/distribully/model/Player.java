@@ -9,8 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Player extends ConnectingComponent implements Comparable<Player> {
-
-
 	private String name;
 	private String ip;
 	private int port;
@@ -58,7 +56,7 @@ public class Player extends ConnectingComponent implements Comparable<Player> {
 		return available;
 	}
 	
-	public void setAvailable(boolean available) {
+	public void setAvailable(boolean available) { //Update your availability
 		this.available = available;
 		HttpClient client = new HttpClient();
 		ContentResponse response = null;
@@ -81,7 +79,7 @@ public class Player extends ConnectingComponent implements Comparable<Player> {
 		}
 	}
 	
-	public void deleteFromServer(){
+	public void deleteFromServer(){ //Remove yourself from the server
 		HttpClient client = new HttpClient();
 		ContentResponse response;
 		try {

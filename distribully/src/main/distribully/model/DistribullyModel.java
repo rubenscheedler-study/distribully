@@ -356,9 +356,8 @@ public class DistribullyModel implements IObservable {
 		JsonObject message = new JsonObject();
 
 		message.add("turnState",  parser.parse((gson.toJson(nextTurn))).getAsJsonObject());
-		message.addProperty("amount", drawAmount);
 
-		new ProducerHandler(message.toString(), "HaveDrawn" ,this.getMe());
+		new ProducerHandler(message.toString(), "NextTurn" ,this.getMe());
 
 	}
 
