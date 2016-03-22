@@ -157,6 +157,9 @@ public class GameConsumerThread extends Thread{
 				//TODO: View
 				break;
 			case "NextTurn":
+				if(model.isReadyToWin()){
+					model.broadCastWin();
+				}
 				JsonObject joTurn = parser.parse(new String(body)).getAsJsonObject();
 				JsonObject turnState = joTurn.get("turnState").getAsJsonObject();
 				TurnState newState = gson.fromJson(turnState, TurnState.class);

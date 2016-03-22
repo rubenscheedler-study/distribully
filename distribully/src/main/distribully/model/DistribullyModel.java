@@ -505,4 +505,29 @@ public class DistribullyModel implements IObservable {
 			e1.printStackTrace();
 		}
 	}
+	
+	public void broadcastWin() {
+		ConnectionFactory factory = new ConnectionFactory();
+		factory.setHost(this.getMe().getIp());
+		Connection connection;
+		try {
+			connection = factory.newConnection();
+			Channel channel = connection.createChannel();
+
+			channel.exchangeDeclare(this.getNickname(), "fanout");
+
+			JsonObject message = new JsonObject();
+
+			message.addProperty("playerWinner", getNickname());
+			
+			channel.basicPublish(this.getNickname(), "Win", null, message.toString().getBytes());
+			System.out.println(" [x] Sent '" + message + "'");
+
+			channel.close();
+			connection.close();
+		} catch (IOException | TimeoutException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 }
