@@ -31,7 +31,7 @@ public class DistribullyWindow extends JFrame implements IObserver {
 	private DistribullyModel model;
 	
 	//View components
-	private JPanel mainPanel;
+	private DistribullyPanel mainPanel;
 	private PlayerOverviewPanel playerOverviewPanel;
 	private SelectRulesPanel selectRulesPanel;
 	private WaitingForGameStartPanel waitingForGameStartPanel;
@@ -69,29 +69,8 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		this.determinePanelToShow();
 		mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.PAGE_AXIS));
 		
-		scrollPane = new JScrollPane(mainPanel);
-		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-		scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+		addScrollPane(mainPanel);
 		
-		scrollPane.getViewport().addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				mainPanel.revalidate();
-				mainPanel.repaint();
-			}
-		});
-		
-		this.add(scrollPane);
-		
-		this.revalidate();
-		this.repaint();
-	}
-	
-	public void setMainPanel(JPanel content) {
-		this.remove(scrollPane);
-		this.mainPanel = content;
-		this.add(mainPanel);
-		logger.info("updated main panel");
 		this.revalidate();
 		this.repaint();
 	}
@@ -105,11 +84,9 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		if (gameState instanceof GameState) {
 			this.remove(scrollPane);
 			determinePanelToShow();	
-			scrollPane = new JScrollPane(mainPanel);
-			if (scrollPane.equals(gamePanel)) {
-				scrollPane.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_NEVER);
-			}
-			this.add(scrollPane);
+			
+			logger.info("gameState update window|gameState"+gameState.toString()+"|comCount:"+this.getComponent(0).toString());
+			addScrollPane(mainPanel);
 			this.revalidate();
 			this.repaint();
 		} 
@@ -133,5 +110,24 @@ public class DistribullyWindow extends JFrame implements IObserver {
 			mainPanel = playerOverviewPanel;
 			break;
 		}
+	}
+	
+	public void addScrollPane(DistribullyPanel panel) {
+		scrollPane = new JScrollPane(panel);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+		scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+		
+		scrollPane.getViewport().addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				mainPanel.revalidate();
+				mainPanel.repaint();
+			}
+		});
+		panel.revalidate();
+		panel.repaint();
+		this.add(scrollPane);
+		
+
 	}
 }
