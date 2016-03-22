@@ -510,6 +510,19 @@ public class DistribullyModel implements IObservable {
 			e1.printStackTrace();
 		}
 	}
+<<<<<<< HEAD
+
+
+
+	public boolean isReadyToWin() {
+		return isReadyToWin;
+	}
+
+
+
+	public void setReadyToWin(boolean isReadyToWin) {
+		this.isReadyToWin = isReadyToWin;
+=======
 	
 	public void broadcastWin() {
 		ConnectionFactory factory = new ConnectionFactory();
@@ -534,17 +547,6 @@ public class DistribullyModel implements IObservable {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-	}
-
-
-
-	public boolean isReadyToWin() {
-		return isReadyToWin;
-	}
-
-
-
-	public void setReadyToWin(boolean isReadyToWin) {
-		this.isReadyToWin = isReadyToWin;
+>>>>>>> 38e1b55a730e4f7a8abb7d530bf4ef04e85541db
 	}
 }
