@@ -7,7 +7,7 @@ import distribully.model.DistribullyModel;
 import distribully.model.Player;
 
 public class PlayCardHandler { //Broadcast which card you played
-	public PlayCardHandler(Card card, DistribullyModel model){
+	public PlayCardHandler(Card card, Card stackCard, DistribullyModel model){
 		//Remove card from hand
 		model.getHand().remove(card);
 

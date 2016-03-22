@@ -168,10 +168,11 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 						if (selectedStackCard.getCard().getNumber() == selectedCard.getCard().getNumber() //May card be played
 								|| selectedStackCard.getCard().getSuit() == selectedCard.getCard().getSuit()) {
 							Card card = selectedCard.getCard();
+							Card stackCard = selectedStackCard.getCard();
 							//Unselected current selection
 							selectedStackCard = null;
 							selectedCard = null;
-							new PlayCardHandler(card, model);
+							new PlayCardHandler(card, stackCard, model);
 						} else {
 							JOptionPane.showMessageDialog(null,
 									"The card you selected may not be played on that stack.",
