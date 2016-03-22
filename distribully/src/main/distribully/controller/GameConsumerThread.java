@@ -246,29 +246,36 @@ public class GameConsumerThread extends Thread{
 			Player player = model.getGamePlayerList().getPlayerByNickname(playerName);
 			player.setReadyToPlay(true);
 			if(model.getGamePlayerList().getPlayers().stream().allMatch(p->p.isReadyToPlay())){
-
-				model.setAndBroadCastTopOfStack();
-				model.generateNewHand();
-				//Only one player may create the first turn object. We define this as the alphabetically first player
-				ArrayList<Player> toSort = new ArrayList<Player>();
-				toSort.addAll(model.getGamePlayerList().getPlayers());
-				Collections.sort(toSort, (p1, p2) -> p1.getName().compareTo(p2.getName()));
-				if (model.getNickname().equals(toSort.get(0).getName())) {
-					model.generateAndSendFirstTurnObject();
-				}
-				model.setGAME_STATE(GameState.IN_GAME);
+				handleReady();
 			}
+		}
+
+		private void handleReady() {
+			model.setAndBroadCastTopOfStack();
+			model.generateNewHand();
+			//Only one player may create the first turn object. We define this as the alphabetically first player
+			ArrayList<Player> toSort = new ArrayList<Player>();
+			toSort.addAll(model.getGamePlayerList().getPlayers());
+			Collections.sort(toSort, (p1, p2) -> p1.getName().compareTo(p2.getName()));
+			if (model.getNickname().equals(toSort.get(0).getName())) {
+				model.generateAndSendFirstTurnObject();
+			}
+			model.setGAME_STATE(GameState.IN_GAME);
 		}
 
 		private void handleLeave(String body) {
 			JsonElement je = parser.parse(body);
 			String playerName = je.getAsJsonObject().get("playerName").getAsString();
-			model.getGamePlayerList().removePlayerByPlayerName(playerName);
 			System.out.println(playerName + " left");
 			JsonObject jo = parser.parse(body).getAsJsonObject();
 			JsonObject turnState = jo.get("turnState").getAsJsonObject();
 			TurnState newState = gson.fromJson(turnState, TurnState.class);
-			model.setTurnState(newState);
+			model.setTurnState(newState);//Ensure the setUpdate happens before the remove, to prevent async errors
+			model.getGamePlayerList().removePlayerByPlayerName(playerName);
+			if(model.getGamePlayerList().getPlayers().stream().allMatch(p->p.isReadyToPlay())){
+				handleReady();
+			}
+			//TODO: check Ready bij rulesSelect
 			//TODO: view
 			if(model.getGamePlayerList().getPlayers().size() <= 1){
 				if(model.getGamePlayerList().getPlayers().stream().anyMatch(p -> p.getName() == model.getNickname())){

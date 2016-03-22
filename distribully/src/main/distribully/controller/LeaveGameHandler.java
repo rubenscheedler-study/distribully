@@ -44,7 +44,9 @@ public class LeaveGameHandler implements ActionListener  {
 
 				JsonObject message = new JsonObject();
 				message.addProperty("playerName", model.getNickname());
-				JsonObject turnState = parser.parse(gson.toJson(new TurnState(model.getNextPlayer(), 0, model.getTurnState().getDirection(), model.getNickname() + " has left the game.", false, ""))).getAsJsonObject();
+				//If getNxtPlayer is null, game hasn't started, so return any player as it will be overwritten anyway. Most convenient is our own name.
+				TurnState newState = new TurnState((model.getNextPlayer() == null) ? model.getNextPlayer() : model.getNickname(), 0, model.getTurnState().getDirection(), model.getNickname() + " has left the game.", false, "");
+				JsonObject turnState = parser.parse(gson.toJson(newState)).getAsJsonObject();
 				message.add("turnState", turnState);
 
 				channel.basicPublish(model.getNickname(), "Leave", null, message.toString().getBytes());
