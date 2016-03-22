@@ -32,13 +32,19 @@ public class AskUsernameHandler {
 			}
 			chosenNickname = chosenNickname.trim();
 			
-			if (chosenNickname.contains(" ")){ //RestServer does not like spaces
+			if (chosenNickname.contains(" ")){
+				chosenNickname = "";
+				
+			}
+			boolean onlyLettersAndNumbers = chosenNickname.chars().allMatch(x -> Character.isLetter(x) || Character.isDigit(x));
+			if (!onlyLettersAndNumbers) { //RestServer does not like spaces, question marks etc.
 				chosenNickname = "";
 				JOptionPane.showMessageDialog(null,
-					    "Spaces are not allowed in the username",
+					    "The username may only contain letters and digits.",
 					    "Invalid username",
 					    JOptionPane.WARNING_MESSAGE);
 			}
+			
 			if (!chosenNickname.equals("") && !nicknameAvailable(chosenNickname)) {
 				chosenNickname = "";
 				JOptionPane.showMessageDialog(null,
