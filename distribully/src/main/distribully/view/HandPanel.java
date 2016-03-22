@@ -42,6 +42,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 	public HandPanel(DistribullyModel model, Dimension size) {
 		this.model = model;
 		this.size = size;
+		System.out.println("handsize"+size);
 		IMAGE_HEIGHT = (int)((size.height/2)*0.8);
 		IMAGE_WIDTH = (int) (500.0 * ((double)IMAGE_HEIGHT/726.0));
 		CARD_VISIBLE_WIDTH = (int)((double)IMAGE_WIDTH/5.75);

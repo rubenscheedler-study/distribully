@@ -56,7 +56,8 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		
 		Dimension contentSize = this.getContentPane().getSize();
 		contentSize.width -= 25;
-		contentSize.height -= 100;
+		contentSize.height = screenSize.height - 100;
+		System.out.println(contentSize);
 		playerOverviewPanel = new PlayerOverviewPanel(model,contentSize);
 		selectRulesPanel = new SelectRulesPanel(this,contentSize);
 		gamePanel = new HandPanel(model,contentSize);
