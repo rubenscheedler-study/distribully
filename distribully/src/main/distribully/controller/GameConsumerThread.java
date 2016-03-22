@@ -188,7 +188,6 @@ public class GameConsumerThread extends Thread{
 			if(model.isMyTurn()){
 				model.draw(drawAmount, nextState);
 			}	
-			
 		}
 
 		private void handleNextTurn(String body) {
@@ -266,7 +265,7 @@ public class GameConsumerThread extends Thread{
 			ArrayList<Player> toSort = new ArrayList<Player>();
 			toSort.addAll(model.getGamePlayerList().getPlayers());
 			Collections.sort(toSort, (p1, p2) -> p1.getName().compareTo(p2.getName()));
-			if (model.getNickname().equals(toSort.get(0).getName())) {
+			if (model.getNickname().equals(toSort.get(0).getName())) { //Afvangen dat 0 wel moet bestaan
 				model.generateAndSendFirstTurnObject();
 			}
 			model.setGAME_STATE(GameState.IN_GAME);
@@ -281,7 +280,7 @@ public class GameConsumerThread extends Thread{
 			TurnState newState = gson.fromJson(turnState, TurnState.class);
 			model.setTurnState(newState);//Ensure the setUpdate happens before the remove, to prevent async errors
 			model.getGamePlayerList().removePlayerByPlayerName(playerName);
-			if(model.getGamePlayerList().getPlayers().stream().allMatch(p->p.isReadyToPlay())){
+			if(model.getGamePlayerList().getPlayers().stream().allMatch(p->p.isReadyToPlay()) && model.getGAME_STATE() == GameState.WAITING_FOR_GAMESTART){
 				handleReady();
 			}
 			//TODO: check Ready bij rulesSelect
