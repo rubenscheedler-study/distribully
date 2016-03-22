@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -14,19 +15,22 @@ import distribully.model.DistribullyModel;
 public class WaitForInviteThread extends Thread {
 	private int port;
 	private volatile boolean listen = false;
-	ServerSocket serverSocket;
-	DistribullyModel model;
+	private ServerSocket serverSocket;
+	private DistribullyModel model;
+	private static Logger logger;
 
 	public WaitForInviteThread(DistribullyModel model) {
 		this.model = model;
 		this.port = model.getMyPort();
 		listen = true;
+		logger = Logger.getLogger("controller.WaitForInviteThread");
+		logger.setParent(Logger.getLogger("controller.DistribullyController"));
 		this.start();
 	}
 	public void run() {
 		try {
 			serverSocket = new ServerSocket(port);
-			System.out.println("Server is listening for invites...");
+			logger.fine("Server is listening for invites...");
 			while (listen) {
 				Socket clientSocket;
 				try {
@@ -37,7 +41,7 @@ public class WaitForInviteThread extends Thread {
 				}
 
 			}
-			System.out.println("Job's done.");
+			logger.fine("Stopped waiting for invites.");
 			serverSocket.close();
 		}
 		catch (IOException ioException) {
@@ -77,7 +81,6 @@ public class WaitForInviteThread extends Thread {
 		private void handle() {
 			try {
 				String hostName = in.readUTF();
-				System.out.println("client>" + hostName); 
 
 				//only when the user is not playing/setting up a game: show the received invite
 				if (model.getGAME_STATE() == GameState.NOT_PLAYING) {

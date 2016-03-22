@@ -28,7 +28,6 @@ public class CardComponent extends DrawableComponent {
 			imageName = card.getImage();
 		}
 		
-		//System.out.println(System.getProperty("user.dir") + "|||" + imageName);
 		File image = new File(imageName);
 		BufferedImage img = null;
 		

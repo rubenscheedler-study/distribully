@@ -2,20 +2,23 @@ package distribully.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Logger;
 
 import distribully.model.DistribullyModel;
-import distribully.view.DistribullyWindow;
 
 public class SetUpGameHandler implements ActionListener {
 
 	private DistribullyModel model;
+	private static Logger logger;
 
 	public SetUpGameHandler(DistribullyModel model) {
+		logger = Logger.getLogger("controller.SetUpGameHandler");
+		logger.setParent(Logger.getLogger("controller.DistribullyController"));
 		this.model = model;
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("setting up a game...");
+		logger.fine("setting up a game...");
 
 		//no longer available for invitations
 		if (DistribullyController.waitForInviteThread != null) {
