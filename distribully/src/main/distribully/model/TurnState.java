@@ -4,13 +4,17 @@ public class TurnState {
 	private String nextPlayer;
 	private int toPick;
 	private int direction;
-	String action;
+	private String action;
+	private boolean chooseSuit;
+	private String lastStack;
 	
-	public TurnState(String nextPlayer, int toPick, int direction, String action){
+	public TurnState(String nextPlayer, int toPick, int direction, String action, boolean chooseSuit, String lastStack){
 		this.nextPlayer = nextPlayer;
 		this.toPick = toPick;
 		this.direction = direction;
 		this.action = action;
+		this.setChooseSuit(chooseSuit);
+		this.setLastStack(lastStack);
 	}
 
 	public String getNextPlayer() {
@@ -43,6 +47,22 @@ public class TurnState {
 
 	public void setAction(String action) {
 		this.action = action;
+	}
+
+	public boolean isChooseSuit() {
+		return chooseSuit;
+	}
+
+	public void setChooseSuit(boolean chooseSuit) {
+		this.chooseSuit = chooseSuit;
+	}
+
+	public String getLastStack() {
+		return lastStack;
+	}
+
+	public void setLastStack(String lastStack) {
+		this.lastStack = lastStack;
 	}
 	
 }

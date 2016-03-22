@@ -477,7 +477,7 @@ public class DistribullyModel implements IObservable {
 
 	public void broadcastStackSuit(String stackOwner, int cardSuitIndex) {
 		
-		TurnState turnState = new TurnState(getNextPlayer(),this.turnState.getToPick(),this.turnState.getDirection(),this.getNickname() + " changed the suit of the stack of " + getNextPlayer() + ".");
+		TurnState turnState = new TurnState(getNextPlayer(),this.turnState.getToPick(),this.turnState.getDirection(),this.getNickname() + " changed the suit of the stack of " + stackOwner + ".");
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(this.getMe().getIp());
 		Connection connection;

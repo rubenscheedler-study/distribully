@@ -199,11 +199,9 @@ public class GameConsumerThread extends Thread{
 							}
 						}
 						
-						model.setTurnState(newState);
 						model.broadcastStackSuit(stackOwner1,cardSuitIndex);
 					}
-				}
-							
+				}		
 				break;
 			case "MustDraw":
 				JsonObject joMustDraw= parser.parse(new String(body)).getAsJsonObject();
