@@ -5,25 +5,18 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.TimeoutException;
 
 import javax.swing.JOptionPane;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.gson.JsonObject;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
 
 import distribully.model.Card;
 import distribully.model.DistribullyModel;
 import distribully.model.IObservable;
 import distribully.model.IObserver;
 import distribully.model.Player;
+import distribully.controller.ProducerHandler;
 import distribully.model.TurnState;
 
 public class HandPanel extends DistribullyPanel implements IObserver {
@@ -45,10 +38,8 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 
 	private PlayCardComponent playCardComponent;
 	private DrawCardsComponent drawCardsComponent;
-	private static Logger logger;
 
 	public HandPanel(DistribullyModel model, Dimension size) {
-		logger = LoggerFactory.getLogger("view.HandPanel");
 		this.model = model;
 		this.size = size;
 		IMAGE_HEIGHT = (int)((size.height/2)*0.8);
@@ -187,39 +178,19 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 							if (model.getHand().isEmpty()) {
 								model.setReadyToWin(true);
 							}
-							ConnectionFactory factory = new ConnectionFactory();
-							factory.setHost(model.getMe().getIp());
-							Connection connection;
-							try {
-								connection = factory.newConnection();
 
-								Channel channel = connection.createChannel();
-
-								channel.exchangeDeclare(model.getNickname(), "fanout");
-								JsonObject message = new JsonObject();
-								message.addProperty("cardId",  selectedCard.getCard().getNumber());
-								message.addProperty("suitId", selectedCard.getCard().getSuit().getV());
-								String ownerName = "";
-								for (Player owner : model.getTopOfStacks().keySet()) {
-									if (model.getTopOfStacks().get(owner).equals(selectedStackCard.getCard())) {
-										ownerName = owner.getName();
-									}
+							JsonObject message = new JsonObject();
+							message.addProperty("cardId",  selectedCard.getCard().getNumber());
+							message.addProperty("suitId", selectedCard.getCard().getSuit().getV());
+							String ownerName = "";
+							for (Player owner : model.getTopOfStacks().keySet()) {
+								if (model.getTopOfStacks().get(owner).equals(selectedStackCard.getCard())) {
+									ownerName = owner.getName();
 								}
-								message.addProperty("stackOwner", ownerName);
-								channel.basicPublish(model.getNickname(), "PlayCard", null, message.toString().getBytes());
-								logger.info(" [x] Sent '" + message + "'");
-
-								channel.close();
-								connection.close();
-							} catch (IOException | TimeoutException e1) {
-								JOptionPane.showMessageDialog(null,
-										"Something went wrong sending a card.",
-										"Error",
-										JOptionPane.ERROR_MESSAGE);
-								logger.error("Something went wrong sending a card.");
-								model.getHand().add(selectedCard.getCard());
 							}
+							message.addProperty("stackOwner", ownerName);
 
+							new ProducerHandler(message.toString(), "PlayCard" ,model.getMe());
 						} else {
 							JOptionPane.showMessageDialog(null,
 									"The card you selected may not be played on that stack.",

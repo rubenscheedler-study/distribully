@@ -272,12 +272,15 @@ public class GameConsumerThread{
 			if(model.getGamePlayerList().getPlayers().stream().allMatch(p->p.isReadyToPlay()) && model.getGAME_STATE() == GameState.WAITING_FOR_GAMESTART){
 				handleReady();
 			}
-			//TODO: view
 			if(model.getGamePlayerList().getPlayers().size() <= 1){
-				if(model.getGamePlayerList().getPlayers().stream().anyMatch(p -> p.getName() == model.getNickname())){
-					//YOU WON //TODO: Dit iets automatischer maken, niet alleen bij leave, mss bij elke refresh/actie?
+				if(model.getGamePlayerList().getPlayers().stream().anyMatch(p -> p.getName().equals(model.getNickname()))){
+					JOptionPane.showMessageDialog(null,
+						    "You have won!",
+						    "Game over",
+						    JOptionPane.PLAIN_MESSAGE);
+					model.getInviteStates().clear();
+					new BackToMainPageHandler(model);	
 				}
-				//Redirect main screen, reboot al die threads enzo
 			}
 		}
 

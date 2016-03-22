@@ -1,25 +1,16 @@
 package distribully.model;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
-
-import javax.swing.JOptionPane;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
 
 import distribully.controller.GameState;
+import distribully.controller.ProducerHandler;
 import distribully.model.rules.ChooseSuitRule;
 import distribully.model.rules.DrawFiveRule;
 import distribully.model.rules.DrawTwoRule;
@@ -41,8 +32,6 @@ public class DistribullyModel implements IObservable {
 
 	private ArrayList<IObserver> observers;
 	private HashMap<String,String> inviteStates;
-	
-	private static Logger logger;
 
 	private String nickname;
 	private HashMap<Player,Card> topOfStacks;
@@ -56,7 +45,6 @@ public class DistribullyModel implements IObservable {
 	private boolean isReadyToWin;
 
 	public DistribullyModel() {
-		logger = LoggerFactory.getLogger("model.DistribullyModel");
 		this.onlinePlayerList = new ClientList(serverAddress,serverPort);
 		this.gamePlayerList = new ClientList(serverAddress, serverPort);
 		observers = new ArrayList<IObserver>();
@@ -263,35 +251,14 @@ public class DistribullyModel implements IObservable {
 	}
 
 	public void setAndBroadCastTopOfStack() {
-		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost(this.getMe().getIp());
-		Connection connection;
-		try {
-			connection = factory.newConnection();
 
-			Channel channel = connection.createChannel();
+		Card card = Card.getARandomCard();
 
-			channel.exchangeDeclare(this.getNickname(), "fanout");
-
-			Card card = Card.getARandomCard();
-
-			JsonObject message = new JsonObject();
-			message.addProperty("cardId", card.getNumber());
-			message.addProperty("cardSuit", card.getSuit().getV());
-			message.addProperty("playerName", this.getNickname());
-
-			channel.basicPublish(this.getNickname(), "InitStack", null, message.toString().getBytes());
-			logger.info(" [x] Sent '" + message + "'");
-
-			channel.close();
-			connection.close();
-		} catch (IOException | TimeoutException e1) {
-			JOptionPane.showMessageDialog(null,
-				    "Something went wrong broadcasting the top of stack.",
-				    "Error",
-				    JOptionPane.ERROR_MESSAGE);
-			logger.error("Something went wrong broadcasting the top of stack.");
-		}
+		JsonObject message = new JsonObject();
+		message.addProperty("cardId", card.getNumber());
+		message.addProperty("cardSuit", card.getSuit().getV());
+		message.addProperty("playerName", this.getNickname());
+		new ProducerHandler(message.toString(), "InitStack" ,this.getMe());
 	}
 
 
@@ -325,33 +292,12 @@ public class DistribullyModel implements IObservable {
 		int toPick = 0;
 		TurnState turnState = new TurnState(nextPlayer,toPick,direction, "", false, "");
 
-		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost(this.getMe().getIp());
-		Connection connection;
-		try {
-			connection = factory.newConnection();
+		Gson gson = new Gson();
+		JsonParser parser = new JsonParser();
+		JsonObject message = new JsonObject();
+		message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
 
-			Channel channel = connection.createChannel();
-
-			channel.exchangeDeclare(this.getNickname(), "fanout");
-
-			Gson gson = new Gson();
-			JsonParser parser = new JsonParser();
-			JsonObject message = new JsonObject();
-			message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
-
-			channel.basicPublish(this.getNickname(), "NextTurn", null, message.toString().getBytes());
-			logger.info(" [x] Sent '" + message + "'");
-
-			channel.close();
-			connection.close();
-		} catch (IOException | TimeoutException e1) {
-			JOptionPane.showMessageDialog(null,
-				    "Something went wrong selecting the first player.",
-				    "Error",
-				    JOptionPane.ERROR_MESSAGE);
-			logger.error("Something went wrong selecting the first player.");
-		}
+		new ProducerHandler(message.toString(),"NextTurn" ,this.getMe());
 	}
 
 
@@ -370,66 +316,22 @@ public class DistribullyModel implements IObservable {
 		}
 		if(turnState.getToPick() == this.getTurnState().getToPick() && turnState.getToPick() > 0){
 			turnState.setToPick(0);
-			ConnectionFactory factory = new ConnectionFactory();
-			factory.setHost(this.getMe().getIp());
-			Connection connection;
-			try {
-				connection = factory.newConnection();
+			JsonObject message = new JsonObject();
+			message.addProperty("drawAmount",  this.getTurnState().getToPick());
+			Gson gson = new Gson();
+			JsonParser parser = new JsonParser();
+			message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
 
-				Channel channel = connection.createChannel();
-
-				channel.exchangeDeclare(this.getNickname(), "fanout");
-				JsonObject message = new JsonObject();
-				message.addProperty("drawAmount",  this.getTurnState().getToPick());
-				Gson gson = new Gson();
-				JsonParser parser = new JsonParser();
-				message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
-
-
-				channel.basicPublish(this.getNickname(), "MustDraw", null, message.toString().getBytes());
-				logger.info(" [x] Sent '" + message + "'");
-
-				channel.close();
-				connection.close();
-			} catch (IOException | TimeoutException e1) {
-				JOptionPane.showMessageDialog(null,
-					    "Something went wrong forcing someone to draw cards.",
-					    "Error",
-					    JOptionPane.ERROR_MESSAGE);
-				logger.error("Something went wrong forcing someone to draw card.");
-			}
+			new ProducerHandler(message.toString(),"MustDraw" ,this.getMe());
 		}
 		else{
-			ConnectionFactory factory = new ConnectionFactory();
-			factory.setHost(this.getMe().getIp());
-			Connection connection;
-			try {
-				connection = factory.newConnection();
+			Gson gson = new Gson();
+			JsonParser parser = new JsonParser();
+			JsonObject message = new JsonObject();
+			message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
 
-				Channel channel = connection.createChannel();
-
-				channel.exchangeDeclare(this.getNickname(), "fanout");
-
-				Gson gson = new Gson();
-				JsonParser parser = new JsonParser();
-				JsonObject message = new JsonObject();
-				message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
-
-				channel.basicPublish(this.getNickname(), "NextTurn", null, message.toString().getBytes());
-				logger.info(" [x] Sent '" + message + "'");
-
-				channel.close();
-				connection.close();
-			} catch (IOException | TimeoutException e1) {
-				JOptionPane.showMessageDialog(null,
-					    "Something went wrong handling a card.",
-					    "Error",
-					    JOptionPane.ERROR_MESSAGE);
-				logger.error("Something went wrong handling a card.");
-			}
+			new ProducerHandler(message.toString(), "NextTurn" ,this.getMe());
 		}
-
-
 	}
 
 	public boolean isMyTurn() {
@@ -449,36 +351,15 @@ public class DistribullyModel implements IObservable {
 		}
 
 		//notify others about what this player has done
-		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost(this.getMe().getIp());
-		Connection connection;
-		try {
-			connection = factory.newConnection();
-			Channel channel = connection.createChannel();
+		Gson gson = new Gson();
+		JsonParser parser = new JsonParser();
+		JsonObject message = new JsonObject();
 
-			channel.exchangeDeclare(this.getNickname(), "fanout");
+		message.add("turnState",  parser.parse((gson.toJson(nextTurn))).getAsJsonObject());
+		message.addProperty("amount", drawAmount);
 
-			Gson gson = new Gson();
-			JsonParser parser = new JsonParser();
+		new ProducerHandler(message.toString(), "HaveDrawn" ,this.getMe());
 
-			JsonObject message = new JsonObject();
-
-			message.add("turnState",  parser.parse((gson.toJson(nextTurn))).getAsJsonObject());
-
-			message.addProperty("amount", drawAmount);
-
-			channel.basicPublish(this.getNickname(), "HaveDrawn", null, message.toString().getBytes());
-			logger.info(" [x] Sent '" + message + "'");
-
-			channel.close();
-			connection.close();
-		} catch (IOException | TimeoutException e1) {
-			JOptionPane.showMessageDialog(null,
-				    "Something went wrong broadcasting the drawing of cards.",
-				    "Error",
-				    JOptionPane.ERROR_MESSAGE);
-			logger.error("Something went wrong broadcasting the drawing of cards.");
-		}
 	}
 
 
@@ -493,72 +374,28 @@ public class DistribullyModel implements IObservable {
 			//Just return any player since the game hasnt started yet and the start player is yet to be set.
 			return this.gamePlayerList.getPlayers().get((numPlayers + 1) % numPlayers ).getName(); //Ensure we stay in the range
 		}
-		
+
 	}
 
 
 
 	public void broadcastStackSuit(int cardSuitIndex) {
-
 		TurnState turnState = new TurnState(getNextPlayer(),this.turnState.getToPick(),this.turnState.getDirection(),this.getNickname() + " changed the suit of the stack of " + this.getTurnState().getLastStack() + ".", false, this.getTurnState().getLastStack());
-		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost(this.getMe().getIp());
-		Connection connection;
-		try {
-			connection = factory.newConnection();
-			Channel channel = connection.createChannel();
+		Gson gson = new Gson();
+		JsonParser parser = new JsonParser();
+		JsonObject message = new JsonObject();
 
-			channel.exchangeDeclare(this.getNickname(), "fanout");
+		message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
+		message.addProperty("cardSuit", cardSuitIndex);
 
-			Gson gson = new Gson();
-			JsonParser parser = new JsonParser();
-
-			JsonObject message = new JsonObject();
-
-			message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
-
-			message.addProperty("cardSuit", cardSuitIndex);
-
-			channel.basicPublish(this.getNickname(), "ChooseSuit", null, message.toString().getBytes());
-			logger.info(" [x] Sent '" + message + "'");
-
-			channel.close();
-			connection.close();
-		} catch (IOException | TimeoutException e1) {
-			JOptionPane.showMessageDialog(null,
-				    "Something went wrong broadcasting the new suit of the stack.",
-				    "Error",
-				    JOptionPane.ERROR_MESSAGE);
-			logger.error("Something went wrong broadcasting the suit of stack.");
-		}
+		new ProducerHandler(message.toString(), "ChooseSuit",this.getMe());
 	}
 
 	public void broadcastWin() {
-		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost(this.getMe().getIp());
-		Connection connection;
-		try {
-			connection = factory.newConnection();
-			Channel channel = connection.createChannel();
-
-			channel.exchangeDeclare(this.getNickname(), "fanout");
-
 			JsonObject message = new JsonObject();
-
 			message.addProperty("playerWinner", getNickname());
 
-			channel.basicPublish(this.getNickname(), "Win", null, message.toString().getBytes());
-			logger.info(" [x] Sent '" + message + "'");
-
-			channel.close();
-			connection.close();
-		} catch (IOException | TimeoutException e1) {
-			JOptionPane.showMessageDialog(null,
-				    "Something went wrong broadcasting a win.",
-				    "Error",
-				    JOptionPane.ERROR_MESSAGE);
-			logger.error("Something went wrong broadcasting a win.");
-		}
+			new ProducerHandler(message.toString(), "Win",this.getMe());
 	}
 
 
