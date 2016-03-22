@@ -126,6 +126,8 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		});
 		panel.revalidate();
 		panel.repaint();
+		scrollPane.revalidate();
+		scrollPane.repaint();
 		this.add(scrollPane);
 		
 
