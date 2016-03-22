@@ -17,7 +17,6 @@ import distribully.model.Player;
 public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 
 	private static final long serialVersionUID = -2882716648466999779L;
-	//private ArrayList<Player> playerRows = new ArrayList<Player>();
 	private DistribullyModel model;
 	private Dimension size;
 	
@@ -33,15 +32,15 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 	protected void render() {
 		this.removeAll();
 		
-		//determine which list of players to render: game members or all online
+		//Determine which list of players to render: game members or all online
 		ArrayList<Player> players;
 		if (model.getGAME_STATE() == GameState.IN_LOBBY) {
 			players = model.getGamePlayerList().getPlayers();
 		} else {
 			players = model.getOnlinePlayerList().getPlayers();
 		}
-		size.height = Math.max(players.size()*40 + 80,size.height);//make sure panel is high enough
-		//remove self from the list of available players		
+		size.height = Math.max(players.size()*40 + 80,size.height);//Make sure panel is high enough
+
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setMinimumSize(size);
 		this.setPreferredSize(size);
@@ -51,25 +50,20 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		if (players.size() == 0) {
 			this.add(new JLabel("No available players"));
 		} else {
-			
 			this.add(getHeaderPanel());
 			
 			for (Player p : players) {
-				//do not render self
+				//Do not render self in the general overview
 				if (p.getName().equals(model.getNickname()) && model.getGAME_STATE() != GameState.IN_LOBBY) {
 					continue;
 				}
 				this.renderPlayer(p);
 			}
-
-
 		}
 		this.revalidate();
 		this.repaint();
-		
 	}
 
-	
 	protected DistribullyPanel getHeaderPanel() {
 		DistribullyPanel headerPanel = new DistribullyPanel();
 		headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -77,11 +71,11 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		headerPanel.setPreferredSize(new Dimension(this.size.width, 40));
 		headerPanel.setMaximumSize(new Dimension(this.size.width, 40));
 		if (model.getGAME_STATE() == GameState.INVITING_USERS) {
-			//add a button to actually start the game
+			//Add a button to actually start the game
 			headerPanel.add(new StartGameButton(model));
 			headerPanel.add(new StopSettingUpGameButton(model));
 		} else if (model.getGAME_STATE() == GameState.IN_LOBBY) {
-			//add a button to leave the lobby, that is: remove yourself from the game player list
+			//Add a button to leave the lobby, that is: remove yourself from the game player list
 			headerPanel.add(new LeaveLobbyButton(model));
 		} else if (model.getGAME_STATE() == GameState.NOT_PLAYING) {
 			headerPanel.setHeaderFont();
@@ -92,7 +86,6 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		
 		return headerPanel;
 	}
-	
 	
 	protected void renderPlayer(Player player) {
 		DistribullyPanel playerPanel = new DistribullyPanel();
@@ -114,23 +107,20 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		this.add(playerPanel);
 	}
 
-	/**
-	 * returns a panel containing either a working invite button, or an invitation state
-	 * @param player Player to render to a panel
-	 * @return the panel
+	/*
+	 * Returns a panel containing either a working invite button, or an invitation state
 	 */
 	private DistribullyPanel getInvitationPanel(Player player) {
 		DistribullyPanel playerPanel = new DistribullyPanel();
 		if (player.isAvailable()) {
 			InviteButton inviteButton = null;
-			//check if player was already invited
+			//Check if player was already invited
 			if (model.getInviteStates().containsKey(player.getName())) {
 				playerPanel.add(new JLabel(model.getInviteStates().get(player.getName())));
 			} else {
 				inviteButton = new InviteButton(model, player.getName());
 				playerPanel.add(inviteButton);
 			}
-			
 		} else {
 			DistribullyTextLabel unavailableLabel;
 			
@@ -139,16 +129,13 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 			} else {
 				unavailableLabel = new DistribullyTextLabel("unavailable");
 			}
-			
 			playerPanel.add(unavailableLabel);
 		}
 		return playerPanel;
 	}
 	
-	
 	private DistribullyPanel getLobbyPanel(Player player) {
 		DistribullyPanel playerPanel = new DistribullyPanel();
-		
 		return playerPanel;
 	}
 	

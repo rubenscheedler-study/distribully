@@ -27,10 +27,10 @@ public class DistribullyWindow extends JFrame implements IObserver {
 	private static final long serialVersionUID = -6180030798589552918L;
 	private static Logger logger;
 	
-	//model
+	//Model
 	private DistribullyModel model;
 	
-	//view components
+	//View components
 	private JPanel mainPanel;
 	private PlayerOverviewPanel playerOverviewPanel;
 	private SelectRulesPanel selectRulesPanel;
@@ -42,7 +42,7 @@ public class DistribullyWindow extends JFrame implements IObserver {
 	public DistribullyWindow(DistribullyModel model) {
 		this.model = model;
 		logger = LoggerFactory.getLogger("view.DistribullyWindow");
-		//get the size of the monitor
+		//Get the size of the monitor
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		screenSize.height -= 100;
 		//window properties
@@ -50,7 +50,7 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		this.setVisible(true);
 		this.setTitle("Distribully");
 		model.addObserver(this);
-		//init of menu
+		//Init of menu
 		this.setJMenuBar(new DistribullyMenu(this.model));
 		new ClientListUpdateHandler(this.model);
 		
@@ -72,16 +72,15 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		scrollPane = new JScrollPane(mainPanel);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 		scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+		
 		scrollPane.getViewport().addChangeListener(new ChangeListener() {
-
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				mainPanel.revalidate();
 				mainPanel.repaint();
 			}
-			
-			
 		});
+		
 		this.add(scrollPane);
 		
 		this.revalidate();
@@ -101,8 +100,6 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		return this.model;
 	}
 
-	
-	
 	@Override
 	public void update(IObservable observable, Object gameState) {
 		if (gameState instanceof GameState) {
@@ -117,8 +114,6 @@ public class DistribullyWindow extends JFrame implements IObserver {
 			this.repaint();
 		} 
 	}
-	
-
 	
 	public void determinePanelToShow() {
 		switch (model.getGAME_STATE()) {
@@ -139,6 +134,4 @@ public class DistribullyWindow extends JFrame implements IObserver {
 			break;
 		}
 	}
-	
-	
 }

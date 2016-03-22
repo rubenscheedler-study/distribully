@@ -48,7 +48,6 @@ public class WaitingForGameStartPanel extends DistribullyPanel implements IObser
 		headerPanel.add(header);
 		this.add(headerPanel);
 		
-		
 		for (Player player : model.getGamePlayerList().getPlayers()) {
 			this.add(getPlayerPanel(player));
 		}

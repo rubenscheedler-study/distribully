@@ -54,7 +54,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 	}
 
 	public void calculateAndSetSize() {
-		//width: 
+		//Width: 
 		int panelWidth = LEFT_OFFSET + ((model.getHand().size()-1)*CARD_VISIBLE_WIDTH) + IMAGE_WIDTH + RIGHT_MARGIN;
 		this.setMinimumSize(new Dimension(panelWidth, this.size.height));
 		this.setPreferredSize(new Dimension(panelWidth, this.size.height));
@@ -67,7 +67,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 
 		calculateAndSetSize();
 
-		//1) draw the header "Your Hand"
+		//1) Draw the header "Your Hand"
 		g.setFont(this.headerFont);
 		g.setColor(new Color(230,230,230));
 		g.drawString("Your Hand", LEFT_OFFSET, TOP_OFFSET);
@@ -78,13 +78,13 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 			drawCardsComponent.draw(g);
 		}
 
-		//render action
+		//Render action
 		if (model.getTurnState() != null) {
 			String actionString = model.getTurnState().getAction();
 			g.drawString(actionString,LEFT_OFFSET+600,TOP_OFFSET);
 		}	
 
-		//2) draw the hand of the player
+		//2)Draw the hand of the player
 
 		int i = 0;
 		boolean refreshHandComponents = this.handCards.size() != model.getHand().size();
@@ -106,12 +106,12 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 			i++;
 		}
 
-		//3 draw header "Current Stack of Players"
+		//3 Draw header "Current Stack of Players"
 		g.drawString("Current Stacks of Players:",LEFT_OFFSET,TOP_OFFSET+30+IMAGE_HEIGHT);
 
+		//4) Draw top of stacks
 		this.stackCards = new ArrayList<CardComponent>();
 		int j = 0;
-		//4) draw top of stacks
 		for (Player player : model.getGamePlayerList().getPlayers()) {
 			Color oldColor = g.getColor();
 			if (model.getTurnState() != null && model.getTurnState().getNextPlayer().equals(player.getName())) {
@@ -144,7 +144,6 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		public void mouseClicked(MouseEvent e) {
 			if (model.isMyTurn()) {
 				for (CardComponent component : handCards) {
-
 					if (component.wasClicked(e.getX(), e.getY())) {
 						if (selectedCard != null && selectedCard.equals(component)) {//unselected if already selected
 							selectedCard = null;
@@ -168,19 +167,16 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 
 				if (playCardComponent.wasClicked(e.getX(), e.getY()))  {
 					if (selectedStackCard != null && selectedCard != null) {
-						if (selectedStackCard.getCard().getNumber() == selectedCard.getCard().getNumber()
+						if (selectedStackCard.getCard().getNumber() == selectedCard.getCard().getNumber() //May card be played
 								|| selectedStackCard.getCard().getSuit() == selectedCard.getCard().getSuit()) {
-
-							//remove card from hand
+							//Remove card from hand
 							model.getHand().remove(selectedCard.getCard());
 
-							//check if hand is empty, then the player is ready to win
+							//Check if hand is empty, then the player is ready to win
 							if (model.getHand().isEmpty()) {
 								model.setReadyToWin(true);
 							}
 							
-							
-
 							JsonObject message = new JsonObject();
 							message.addProperty("cardId",  selectedCard.getCard().getNumber());
 							message.addProperty("suitId", selectedCard.getCard().getSuit().getV());
@@ -194,7 +190,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 							
 							message.addProperty("stackOwner", ownerName);
 							
-							//unselected current selection
+							//Unselected current selection
 							selectedStackCard = null;
 							selectedCard = null;
 							

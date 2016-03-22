@@ -10,7 +10,6 @@ import javax.swing.JComboBox;
 
 import distribully.controller.SelectRuleHandler;
 import distribully.model.Card;
-import distribully.model.CardSuit;
 import distribully.model.DistribullyModel;
 import distribully.model.IObservable;
 import distribully.model.IObserver;
@@ -43,19 +42,19 @@ public class SelectRulesPanel extends DistribullyPanel implements IObserver {
 		
 		ArrayList<Rule> availableRules = new ArrayList<Rule>();
 		
-		availableRules.add(new EmptyRule(null));//generates top option "no rule" in dropdown
+		availableRules.add(new EmptyRule(null));//Generates top option "no rule" in dropdown
 		
-		//filter out all the rules that are already assigned
+		//Filter out all the rules that are already assigned
 		availableRules.addAll(model.getAllRules().stream()
 								   .filter(r -> !model.getChoosenRules().containsValue(r))
 								   .collect(Collectors.toCollection(ArrayList<Rule>::new)));
 
-		//add a panel for each card that allows the user to select a rule for that card
+		//Add a panel for each card that allows the user to select a rule for that card
 		for (int i = 2; i < 15; i++) {
 			this.add(renderSelectForCard(i,availableRules));
 		}
 		
-		//add a finish button that notifies the host that all rules have been chosen
+		//Add a finish button that notifies the host that all rules have been chosen
 		this.add(new FinishSelectRulesButton(model));
 		this.revalidate();
 		this.repaint();
@@ -73,11 +72,8 @@ public class SelectRulesPanel extends DistribullyPanel implements IObserver {
 		return headerPanel;
 	}
 	
-	/**
-	 * render a panel row with on the left the card name and on the right a dropdown to associate a rule.
-	 * @param cardNumber Integer index of the card [2,14]
-	 * @param availableRules Set of not picked rules, plus the empty rule
-	 * @return
+	/*
+	 * Render a panel row with on the left the card name and on the right a dropdown to associate a rule.
 	 */
 	public DistribullyPanel renderSelectForCard(int cardNumber, ArrayList<Rule> rules) {
 		ArrayList<Rule> availableRules = new ArrayList<Rule>();
@@ -89,7 +85,7 @@ public class SelectRulesPanel extends DistribullyPanel implements IObserver {
 		rulePanel.setMinimumSize(new Dimension(this.size.width, 25));
 		rulePanel.setPreferredSize(new Dimension(this.size.width, 25));
 		rulePanel.setMaximumSize(new Dimension(this.size.width, 25));
-		String cardName = new Card(cardNumber, CardSuit.HEARTS).getCardName(); //Any suit works for this, we only need the name associated with the number
+		String cardName = new Card(cardNumber).getCardName(); //We only need the name
 		
 		DistribullyTextLabel cardNameLabel = new DistribullyTextLabel(cardName + ":");
 		cardNameLabel.setMinimumSize(new Dimension(400, 25));
@@ -97,7 +93,7 @@ public class SelectRulesPanel extends DistribullyPanel implements IObserver {
 		cardNameLabel.setMaximumSize(new Dimension(400, 25));
 		rulePanel.add(cardNameLabel);
 		
-		//check if card has an associated rule, add it to the dropdown
+		//Check if card has an associated rule, add it to the dropdown
 		if (model.getChoosenRules().containsKey(cardNumber)) {
 			availableRules.add(model.getChoosenRules().get(cardNumber));
 		}
@@ -107,15 +103,13 @@ public class SelectRulesPanel extends DistribullyPanel implements IObserver {
 		ruleDropdown.setMinimumSize(new Dimension(200, 25));
 		ruleDropdown.setPreferredSize(new Dimension(200, 25));
 		ruleDropdown.setMaximumSize(new Dimension(200, 25));
-		//check if card has an associated rule, select it in the dropdown
+		//Check if card has an associated rule, select it in the dropdown
 		if (model.getChoosenRules().containsKey(cardNumber)) {
 			ruleDropdown.setSelectedItem((model.getChoosenRules().get(cardNumber)));
 		}
-
 		ruleDropdown.addActionListener(new SelectRuleHandler(cardNumber,ruleDropdown,model));
 		
 		rulePanel.add(ruleDropdown);
-
 		return rulePanel;
 	}
 

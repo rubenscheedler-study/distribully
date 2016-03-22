@@ -16,8 +16,6 @@ public class SetUpGameButton extends JMenuItem{
 		this.setText("Set up game");
 		
 		this.addActionListener(new SetUpGameHandler(model));
-		
 	}
-
 }
 

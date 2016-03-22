@@ -16,6 +16,14 @@ public class Card {
 		//Since in this game the user can have multiples of the same card, we must generate an unique identifier to differentiate
 		uniqueIdentifier = value; 
 	}
+	public Card(int number) {
+		this.setNumber(number);
+		
+		Random randomNum = new Random();
+		long value = randomNum.nextLong();
+		//Since in this game the user can have multiples of the same card, we must generate an unique identifier to differentiate
+		uniqueIdentifier = value; 
+	}
 
 	public int getNumber() {
 		return number;

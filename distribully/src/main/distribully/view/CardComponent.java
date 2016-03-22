@@ -24,7 +24,6 @@ public class CardComponent extends DrawableComponent {
 		this.card = card;
 		this.actualWidth = actualWidth;
 		logger = LoggerFactory.getLogger("view.CardComponent");
-
 	}
 	
 	public void draw(Graphics g, boolean selected) {
@@ -47,7 +46,7 @@ public class CardComponent extends DrawableComponent {
 		}
 		
 		if (selected) {
-			g.setColor(Color.GREEN);
+			g.setColor(Color.GREEN); //Show the player the card is selected
 			g.fillRoundRect(posX-5, posY-5, width+10, height+10, 10, 10);
 			g.setColor(Color.WHITE);
 		}
@@ -65,9 +64,6 @@ public class CardComponent extends DrawableComponent {
 		return x >= posX && x < (posX + actualWidth) && y >= posY && y < (posY + height);
 	}
 
-
-
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

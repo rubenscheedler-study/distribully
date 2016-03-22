@@ -12,7 +12,6 @@ public class DrawCardsComponent extends DrawableComponent {
 	@Override
 	public void draw(Graphics g) {
 		Color color = g.getColor();
-		//Font font = g.getFont();
 		g.setColor(Color.GRAY);
 		g.fillRect(posX, posY, width, height);
 		g.setColor(Color.RED);
