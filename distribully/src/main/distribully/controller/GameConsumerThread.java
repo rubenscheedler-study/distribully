@@ -273,7 +273,7 @@ public class GameConsumerThread{
 			model.getInviteStates().clear();
 			model.getChosenRules().clear();
 			
-			model.getGamePlayerList().getPlayers().forEach(player -> initPlayerExchange(player));
+			model.getGamePlayerList().getPlayers().forEach(player -> initPlayerExchange(player)); //No need to exclude the host, since it will just use the earlier existing exchange
 			model.setGAME_STATE(GameState.SETTING_RULES);			
 		}
 	}
