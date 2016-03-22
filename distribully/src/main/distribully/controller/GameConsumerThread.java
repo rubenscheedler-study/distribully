@@ -202,7 +202,6 @@ public class GameConsumerThread{
 		}
 
 		private void handleCard(String body) {
-
 			JsonObject jo = parser.parse(body).getAsJsonObject();
 			int cardId = Integer.parseInt(jo.get("cardId").getAsString());
 			int suiteId = Integer.parseInt(jo.get("suitId").getAsString());
