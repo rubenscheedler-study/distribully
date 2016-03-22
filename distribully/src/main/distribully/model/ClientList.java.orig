@@ -74,7 +74,11 @@ public class ClientList extends ConnectingComponent implements IObservable {
 			Gson gson = new Gson();
 			Player[] players = gson.fromJson(ja, Player[].class);
 			ArrayList<Player> playerList  = new ArrayList<Player>(Arrays.asList(players));
+<<<<<<< HEAD
+			//only update the list if it's different
+=======
 			//Only update the list if it's different
+>>>>>>> 2c45857511c82e5027b2e355abf139231edbd56c
 			boolean listsAreEqual = this.playersListEquals(playerList);
 			if (!listsAreEqual) {
 				this.players.removeAll(this.players);

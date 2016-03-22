@@ -16,7 +16,7 @@ import distribully.model.DistribullyModel;
 
 public class AskUsernameHandler {
 	private static Logger logger;
-	DistribullyModel model;
+	private DistribullyModel model;
 	
 	public AskUsernameHandler(DistribullyModel model) {
 		logger = LoggerFactory.getLogger("controller.JoinclientList");
@@ -26,13 +26,13 @@ public class AskUsernameHandler {
 		do {
 			chosenNickname = askUserForName();
 			
-			if (chosenNickname == null) { //user does not want to pick a username => close application
+			if (chosenNickname == null) { //User does not want to pick a username => close application
 				DistribullyController.sendCloseEvent();
 				return;
 			}
 			chosenNickname = chosenNickname.trim();
 			
-			if (chosenNickname.contains(" ")){
+			if (chosenNickname.contains(" ")){ //RestServer does not like spaces
 				chosenNickname = "";
 				JOptionPane.showMessageDialog(null,
 					    "Spaces are not allowed in the username",
@@ -48,7 +48,7 @@ public class AskUsernameHandler {
 			}
 			
 		}
-		while (chosenNickname.equals(""));
+		while (chosenNickname.equals("")); //Keep asking till the userName is entered en available
 		
 		//check if name is unique
 		logger.info("setting model nickname:" + chosenNickname);
@@ -59,11 +59,11 @@ public class AskUsernameHandler {
 	}
 
 	
-	public String askUserForName() {
+	private String askUserForName() {
 		return JOptionPane.showInputDialog(null, "Please enter your nickname");
 	}
 	
-	public boolean nicknameAvailable(String nickname) {
+	private boolean nicknameAvailable(String nickname) {
 		HttpClient client = new HttpClient();
 		ContentResponse response = null;
 		try {

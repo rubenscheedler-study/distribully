@@ -28,7 +28,7 @@ public class WaitForInviteThread extends Thread {
 		this.start();
 	}
 	public void run() {
-		this.port = model.getMyPort();
+		this.port = model.getMyPort(); //Get the newest port
 		try {
 			serverSocket = new ServerSocket(port);
 			logger.info("Server is listening for invites...");
@@ -41,7 +41,6 @@ public class WaitForInviteThread extends Thread {
 					logger.error("SocketException in waitForInvite thread.");
 					listen = false;
 				}
-
 			}
 			logger.info("Stopped waiting for invites.");
 			serverSocket.close();
@@ -52,7 +51,7 @@ public class WaitForInviteThread extends Thread {
 				    "Could not open port, choose a different port",
 				    "Port bind error",
 				    JOptionPane.ERROR_MESSAGE);
-			new AskPortHandler(model);
+			new AskPortHandler(model); //Ask for a new port
 			this.run();
 		}
 	}
@@ -92,15 +91,15 @@ public class WaitForInviteThread extends Thread {
 					if (acceptedInvite == JOptionPane.YES_OPTION) {
 						out.writeUTF("Accepted");
 
-						//not available to invites anymore:
+						//Not available for invites anymore:
 						model.getMe().setAvailable(false);
 						model.setGAME_STATE(GameState.IN_LOBBY);
 						model.setCurrentHostName(hostName);
-						//start a thread that updates a list of game players
+						//Start a thread that updates a list of game players
 						DistribullyController.lobbyThread = new LobbyThread(model);
 						DistribullyController.consumerThread = new GameConsumerThread(model);
 
-						listen = false;//kill this thread
+						listen = false;//Kill this thread
 					} else {
 						out.writeUTF("Rejected");
 					}

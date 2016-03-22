@@ -18,16 +18,16 @@ import distribully.model.TurnState;
 
 public class CloseWindowHandler extends WindowAdapter {
 
-	DistribullyModel model;
-
+	private DistribullyModel model;
 	private static Logger logger;
+
 	public CloseWindowHandler(DistribullyModel model){
 		this.model = model;
 		logger = LoggerFactory.getLogger("controller.CloseWindowHandler");
 	}
 	@Override
 	public void windowClosing(WindowEvent e)
-	{ 
+	{   //Override the window close handling
 		if (model.getGAME_STATE() == GameState.IN_GAME || model.getGAME_STATE() == GameState.SETTING_RULES){
 			int leaveGame = JOptionPane.showConfirmDialog (null, 
 					"You are in the middle of a game, are you sure you want to quit?", 
@@ -37,7 +37,7 @@ public class CloseWindowHandler extends WindowAdapter {
 				message.addProperty("playerName", model.getNickname());
 				Gson gson = new Gson();
 				JsonParser parser = new JsonParser();
-				//If getNxtPlayer is null, game hasn't started, so return any player as it will be overwritten anyway. Most convenient is our own name.
+				//If getNextPlayer is null, game hasn't started, so return any player as it will be overwritten anyway. Most convenient is our own name.
 				TurnState newState;
 				if(model.getTurnState() == null){
 					newState = new TurnState(model.getNickname(), 0, 1, model.getNickname() + " has left the game.", false, "");
@@ -48,7 +48,7 @@ public class CloseWindowHandler extends WindowAdapter {
 				message.add("turnState", turnState);
 				new ProducerHandler(message.toString(), "Leave", model.getMe());
 			}else{
-				return;
+				return; //User does not want to close
 			}
 		}
 		if (model.getMe() != null) {
@@ -57,7 +57,7 @@ public class CloseWindowHandler extends WindowAdapter {
 		if(model.getGAME_STATE() == GameState.IN_LOBBY){
 			model.getGamePlayerList().deleteFromGame(model.getNickname(),model.getCurrentHostName());
 		} else if (model.getGAME_STATE() == GameState.INVITING_USERS) {
-			model.getGamePlayerList().deleteGameList(model.getNickname());//=current host name
+			model.getGamePlayerList().deleteGameList(model.getNickname());//Since you are the host
 		}
 		logger.info("Closed game");
 		System.exit(0);

@@ -40,7 +40,7 @@ public class GameConsumerThread{
 		queueName = model.getNickname();
 		String hostName = model.getCurrentHostName();
 		Player host = model.getOnlinePlayerList().getPlayerByNickname(hostName);
-		if (host == null) { //host aborted his game before we accepted the invite
+		if (host == null) { //Host aborted his game before we accepted the invite
 			JOptionPane.showMessageDialog(null,
 				    hostName + " aborted the game that you were invited for. \n",
 				    "No game to join",
@@ -52,34 +52,28 @@ public class GameConsumerThread{
 		initPlayerExchange(host);
 	}
 
-	private void initPlayerExchange(Player player){
+	private void initPlayerExchange(Player player){ //Open a connection to a specified player
 		ConnectionFactory factory = new ConnectionFactory();  
 		String playerName = player.getName();
 		factory.setHost(player.getIp());
-
 		try {
 			Connection connection = factory.newConnection();
 			Channel channel = connection.createChannel();
 			channel.queueDeclare(queueName, false, false, false, null);
 			channel.exchangeDeclare(playerName, "fanout");
 			channel.queueBind(queueName, playerName, "");
-			channel.queuePurge(queueName);
+			channel.queuePurge(queueName); //Empty the queue from message that may remain from a previous game
 			Consumer consumer = new MessageConsumer(channel);
 			channel.basicConsume(queueName, true, consumer);
 			logger.info("host connected: " + playerName);
-		} catch (TimeoutException e) {
+		} catch (TimeoutException | IOException e) {
 			//Player has lost internet availability or rabbitMQ is not running -> remove from playerList
 			model.getGamePlayerList().getPlayers().remove(player);
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null,
-				    "Something went wrong when connecting to a host.",
-				    "Error",
-				    JOptionPane.ERROR_MESSAGE);
 			logger.error("Something went wrong when connecting to host "+ playerName +".");
 		}
 	}
 
-	class MessageConsumer extends DefaultConsumer{
+	class MessageConsumer extends DefaultConsumer{ //Custom consumer
 		JsonParser parser;
 		Gson gson;
 		public MessageConsumer(Channel channel) {
@@ -91,7 +85,7 @@ public class GameConsumerThread{
 		@Override
 		public void handleDelivery(String consumerTag, Envelope envelope,
 				AMQP.BasicProperties properties, byte[] body) throws IOException {
-			switch(envelope.getRoutingKey()){
+			switch(envelope.getRoutingKey()){ //Use key to identify the type of message
 			case "Start":
 				handleStart();
 				break;
@@ -110,9 +104,6 @@ public class GameConsumerThread{
 			case "MustDraw":
 				handleMustDraw(new String(body));
 				break;
-			case "HaveDrawn":
-				handleHaveDrawn(new String(body));
-				break;
 			case "ChooseSuit":
 				handleChooseSuit(new String(body));
 				break;
@@ -125,7 +116,7 @@ public class GameConsumerThread{
 			}
 		}
 
-		private void handleWin(String body) {
+		private void handleWin(String body) {//Tell everyone a certain player has won
 			JsonObject jo = parser.parse(body).getAsJsonObject();
 			String playerWinner = jo.get("playerWinner").getAsString();
 			logger.info(playerWinner + " has won.");
@@ -137,7 +128,7 @@ public class GameConsumerThread{
 			new BackToMainPageHandler(model);	
 		}
 
-		private void handleInitStack(String body) {
+		private void handleInitStack(String body) { //Set a top of stack for a player
 			JsonObject jo = parser.parse(body).getAsJsonObject();
 			int cardId = Integer.parseInt(jo.get("cardId").getAsString());
 			int suit = Integer.parseInt(jo.get("cardSuit").getAsString());
@@ -146,7 +137,7 @@ public class GameConsumerThread{
 			model.putTopOfStack(model.getGamePlayerList().getPlayerByNickname(playerName), new Card(cardId, CardSuit.values()[suit]));
 		}
 
-		private void handleChooseSuit(String body) {
+		private void handleChooseSuit(String body) { //Update the suit of a top of stack
 			JsonObject jo = parser.parse(body).getAsJsonObject();
 			int suit = Integer.parseInt(jo.get("cardSuit").getAsString());
 			JsonObject turnState = jo.get("turnState").getAsJsonObject();
@@ -156,28 +147,19 @@ public class GameConsumerThread{
 			model.setTurnState(newState);
 		}
 
-		private void handleHaveDrawn(String body) {
-			JsonObject jo= parser.parse(body).getAsJsonObject();
-			int amount = Integer.parseInt(jo.get("amount").getAsString());
-			logger.info("Drawn " + amount + " cards");
-			JsonObject turnState = jo.get("turnState").getAsJsonObject();
-			TurnState newState = gson.fromJson(turnState, TurnState.class);
-			model.setTurnState(newState);
-		}
-
 		private void handleMustDraw(String body) {
-			JsonObject jo= parser.parse(body).getAsJsonObject();
+			JsonObject jo= parser.parse(body).getAsJsonObject(); 
 			int drawAmount = Integer.parseInt(jo.get("drawAmount").getAsString());
 			JsonObject turnState = jo.get("turnState").getAsJsonObject();
 			TurnState nextState = gson.fromJson(turnState, TurnState.class); //The state that will be used after the user has drawn cards
 			logger.info("Must draw " + drawAmount + " cards");
-			if(model.isMyTurn()){
+			if(model.isMyTurn()){ //Must draw cards
 				model.draw(drawAmount, nextState);
 			}	
 		}
 
 		private void handleNextTurn(String body) {
-			if(model.isReadyToWin()){
+			if(model.isReadyToWin()){ //If we get a next turn and not a must draw, we have won.
 				model.broadcastWin();
 			}
 			JsonObject jo = parser.parse(body).getAsJsonObject();
@@ -214,7 +196,6 @@ public class GameConsumerThread{
 							break;
 						}
 					}
-
 					model.broadcastStackSuit(cardSuitIndex);
 				}
 			}		
@@ -227,7 +208,7 @@ public class GameConsumerThread{
 			int suiteId = Integer.parseInt(jo.get("suitId").getAsString());
 			String stackOwner = jo.get("stackOwner").getAsString();
 			logger.info("Card "+ cardId +" played");
-			if(stackOwner.equals(model.getNickname())){
+			if(stackOwner.equals(model.getNickname())){ //Played on my stack
 				model.executeCard(cardId);
 			}
 			model.putTopOfStack(model.getGamePlayerList().getPlayerByNickname(stackOwner),new Card(cardId, CardSuit.values()[suiteId]));
@@ -241,7 +222,7 @@ public class GameConsumerThread{
 			player.setReadyToPlay(true);
 			model.getGamePlayerList().setPlayerReadyState(playerName,true);
 			if(model.getGamePlayerList().getPlayers().stream().allMatch(p->p.isReadyToPlay() && model.getGAME_STATE() == GameState.WAITING_FOR_GAMESTART)){
-				handleReady();
+				handleReady(); //If everyone is ready and user is waiting for everyone to be ready
 			}
 		}
 
@@ -268,9 +249,9 @@ public class GameConsumerThread{
 			model.setTurnState(newState);//Ensure the setUpdate happens before the remove, to prevent async errors
 			model.getGamePlayerList().removePlayerByPlayerName(playerName);
 			if(model.getGamePlayerList().getPlayers().stream().allMatch(p->p.isReadyToPlay()) && model.getGAME_STATE() == GameState.WAITING_FOR_GAMESTART){
-				handleReady();
+				handleReady(); //If everyone is ready and user is waiting for everyone to be ready
 			}
-			if(model.getGamePlayerList().getPlayers().size() <= 1){
+			if(model.getGamePlayerList().getPlayers().size() <= 1){ //Solo players always win
 				if(model.getGamePlayerList().getPlayers().stream().anyMatch(p -> p.getName().equals(model.getNickname()))){
 					JOptionPane.showMessageDialog(null,
 						    "You have won!",

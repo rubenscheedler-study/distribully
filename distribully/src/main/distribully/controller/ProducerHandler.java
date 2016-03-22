@@ -26,11 +26,12 @@ public class ProducerHandler {
 			connection = factory.newConnection();
 
 			Channel channel = connection.createChannel();
-
-			channel.exchangeDeclare(producer.getName(), "fanout");
-
+			channel.exchangeDeclare(producer.getName(), "fanout"); 
+			//Publish message on your exchange, with the key notifying the type of message
 			channel.basicPublish(producer.getName(), key, null, message.getBytes());
+			
 			logger.info(" [x] Sent '" + message + "'");
+			
 			channel.close();
 			connection.close();
 		} catch (IOException | TimeoutException e1) {

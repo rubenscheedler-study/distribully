@@ -27,7 +27,7 @@ public class ClientListUpdateHandler {
 		HttpClient client = new HttpClient();
 		ContentResponse response = null;
 		try {
-			client.start();
+			client.start(); //Get list of all online players
 			response = client.newRequest(model.getServerAddress() + ":" + model.getServerPort() + "/players").method(HttpMethod.GET).send();
 			client.stop();
 		} catch (Exception e) {
@@ -38,8 +38,8 @@ public class ClientListUpdateHandler {
 							JOptionPane.WARNING_MESSAGE);
 			System.exit(69);  //Service unavailable
 		}
-		if(response.getStatus() == 200){
-
+		
+		if(response.getStatus() == 200){ //Null check not needed due to the catch.
 			JsonParser jsonParser = new JsonParser();
 			logger.info(response.getContentAsString());
 			JsonElement je = jsonParser.parse(response.getContentAsString());
@@ -53,7 +53,7 @@ public class ClientListUpdateHandler {
 			playerList.forEach(player -> player.setServerPort(model.getServerPort()));
 
 			model.getOnlinePlayerList().setPlayers(playerList);
-		} else{ //No list? Server is broken
+		} else{ //No list? Server or connection is broken
 			JOptionPane.showMessageDialog(null,
 					"The server is currently unavailable.",
 							"Server error",

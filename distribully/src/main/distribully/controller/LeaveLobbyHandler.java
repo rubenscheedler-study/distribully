@@ -14,14 +14,11 @@ public class LeaveLobbyHandler implements ActionListener  {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		//delete me from the game list
+		//Delete me from the game list
 		model.getGamePlayerList().deleteFromGame(model.getNickname(),model.getCurrentHostName());
-		//kill the lobby thread
+		//Kill the lobby thread
 		DistribullyController.lobbyThread.setInLobby(false);
-		//go back to main page
+		//Go back to main page
 		new BackToMainPageHandler(model);
-
-		
 	}
-
 }

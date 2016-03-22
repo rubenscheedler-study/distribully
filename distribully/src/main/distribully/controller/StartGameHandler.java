@@ -14,7 +14,7 @@ public class StartGameHandler implements ActionListener  {
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		DistribullyController.InviteThreadList.forEach(thread -> thread.closeServer());
+		DistribullyController.InviteThreadList.forEach(thread -> thread.closeServer()); //Close all open invites
 		DistribullyController.updateGameHostThread.setIsSettingUpGame(false);
 		new ProducerHandler("", "Start", model.getMe());
 	}

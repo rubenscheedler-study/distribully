@@ -17,7 +17,7 @@ public class FinishSelectRulesHandler  implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		if(model.getChoosenRules().size() == model.getAllRules().size()){
+		if(model.getChoosenRules().size() == model.getAllRules().size()){ //Are all rules assigned?
 			JsonObject message = new JsonObject();
 			message.addProperty("playerName", model.getNickname());
 			

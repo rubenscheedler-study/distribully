@@ -31,7 +31,7 @@ public class SelectRuleHandler implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		Rule rule  = (Rule)dropdown.getSelectedItem();
 		logger.info("ruleselected:  n:" + cardNumber + "|rule: " + rule.toString());
-		if (!rule.toString().equals( (new EmptyRule(null)).toString())) {
+		if (!rule.toString().equals( (new EmptyRule(null)).toString())) { //Whether the card has a special rule now
 			model.setCardRule(cardNumber, rule);
 		} else {
 			model.removeCardRule(cardNumber);

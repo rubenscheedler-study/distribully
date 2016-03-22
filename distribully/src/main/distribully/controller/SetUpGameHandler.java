@@ -21,30 +21,28 @@ public class SetUpGameHandler implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		logger.info("setting up a game...");
 
-		//no longer available for invitations
+		//No longer available for invitations
 		if (DistribullyController.waitForInviteThread != null) {
 			DistribullyController.waitForInviteThread.closeServer();
 		}
 		model.getMe().setAvailable(false);
 
-		//set current host name
+		//Set current host name
 		model.setCurrentHostName(model.getNickname());
 
 
-		//update the available player list
+		//Update the available player list
 		new ClientListUpdateHandler(model);
 
-		//create a game list on the server
+		//Create a game list on the server
 		model.getGamePlayerList().createGameList(model.getMe());
-
 
 		model.setGAME_STATE(GameState.INVITING_USERS);
 
-		//start the thread that will handle the distributed game
+		//Start the thread that will handle the distributed game
 		DistribullyController.consumerThread = new GameConsumerThread(model);
 		
-		//start a thread that keeps the player list invite status up to date
+		//Start a thread that keeps the player list invite status up to date
 		DistribullyController.updateGameHostThread = new UpdateGameHostThread(model);
 	}
-
 }

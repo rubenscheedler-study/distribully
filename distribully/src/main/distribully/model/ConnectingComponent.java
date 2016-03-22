@@ -4,7 +4,7 @@ public abstract class ConnectingComponent {
 	protected String serverAddress;
 	protected int serverPort;
 	
-	public ConnectingComponent() {}
+	public ConnectingComponent() {} //All components that extend this can connect with the server
 	
 	public ConnectingComponent(String serverAddress, int serverPort) {
 		this.serverAddress = serverAddress;
