@@ -105,7 +105,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		}
 
 		//3 Draw header "Current Stack of Players"
-		g.drawString("Current Stacks of Players:",LEFT_OFFSET,TOP_OFFSET+30+IMAGE_HEIGHT);
+		g.drawString("Current Stacks of Players:",LEFT_OFFSET,TOP_OFFSET+40+IMAGE_HEIGHT);
 
 		//4) Draw top of stacks
 		this.stackCards = new ArrayList<CardComponent>();
@@ -115,7 +115,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 			if (model.getTurnState() != null && model.getTurnState().getNextPlayer().equals(player.getName())) {
 				g.setColor(Color.GREEN);
 			}
-			g.drawString(player.getName(),LEFT_OFFSET+j*(IMAGE_WIDTH+15), TOP_OFFSET+30+IMAGE_HEIGHT+30);
+			g.drawString(player.getName(),LEFT_OFFSET+j*(IMAGE_WIDTH+15), TOP_OFFSET+30+IMAGE_HEIGHT+40);
 			g.setColor(oldColor);
 
 			CardComponent cardComponent;
@@ -124,7 +124,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 			if (model.getTopOfStacks().containsKey(player)) {
 				topCard = model.getTopOfStacks().get(player);
 			}
-			cardComponent = new CardComponent(LEFT_OFFSET+j*(IMAGE_WIDTH+15),TOP_OFFSET+30+IMAGE_HEIGHT+40,IMAGE_WIDTH,IMAGE_HEIGHT,topCard,IMAGE_WIDTH);
+			cardComponent = new CardComponent(LEFT_OFFSET+j*(IMAGE_WIDTH+15),TOP_OFFSET+30+IMAGE_HEIGHT+50,IMAGE_WIDTH,IMAGE_HEIGHT,topCard,IMAGE_WIDTH);
 			this.stackCards.add(cardComponent);
 
 			cardComponent.draw(g, selectedStackCard != null && selectedStackCard.equals(cardComponent));

@@ -31,7 +31,7 @@ public class DistribullyWindow extends JFrame implements IObserver {
 	private DistribullyModel model;
 	
 	//View components
-	private JPanel mainPanel;
+	private DistribullyPanel mainPanel;
 	private PlayerOverviewPanel playerOverviewPanel;
 	private SelectRulesPanel selectRulesPanel;
 	private WaitingForGameStartPanel waitingForGameStartPanel;
@@ -69,19 +69,7 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		this.determinePanelToShow();
 		mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.PAGE_AXIS));
 		
-		scrollPane = new JScrollPane(mainPanel);
-		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-		scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
-		
-		scrollPane.getViewport().addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				mainPanel.revalidate();
-				mainPanel.repaint();
-			}
-		});
-		
-		this.add(scrollPane);
+		addScrollPane(mainPanel);
 		
 		this.revalidate();
 		this.repaint();
@@ -97,10 +85,8 @@ public class DistribullyWindow extends JFrame implements IObserver {
 			this.remove(scrollPane);
 			determinePanelToShow();	
 			
-			logger.info("gameState update window|gameState"+gameState.toString()+"|comCount:"+this.getComponentCount());
-			scrollPane = new JScrollPane(mainPanel);
-
-			this.add(scrollPane);
+			logger.info("gameState update window|gameState"+gameState.toString()+"|comCount:"+this.getComponent(0).toString());
+			addScrollPane(mainPanel);
 			this.revalidate();
 			this.repaint();
 		} 
@@ -124,5 +110,24 @@ public class DistribullyWindow extends JFrame implements IObserver {
 			mainPanel = playerOverviewPanel;
 			break;
 		}
+	}
+	
+	public void addScrollPane(DistribullyPanel panel) {
+		scrollPane = new JScrollPane(panel);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+		scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+		
+		scrollPane.getViewport().addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				mainPanel.revalidate();
+				mainPanel.repaint();
+			}
+		});
+		panel.revalidate();
+		panel.repaint();
+		this.add(scrollPane);
+		
+
 	}
 }

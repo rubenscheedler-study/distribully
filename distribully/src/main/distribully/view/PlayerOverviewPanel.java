@@ -47,7 +47,7 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		this.setMaximumSize(size);
 		
 		
-		if (players.size() == 0) {
+		if (players.size() == 1) {
 			this.add(new JLabel("No available players"));
 		} else {
 			this.add(getHeaderPanel());
