@@ -50,14 +50,8 @@ public class LeaveGameHandler implements ActionListener  {
 				e1.printStackTrace();
 			}
 			DistribullyController.consumerThread.setPlaying(false);
-			//set available for invites
-			model.getMe().setAvailable(true);
-			//change game state
-			DistribullyController.waitForInviteThread = new WaitForInviteThread(model);
-			//set game state
-			model.setGAME_STATE(GameState.NOT_PLAYING);
-			//refresh the online player list
-			new ClientListUpdateHandler(model);
+			
+			new BackToMainPageHandler(model);
 		}
 	}
 }
