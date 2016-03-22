@@ -11,7 +11,7 @@ public class RevertTurnOrderRule extends Rule {
 
 	@Override
 	public TurnState execute() {
-		TurnState turnState = new TurnState(model.getTurnState().getNextPlayer(),model.getTurnState().getToPick(),model.getTurnState().getDirection(),model.getTurnState().getAction());
+		TurnState turnState = new TurnState(model.getTurnState().getNextPlayer(),model.getTurnState().getToPick(),model.getTurnState().getDirection(),model.getTurnState().getAction(),false,"");
 		
 		turnState.setDirection(turnState.getDirection()*-1);
 		turnState.setNextPlayer(rotateTurn(turnState.getDirection()));
