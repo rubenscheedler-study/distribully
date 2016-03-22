@@ -30,7 +30,7 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 	}
 	
 	protected void render() {
-		this.removeAll(); //Remove all elements
+		this.removeAll(); //Remove all elements, then re-add them
 		
 		//Determine which list of players to render: game members or all online
 		ArrayList<Player> players;
