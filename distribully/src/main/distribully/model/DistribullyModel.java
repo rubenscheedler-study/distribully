@@ -364,6 +364,7 @@ public class DistribullyModel implements IObservable {
 			turnState = new TurnState(getNextPlayer(),toPick,direction, "", false,this.getNickname());
 		}
 		if(turnState.getToPick() == this.getTurnState().getToPick() && turnState.getToPick() > 0){
+			turnState.setToPick(0);
 			ConnectionFactory factory = new ConnectionFactory();
 			factory.setHost(this.getMe().getIp());
 			Connection connection;
