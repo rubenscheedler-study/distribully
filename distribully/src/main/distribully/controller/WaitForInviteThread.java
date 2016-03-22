@@ -23,12 +23,12 @@ public class WaitForInviteThread extends Thread {
 
 	public WaitForInviteThread(DistribullyModel model) {
 		this.model = model;
-		this.port = model.getMyPort();
 		listen = true;
 		logger = LoggerFactory.getLogger("controller.WaitForInviteThread");
 		this.start();
 	}
 	public void run() {
+		this.port = model.getMyPort();
 		try {
 			serverSocket = new ServerSocket(port);
 			logger.info("Server is listening for invites...");
@@ -46,12 +46,13 @@ public class WaitForInviteThread extends Thread {
 			serverSocket.close();
 		}
 		catch (IOException ioException) {
+			logger.error("Incorrect port");
 			JOptionPane.showMessageDialog(null,
 				    "Could not open port, choose a different port",
 				    "Port bind error",
 				    JOptionPane.ERROR_MESSAGE);
-			//TODO: select new port
-			
+			new AskPortHandler(model);
+			this.run();
 		}
 	}
 	public void closeServer(){

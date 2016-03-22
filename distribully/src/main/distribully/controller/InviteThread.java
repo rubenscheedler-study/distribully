@@ -8,6 +8,9 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import distribully.model.DistribullyModel;
 import distribully.model.Player;
 
@@ -15,10 +18,12 @@ public class InviteThread extends Thread{
 	private String address;
 	private int port;
 	private Player player;
-	DistribullyModel model;
-	Socket s = null;
+	private DistribullyModel model;
+	private Socket s = null;
+	private static Logger logger;
 	
 	public InviteThread(Player player, DistribullyModel model){
+		logger = LoggerFactory.getLogger("controller.Invitethread");
 		this.player = player;
 		address = player.getIp();
 		port = player.getPort();
@@ -32,7 +37,9 @@ public class InviteThread extends Thread{
 				s.close();
 			}
 		}catch(Exception e){
-			//Will always throw exception if the thread is waiting for a response. TODO: Ignore?.
+			//Will always throw exception if the thread is waiting for a response. Just log and ignore.
+			logger.debug("InviteThread was closed during operation");
+			
 		}
 	}
 	
@@ -57,7 +64,7 @@ public class InviteThread extends Thread{
 		} catch (ConnectException e){ //Receiver has no open socket
 			model.putInviteState(player.getName(), "Rejected");
 		} catch (SocketException e) {//Socked closed from the outside, don't update the view.
-			//TODO: wat moet hier
+			model.putInviteState(player.getName(), "Unreachable");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}finally {

@@ -3,10 +3,8 @@ package distribully.model;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.http.HttpMethod;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Player extends ConnectingComponent implements Comparable<Player> {
 
@@ -16,12 +14,14 @@ public class Player extends ConnectingComponent implements Comparable<Player> {
 	private int port;
 	private boolean available;
 	private transient boolean readyToPlay;
+	private static Logger logger;
 	
 	public Player(String name, String ip, int port) {
 		this.name = name;
 		this.ip = ip;
 		this.port = port;
 		available = true;
+		logger = LoggerFactory.getLogger("model.Player");
 		setReadyToPlay(false);
 	}
 	
@@ -70,7 +70,24 @@ public class Player extends ConnectingComponent implements Comparable<Player> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//TODO: Handle response
+		if(response.getStatus() != 200){ //400 or 403
+			logger.error("Setting availability failed.");
+		}
+	}
+	
+	public void deleteFromServer(){
+		HttpClient client = new HttpClient();
+		ContentResponse response;
+		try {
+			client.start();
+			response = client.newRequest(this.serverAddress + ":" + this.serverPort + "/players/" + this.name).method(HttpMethod.DELETE).send();
+		} catch (Exception e) {
+			logger.error("Something went wrong while sending the request for deleting yourself");
+			return;
+		}
+		if(response.getStatus() != 201){
+			logger.error("Something went wrong on the server while deleting yourself.");
+		}
 	}
 
 	public boolean isReadyToPlay() {

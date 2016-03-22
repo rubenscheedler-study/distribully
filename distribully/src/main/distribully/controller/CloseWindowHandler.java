@@ -62,14 +62,15 @@ public class CloseWindowHandler extends WindowAdapter {
 					channel.close();
 					connection.close();
 				} catch (IOException | TimeoutException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					//Doesn't matter what happens here, since we are closing the application anyway. A log for debugging will suffice.
+					logger.error("Error while closing application");
+					
 				}
 			}else{
 				return;
 			}
 		}
-		model.getOnlinePlayerList().deleteFromServer(model.getNickname());
+		model.getMe().deleteFromServer();
 		if(model.getGAME_STATE() == GameState.IN_LOBBY){
 			model.getGamePlayerList().deleteFromGame(model.getNickname(),model.getCurrentHostName());
 		} else if (model.getGAME_STATE() == GameState.INVITING_USERS) {

@@ -9,6 +9,8 @@ import java.util.Collections;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.http.HttpMethod;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -18,26 +20,17 @@ import com.google.gson.JsonParser;
 public class ClientList extends ConnectingComponent implements IObservable {
 	private ArrayList<Player> players;
 	//list of observers
-	ArrayList<IObserver> observers = new ArrayList<IObserver>();
+	private ArrayList<IObserver> observers = new ArrayList<IObserver>();
+	private static Logger logger;
 	
 	public ClientList(String serverAddress, int serverPort) {
 		super(serverAddress,serverPort);
 		players = new ArrayList<Player>();
+		logger = LoggerFactory.getLogger("model.ClientList");
 	}
 
 	public ArrayList<Player> getPlayers() {
 		return this.players;
-	}
-	
-	public void deleteFromServer(String playerName){//TODO moet naar player?
-		HttpClient client = new HttpClient();
-		try {
-			client.start();
-			client.newRequest(this.serverAddress + ":" + this.serverPort + "/players/" + playerName).method(HttpMethod.DELETE).send();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		//TODO: Handle response?
 	}
 	
 	@Override
@@ -68,15 +61,10 @@ public class ClientList extends ConnectingComponent implements IObservable {
 			response = client.newRequest(this.serverAddress + ":" + this.serverPort + "/game/" + hostName)
 					.method(HttpMethod.GET)
 					.send();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		try {
 			client.stop();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Something went wrong when sending the request to get the userList.");
+			return false;
 		}
 		
 		if (response.getStatus() == 200) {
@@ -124,14 +112,15 @@ public class ClientList extends ConnectingComponent implements IObservable {
 					.param("player",gson.toJson(player))
 					.send();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Something went wrong when sending the request to add an user.");
+			return;
 		}
 		
 		if (response.getStatus() == 201) {
 			this.players.add(player);
 			this.notifyObservers(this);
 		} else {
-			//TODO peniek!
+			logger.error("Something went wrong when adding an user.");
 		}
 	}
 	
@@ -153,13 +142,12 @@ public class ClientList extends ConnectingComponent implements IObservable {
 					.send();
 			client.stop();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Something went wrong when sending the request to create a game.");
+			return;
 		}
 		
-		if (response.getStatus() == 200) {
-
-		} else {
-			//TODO peniek!
+		if (response.getStatus() != 200) {
+			logger.error("Something went wrong when creating a game.");
 		}
 		
 		
@@ -176,16 +164,13 @@ public class ClientList extends ConnectingComponent implements IObservable {
 					.send();
 			client.stop();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Something went wrong when sending the request to delete a game.");
+			return;
 		}
 		
-		if (response.getStatus() == 200) {
-
-		} else {
-			//TODO peniek!
-		}
-		
-		
+		if (response.getStatus() != 200) {
+			logger.error("Something went wrong when deleting a game.");
+		}		
 	}
 	
 	/**
@@ -213,14 +198,18 @@ public class ClientList extends ConnectingComponent implements IObservable {
 
 	public void deleteFromGame(String playerName, String hostName) {
 		HttpClient client = new HttpClient();
+		ContentResponse response;
 		try {
 			client.start();
-			client.newRequest(this.serverAddress + ":" + this.serverPort + "/game/" + hostName).method(HttpMethod.DELETE).param("playerName",playerName).send();
+			response = client.newRequest(this.serverAddress + ":" + this.serverPort + "/game/" + hostName).method(HttpMethod.DELETE).param("playerName",playerName).send();
 			client.stop();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Something went wrong when sending the request to delete an user.");
+			return;
 		}
-		//TODO: Handle response?
+		if(response.getStatus() != 200){//400 or 403
+			logger.error("Something went wrong when deleting an user.");
+		}
 		
 	}
 	

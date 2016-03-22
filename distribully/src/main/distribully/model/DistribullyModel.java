@@ -185,7 +185,6 @@ public class DistribullyModel implements IObservable {
 
 	/**
 	 * checks for all entries in the hashmap if the server still contains it in the game players. Drops it, if not.
-	 * TODO add NEW players as well?
 	 * @param gamePlayers
 	 */
 	public void updateInviteStatesByListState(ClientList gamePlayers) {

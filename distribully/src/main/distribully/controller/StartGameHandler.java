@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+import javax.swing.JOptionPane;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,8 +46,12 @@ public class StartGameHandler implements ActionListener  {
 			channel.close();
 			connection.close();
 		} catch (IOException | TimeoutException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+				    "Game creation failed.",
+				    "Error",
+				    JOptionPane.ERROR_MESSAGE);
+			logger.error("Game creation failed");
+			new BackToMainPageHandler(model);
 		}
 	}
 

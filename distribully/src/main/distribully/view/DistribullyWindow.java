@@ -112,7 +112,6 @@ public class DistribullyWindow extends JFrame implements IObserver {
 				scrollPane.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_NEVER);
 			}
 			this.add(scrollPane);
-			logger.info("repaint of whole window");
 			this.revalidate();
 			this.repaint();
 		} 

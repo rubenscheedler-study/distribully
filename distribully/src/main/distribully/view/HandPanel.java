@@ -148,7 +148,6 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 
 	@Override
 	public void update(IObservable observable, Object changedObject) {
-		logger.info("observer update");
 		this.repaint();
 	}
 
@@ -168,7 +167,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 					}
 				}
 
-				for (CardComponent component : stackCards) {//TODO validate
+				for (CardComponent component : stackCards) {
 					if (component.wasClicked(e.getX(), e.getY())) {
 						if (selectedStackCard != null && selectedStackCard.equals(component)) {//unselected if already selected
 							selectedStackCard = null;
@@ -185,7 +184,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 							|| selectedStackCard.getCard().getSuit() == selectedCard.getCard().getSuit()) {
 							
 							//remove card from hand
-							model.getHand().remove(selectedCard.getCard());//TODO notify?
+							model.getHand().remove(selectedCard.getCard());
 						
 							//check if hand is empty, then the player is ready to win
 							if (model.getHand().isEmpty()) {
