@@ -42,6 +42,15 @@ public class GameConsumerThread extends Thread{
 		queueName = model.getNickname();
 		String hostName = model.getCurrentHostName();
 		Player host = model.getOnlinePlayerList().getPlayerByNickname(hostName);
+		if (host == null) { //host aborted his game before we accepted the invite
+			JOptionPane.showMessageDialog(null,
+				    hostName + " aborted the game that you were invited for. \n",
+				    "No game to join",
+				    JOptionPane.WARNING_MESSAGE);
+			System.out.println("host left before accept");
+			new BackToMainPageHandler(model);
+			return;
+		}
 		playing = true;
 		try {
 			initPlayerExchange(host);

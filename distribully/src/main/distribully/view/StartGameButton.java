@@ -14,6 +14,7 @@ public class StartGameButton extends JButton {
 	public StartGameButton(DistribullyModel model) {
 		this.setText("Start Game");
 		this.model = model;
+		this.setEnabled(model.getGamePlayerList().getPlayers().size() > 1);
 		this.addActionListener(new StartGameHandler(model));
 	}
 }
