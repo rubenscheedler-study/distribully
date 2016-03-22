@@ -321,7 +321,7 @@ public class DistribullyModel implements IObservable {
 		String nextPlayer = this.gamePlayerList.getPlayers().get(i).getName();
 		int direction = 1;
 		int toPick = 0;
-		TurnState turnState = new TurnState(nextPlayer,toPick,direction, "");
+		TurnState turnState = new TurnState(nextPlayer,toPick,direction, "", false, "");
 
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(this.getMe().getIp());
@@ -354,7 +354,6 @@ public class DistribullyModel implements IObservable {
 	public void executeCard(int cardId) {
 		int direction = 1;
 		int toPick = 0;
-		String action;
 		TurnState turnState;
 		if(chosenRules.containsKey(cardId)){
 			Rule rule = chosenRules.get(cardId);
@@ -362,8 +361,7 @@ public class DistribullyModel implements IObservable {
 		}else{
 			direction = this.getTurnState().getDirection();
 			toPick = this.getTurnState().getToPick();
-			turnState = new TurnState(getNextPlayer(),toPick,direction, "");
-
+			turnState = new TurnState(getNextPlayer(),toPick,direction, "", false,this.getNickname());
 		}
 		if(turnState.getToPick() == this.getTurnState().getToPick() && turnState.getToPick() > 0){
 			ConnectionFactory factory = new ConnectionFactory();
@@ -475,9 +473,9 @@ public class DistribullyModel implements IObservable {
 
 
 
-	public void broadcastStackSuit(String stackOwner, int cardSuitIndex) {
+	public void broadcastStackSuit(int cardSuitIndex) {
 		
-		TurnState turnState = new TurnState(getNextPlayer(),this.turnState.getToPick(),this.turnState.getDirection(),this.getNickname() + " changed the suit of the stack of " + stackOwner + ".");
+		TurnState turnState = new TurnState(getNextPlayer(),this.turnState.getToPick(),this.turnState.getDirection(),this.getNickname() + " changed the suit of the stack of " + this.getTurnState().getLastStack() + ".", false, this.getTurnState().getLastStack());
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(this.getMe().getIp());
 		Connection connection;
@@ -495,7 +493,6 @@ public class DistribullyModel implements IObservable {
 			message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
 
 			message.addProperty("cardSuit", cardSuitIndex);
-			message.addProperty("stackPlayer", stackOwner);
 			
 			channel.basicPublish(this.getNickname(), "ChooseSuit", null, message.toString().getBytes());
 			System.out.println(" [x] Sent '" + message + "'");

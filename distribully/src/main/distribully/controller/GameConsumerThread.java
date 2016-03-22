@@ -67,7 +67,7 @@ public class GameConsumerThread extends Thread{
 		ConnectionFactory factory = new ConnectionFactory();  
 		String playerName = player.getName();
 		factory.setHost(player.getIp());
-		
+
 		try {
 			Connection connection = factory.newConnection();
 			Channel channel = connection.createChannel();
@@ -114,7 +114,7 @@ public class GameConsumerThread extends Thread{
 				String playerNameLeave = jeLeave.getAsJsonObject().get("playerName").getAsString();
 				model.getGamePlayerList().removePlayerByPlayerName(playerNameLeave);
 				System.out.println(playerNameLeave + " left");
-				
+
 				//TODO: view
 				if(model.getGamePlayerList().getPlayers().size() <= 1){
 					if(model.getGamePlayerList().getPlayers().stream().anyMatch(p -> p.getName() == model.getNickname())){
@@ -130,7 +130,7 @@ public class GameConsumerThread extends Thread{
 				Player player = model.getGamePlayerList().getPlayerByNickname(playerNameRule);
 				player.setReadyToPlay(true);
 				if(model.getGamePlayerList().getPlayers().stream().allMatch(p->p.isReadyToPlay())){
-					
+
 					model.setAndBroadCastTopOfStack();
 					model.generateNewHand();
 					//Only one player may create the first turn object. We define this as the alphabetically first player
@@ -160,26 +160,19 @@ public class GameConsumerThread extends Thread{
 				JsonObject joTurn = parser.parse(new String(body)).getAsJsonObject();
 				JsonObject turnState = joTurn.get("turnState").getAsJsonObject();
 				TurnState newState = gson.fromJson(turnState, TurnState.class);
-				String stackOwner1 = "";
-				if (model.getTurnState() == null) {
-					model.setTurnState(newState);
-					stackOwner1 = model.getTurnState().getNextPlayer();
-				} else {
-					stackOwner1 = model.getTurnState().getNextPlayer();
-					model.setTurnState(newState);
-				}
-				
+				model.setTurnState(newState);
+
 				System.out.println("Next player is "+ newState.getNextPlayer() +" by action " + newState.getAction());
 				if(model.isMyTurn()){
-					if (newState.getAction().contains("choose suit")){
+					if (newState.isChooseSuit()){
 						String suitCandidate = "";
 						int cardSuitIndex = -1;
 						while (suitCandidate.equals("")) {
 							suitCandidate = JOptionPane.showInputDialog(null,
-							    "Choose a new suit for this stack from: \n"
-								+ "hearts, diamonds, clubs, spades",
-							    "Choose a New Suit",
-							    JOptionPane.QUESTION_MESSAGE).toLowerCase();
+									"Choose a new suit for this stack from: \n"
+											+ "hearts, diamonds, clubs, spades",
+											"Choose a New Suit",
+											JOptionPane.QUESTION_MESSAGE).toLowerCase();
 							switch (suitCandidate) {
 							case "hearts":
 								cardSuitIndex = 0;
@@ -198,8 +191,8 @@ public class GameConsumerThread extends Thread{
 								break;
 							}
 						}
-						
-						model.broadcastStackSuit(stackOwner1,cardSuitIndex);
+
+						model.broadcastStackSuit(cardSuitIndex);
 					}
 				}		
 				break;
@@ -213,7 +206,7 @@ public class GameConsumerThread extends Thread{
 					model.draw(drawAmount, nextTurn);
 				}	
 				break;
-				
+
 			case "HaveDrawn":
 				JsonObject joDraw= parser.parse(new String(body)).getAsJsonObject();
 				int amount = Integer.parseInt(joDraw.get("amount").getAsString());
@@ -224,7 +217,7 @@ public class GameConsumerThread extends Thread{
 				//TODO: view
 				//TODO: Update counts, player is in turnstate
 				break;
-				
+
 			case "ChooseSuit":
 				JsonObject joSuit = parser.parse(new String(body)).getAsJsonObject();
 				int suit = Integer.parseInt(joSuit.get("cardSuit").getAsString());
