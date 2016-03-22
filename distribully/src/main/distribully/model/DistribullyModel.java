@@ -449,7 +449,7 @@ public class DistribullyModel implements IObservable {
 
 			JsonObject message = new JsonObject();
 
-			message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
+			message.add("turnState",  parser.parse((gson.toJson(nextTurn))).getAsJsonObject());
 
 			message.addProperty("amount", drawAmount);
 
