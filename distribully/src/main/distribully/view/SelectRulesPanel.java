@@ -46,7 +46,7 @@ public class SelectRulesPanel extends DistribullyPanel implements IObserver {
 		
 		//Filter out all the rules that are already assigned
 		availableRules.addAll(model.getAllRules().stream()
-								   .filter(r -> !model.getChoosenRules().containsValue(r))
+								   .filter(r -> !model.getChosenRules().containsValue(r))
 								   .collect(Collectors.toCollection(ArrayList<Rule>::new)));
 
 		//Add a panel for each card that allows the user to select a rule for that card
@@ -94,8 +94,8 @@ public class SelectRulesPanel extends DistribullyPanel implements IObserver {
 		rulePanel.add(cardNameLabel);
 		
 		//Check if card has an associated rule, add it to the dropdown
-		if (model.getChoosenRules().containsKey(cardNumber)) {
-			availableRules.add(model.getChoosenRules().get(cardNumber));
+		if (model.getChosenRules().containsKey(cardNumber)) {
+			availableRules.add(model.getChosenRules().get(cardNumber));
 		}
 		
 		Rule[] availableRuleArray = new Rule[availableRules.size()];
@@ -104,8 +104,8 @@ public class SelectRulesPanel extends DistribullyPanel implements IObserver {
 		ruleDropdown.setPreferredSize(new Dimension(200, 25));
 		ruleDropdown.setMaximumSize(new Dimension(200, 25));
 		//Check if card has an associated rule, select it in the dropdown
-		if (model.getChoosenRules().containsKey(cardNumber)) {
-			ruleDropdown.setSelectedItem((model.getChoosenRules().get(cardNumber)));
+		if (model.getChosenRules().containsKey(cardNumber)) {
+			ruleDropdown.setSelectedItem((model.getChosenRules().get(cardNumber)));
 		}
 		ruleDropdown.addActionListener(new SelectRuleHandler(cardNumber,ruleDropdown,model));
 		

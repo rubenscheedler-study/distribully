@@ -5,12 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 import distribully.controller.GameState;
-import distribully.controller.ProducerHandler;
 import distribully.model.rules.ChooseSuitRule;
 import distribully.model.rules.DrawFiveRule;
 import distribully.model.rules.DrawTwoRule;
@@ -26,13 +21,11 @@ public class DistribullyModel implements IObservable {
 
 	private GameState GAME_STATE;
 	
-	private String serverAddress = "http://localhost"; //Hardcoded for testing, does also work with ip's if the port is open
-	private final int serverPort = 4567;
+	private String serverAddress = "http://localhost"; //Hardcoded for testing, does also work with external ip's if the port is open
+	private final int serverPort = 4567; //Default port for Spark server
 	private String myIP;
 	private String currentHostName;
 	private int myPort;
-	private Gson gson;
-	private JsonParser parser;
 
 	private ArrayList<IObserver> observers;
 	private HashMap<String,String> inviteStates;
@@ -58,8 +51,6 @@ public class DistribullyModel implements IObservable {
 		fillAllRules();
 		hand = Collections.synchronizedList(new ArrayList<Card>()); //Synchronize to prevent concurrency issues
 		topOfStacks = new HashMap<Player,Card>();
-		gson = new Gson();
-		parser = new JsonParser();
 		setReadyToWin(false);
 	}
 	
@@ -92,80 +83,11 @@ public class DistribullyModel implements IObservable {
 		}
 	}
 
-	public void setAndBroadCastTopOfStack() { //Randomly generate a top of stack for yourself
-		Card card = Card.getARandomCard();
-
-		JsonObject message = new JsonObject();
-		message.addProperty("cardId", card.getNumber());
-		message.addProperty("cardSuit", card.getSuit().getV());
-		message.addProperty("playerName", this.getNickname());
-		new ProducerHandler(message.toString(), "InitStack" ,this.getMe());
-	}
-
 	public void generateNewHand() { //Generate a clean hand of 7 cards, as seven is the default in pesten
 		for (int i = 0; i < 7; i++) {
 			this.hand.add(Card.getARandomCard());
 		}
 		this.notifyObservers(this);
-	}
-
-	public void generateAndSendFirstTurnObject() { //Choose and broadcast who gets the first turn
-		int i = (int)(Math.random()*(double)this.gamePlayerList.getPlayers().size());
-		String nextPlayer = this.gamePlayerList.getPlayers().get(i).getName();
-		int direction = 1;
-		int toPick = 0;
-		TurnState turnState = new TurnState(nextPlayer,toPick,direction, "", false, "");
-
-		JsonObject message = new JsonObject();
-		message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
-
-		new ProducerHandler(message.toString(),"NextTurn" ,this.getMe());
-	}
-
-	public void executeCard(int cardId) {
-		int direction = 1;
-		int toPick = 0;
-		TurnState turnState;
-		if(chosenRules.containsKey(cardId)){ //Special rule
-			Rule rule = chosenRules.get(cardId);
-			turnState = rule.execute();
-		}else{
-			direction = this.getTurnState().getDirection();
-			toPick = this.getTurnState().getToPick();
-			turnState = new TurnState(getNextPlayer(),toPick,direction, "", false,this.getNickname());
-		}
-		if(turnState.getToPick() == this.getTurnState().getToPick() && turnState.getToPick() > 0){ //Number of card to pick did not increase, tell user to draw them
-			turnState.setToPick(0);
-			JsonObject message = new JsonObject();
-			message.addProperty("drawAmount",  this.getTurnState().getToPick());
-			message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
-
-			new ProducerHandler(message.toString(),"MustDraw" ,this.getMe());
-		}
-		else{
-			JsonObject message = new JsonObject();
-			message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
-
-			new ProducerHandler(message.toString(), "NextTurn" ,this.getMe());
-		}
-	}
-
-
-
-	public void draw(int drawAmount, TurnState nextTurn) {
-		isReadyToWin = false;
-
-		//Draw the cards, add them to the hand
-		for (int i = 0; i < drawAmount; i++) {
-			hand.add(Card.getARandomCard());
-		}
-
-		//Notify others about what this player has done
-		JsonObject message = new JsonObject();
-		message.add("turnState",  parser.parse((gson.toJson(nextTurn))).getAsJsonObject());
-
-		new ProducerHandler(message.toString(), "NextTurn" ,this.getMe());
-
 	}
 
 	public String getNextPlayer() { //Get the player who's turn is next
@@ -179,24 +101,6 @@ public class DistribullyModel implements IObservable {
 			return this.gamePlayerList.getPlayers().get((numPlayers + 1) % numPlayers ).getName(); //Ensure we stay in the range
 		}
 
-	}
-
-	public void broadcastStackSuit(int cardSuitIndex) {//Tell everyone which suit you picked
-		TurnState turnState = new TurnState(getNextPlayer(),this.turnState.getToPick(),this.turnState.getDirection(),this.getNickname() + " changed the suit of the stack of " + this.getTurnState().getLastStack() + ".", false, this.getTurnState().getLastStack());
-
-		JsonObject message = new JsonObject();
-
-		message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
-		message.addProperty("cardSuit", cardSuitIndex);
-
-		new ProducerHandler(message.toString(), "ChooseSuit",this.getMe());
-	}
-
-	public void broadcastWin() { //Tell everyone you won
-			JsonObject message = new JsonObject();
-			message.addProperty("playerWinner", getNickname());
-
-			new ProducerHandler(message.toString(), "Win",this.getMe());
 	}
 
 	public boolean isMyTurn() {
@@ -247,11 +151,11 @@ public class DistribullyModel implements IObservable {
 		this.allRules = allRules;
 	}
 
-	public HashMap<Integer,Rule> getChoosenRules() {
+	public HashMap<Integer,Rule> getChosenRules() {
 		return chosenRules;
 	}
 
-	public void setChoosenRules(HashMap<Integer,Rule> choosenRules) {
+	public void setChosenRules(HashMap<Integer,Rule> choosenRules) {
 		this.chosenRules = choosenRules;
 	}
 

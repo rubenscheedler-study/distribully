@@ -154,13 +154,13 @@ public class GameConsumerThread{
 			TurnState nextState = gson.fromJson(turnState, TurnState.class); //The state that will be used after the user has drawn cards
 			logger.info("Must draw " + drawAmount + " cards");
 			if(model.isMyTurn()){ //Must draw cards
-				model.draw(drawAmount, nextState);
+				new BroadcastDrawHandler(model, drawAmount, nextState);
 			}	
 		}
 
 		private void handleNextTurn(String body) {
 			if(model.isReadyToWin()){ //If we get a next turn and not a must draw, we have won.
-				model.broadcastWin();
+				new BroadcastWinHandler(model);
 			}
 			JsonObject jo = parser.parse(body).getAsJsonObject();
 			JsonObject turnState = jo.get("turnState").getAsJsonObject();
@@ -196,7 +196,7 @@ public class GameConsumerThread{
 							break;
 						}
 					}
-					model.broadcastStackSuit(cardSuitIndex);
+					new BroadcastSuitHandler(model, cardSuitIndex);
 				}
 			}		
 		}
@@ -209,7 +209,7 @@ public class GameConsumerThread{
 			String stackOwner = jo.get("stackOwner").getAsString();
 			logger.info("Card "+ cardId +" played");
 			if(stackOwner.equals(model.getNickname())){ //Played on my stack
-				model.executeCard(cardId);
+				new ExecuteCardHandler(model, cardId);
 			}
 			model.putTopOfStack(model.getGamePlayerList().getPlayerByNickname(stackOwner),new Card(cardId, CardSuit.values()[suiteId]));
 		}
@@ -227,14 +227,14 @@ public class GameConsumerThread{
 		}
 
 		private void handleReady() {
-			model.setAndBroadCastTopOfStack();
+			new BroadcastTopOfStackHandler(model);
 			model.generateNewHand();
 			//Only one player may create the first turn object. We define this as the alphabetically first player
 			ArrayList<Player> toSort = new ArrayList<Player>();
 			toSort.addAll(model.getGamePlayerList().getPlayers());
 			Collections.sort(toSort, (p1, p2) -> p1.getName().compareTo(p2.getName()));
 			if (model.getNickname().equals(toSort.get(0).getName())) { //Can only get here when there are players, so 0 always exists.
-				model.generateAndSendFirstTurnObject();
+				new BroadcastFirstTurnHandler(model);
 			}
 			model.setGAME_STATE(GameState.IN_GAME);
 		}
@@ -271,7 +271,7 @@ public class GameConsumerThread{
 			new ClientListUpdateHandler(model);
 			
 			model.getInviteStates().clear();
-			model.getChoosenRules().clear();
+			model.getChosenRules().clear();
 			
 			model.getGamePlayerList().getPlayers().forEach(player -> initPlayerExchange(player));
 			model.setGAME_STATE(GameState.SETTING_RULES);			

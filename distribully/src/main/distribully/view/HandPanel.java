@@ -9,15 +9,13 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import com.google.gson.JsonObject;
-
 import distribully.model.Card;
 import distribully.model.DistribullyModel;
 import distribully.model.IObservable;
 import distribully.model.IObserver;
 import distribully.model.Player;
-import distribully.controller.ProducerHandler;
-import distribully.model.TurnState;
+import distribully.controller.DrawButtonPressHandler;
+import distribully.controller.PlayCardHandler;
 
 public class HandPanel extends DistribullyPanel implements IObserver {
 
@@ -94,9 +92,9 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 		for (Card c : model.getHand()) {
 			CardComponent cardComponent;
 			if (refreshHandComponents) {
-				int ind = model.getHand().indexOf(c);
+				int idx = model.getHand().indexOf(c);
 
-				int visibleWidth = ind == (model.getHand().size()-1) ? IMAGE_WIDTH : CARD_VISIBLE_WIDTH;
+				int visibleWidth = idx == (model.getHand().size()-1) ? IMAGE_WIDTH : CARD_VISIBLE_WIDTH;
 				cardComponent = new CardComponent(LEFT_OFFSET+CARD_VISIBLE_WIDTH*i,TOP_OFFSET+15,IMAGE_WIDTH,IMAGE_HEIGHT,c,visibleWidth);
 				this.handCards.add(cardComponent);
 			} else {
@@ -169,34 +167,11 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 					if (selectedStackCard != null && selectedCard != null) {
 						if (selectedStackCard.getCard().getNumber() == selectedCard.getCard().getNumber() //May card be played
 								|| selectedStackCard.getCard().getSuit() == selectedCard.getCard().getSuit()) {
-							//Remove card from hand
-							model.getHand().remove(selectedCard.getCard());
-
-							//Check if hand is empty, then the player is ready to win
-							if (model.getHand().isEmpty()) {
-								model.setReadyToWin(true);
-							}
-							
-							JsonObject message = new JsonObject();
-							message.addProperty("cardId",  selectedCard.getCard().getNumber());
-							message.addProperty("suitId", selectedCard.getCard().getSuit().getV());
-							String ownerName = "";
-							for (Player owner : model.getTopOfStacks().keySet()) {
-								if (model.getTopOfStacks().get(owner).equals(selectedStackCard.getCard())) {
-									ownerName = owner.getName();
-								}
-							}
-							
-							
-							message.addProperty("stackOwner", ownerName);
-							
+							Card card = selectedCard.getCard();
 							//Unselected current selection
 							selectedStackCard = null;
 							selectedCard = null;
-							
-							new ProducerHandler(message.toString(), "PlayCard" ,model.getMe());
-							
-							
+							new PlayCardHandler(card, model);
 						} else {
 							JOptionPane.showMessageDialog(null,
 									"The card you selected may not be played on that stack.",
@@ -212,12 +187,7 @@ public class HandPanel extends DistribullyPanel implements IObserver {
 				}
 
 				if (drawCardsComponent.wasClicked(e.getX(),e.getY())) {
-					TurnState toSend = model.getTurnState();
-					int toDraw = model.getTurnState().getToPick()+1;
-					toSend.setNextPlayer(model.getNextPlayer());
-					toSend.setAction(model.getNickname() + " has drawn "+ toDraw+" card(s).");
-					toSend.setToPick(0);
-					model.draw(toDraw, toSend);
+					new DrawButtonPressHandler(model);
 				}
 
 				revalidate();
