@@ -30,6 +30,7 @@ public class LeaveGameHandler implements ActionListener  {
 				"You are in the middle of a game, are you sure you want to stop?", 
 				"Confirm",JOptionPane.YES_NO_OPTION); 
 		if(leaveGame == JOptionPane.YES_OPTION){
+			DistribullyController.consumerThread.setPlaying(false);
 			ConnectionFactory factory = new ConnectionFactory();
 			factory.setHost(model.getMe().getIp());
 			Connection connection;
@@ -45,7 +46,7 @@ public class LeaveGameHandler implements ActionListener  {
 				JsonObject message = new JsonObject();
 				message.addProperty("playerName", model.getNickname());
 				//If getNxtPlayer is null, game hasn't started, so return any player as it will be overwritten anyway. Most convenient is our own name.
-				TurnState newState = new TurnState((model.getNextPlayer() == null) ? model.getNextPlayer() : model.getNickname(), 0, model.getTurnState().getDirection(), model.getNickname() + " has left the game.", false, "");
+				TurnState newState = new TurnState(model.getNextPlayer(), 0, (model.getTurnState() == null)? 1 : model.getTurnState().getDirection(), model.getNickname() + " has left the game.", false, "");
 				JsonObject turnState = parser.parse(gson.toJson(newState)).getAsJsonObject();
 				message.add("turnState", turnState);
 
@@ -58,7 +59,6 @@ public class LeaveGameHandler implements ActionListener  {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			DistribullyController.consumerThread.setPlaying(false);
 			//set available for invites
 			model.getMe().setAvailable(true);
 			//change game state

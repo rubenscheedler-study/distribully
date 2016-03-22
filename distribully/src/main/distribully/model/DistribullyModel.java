@@ -46,7 +46,7 @@ public class DistribullyModel implements IObservable {
 	private TurnState turnState;
 
 	private boolean isReadyToWin;
-	
+
 	public DistribullyModel() {
 		this.onlinePlayerList = new ClientList(serverAddress,serverPort);
 		this.gamePlayerList = new ClientList(serverAddress, serverPort);
@@ -429,9 +429,9 @@ public class DistribullyModel implements IObservable {
 
 	public void draw(int drawAmount, TurnState nextTurn) {
 		//update model according to action
-		
+
 		isReadyToWin = false;
-		
+
 		//draw the cards, add them to the hand
 		for (int i = 0; i < drawAmount; i++) {
 			hand.add(Card.getARandomCard());
@@ -471,14 +471,21 @@ public class DistribullyModel implements IObservable {
 
 	public String getNextPlayer() {
 		int numPlayers = this.gamePlayerList.getPlayers().size();
-		int index = this.gamePlayerList.getPlayers().indexOf(gamePlayerList.getPlayerByNickname(this.getTurnState().getNextPlayer()));
-		return this.gamePlayerList.getPlayers().get((index + numPlayers + getTurnState().getDirection()) % numPlayers ).getName(); //Ensure we stay in the range
+		int index;
+		if(this.getTurnState() != null){
+			index = this.gamePlayerList.getPlayers().indexOf(gamePlayerList.getPlayerByNickname(this.getTurnState().getNextPlayer()));
+			return this.gamePlayerList.getPlayers().get((index + numPlayers + getTurnState().getDirection()) % numPlayers ).getName(); //Ensure we stay in the range
+		} else{
+			//Just return any player since the game hasnt started yet and the start player is yet to be set.
+			return this.gamePlayerList.getPlayers().get((numPlayers + 1) % numPlayers ).getName(); //Ensure we stay in the range
+		}
+		
 	}
 
 
 
 	public void broadcastStackSuit(int cardSuitIndex) {
-		
+
 		TurnState turnState = new TurnState(getNextPlayer(),this.turnState.getToPick(),this.turnState.getDirection(),this.getNickname() + " changed the suit of the stack of " + this.getTurnState().getLastStack() + ".", false, this.getTurnState().getLastStack());
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(this.getMe().getIp());
@@ -497,7 +504,7 @@ public class DistribullyModel implements IObservable {
 			message.add("turnState",  parser.parse((gson.toJson(turnState))).getAsJsonObject());
 
 			message.addProperty("cardSuit", cardSuitIndex);
-			
+
 			channel.basicPublish(this.getNickname(), "ChooseSuit", null, message.toString().getBytes());
 			System.out.println(" [x] Sent '" + message + "'");
 
@@ -508,7 +515,7 @@ public class DistribullyModel implements IObservable {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	public void broadcastWin() {
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(this.getMe().getIp());
@@ -522,7 +529,7 @@ public class DistribullyModel implements IObservable {
 			JsonObject message = new JsonObject();
 
 			message.addProperty("playerWinner", getNickname());
-			
+
 			channel.basicPublish(this.getNickname(), "Win", null, message.toString().getBytes());
 			System.out.println(" [x] Sent '" + message + "'");
 
