@@ -30,7 +30,7 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 	}
 	
 	protected void render() {
-		this.removeAll();
+		this.removeAll(); //Remove all elements
 		
 		//Determine which list of players to render: game members or all online
 		ArrayList<Player> players;
@@ -101,7 +101,7 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		if (model.getGAME_STATE() == GameState.INVITING_USERS) {
 			playerPanel.add(getInvitationPanel(player));
 		} else if (model.getGAME_STATE() == GameState.IN_LOBBY) {
-			playerPanel.add(getLobbyPanel(player));
+			playerPanel.add(getLobbyPanel());
 		}
 		
 		this.add(playerPanel);
@@ -134,7 +134,7 @@ public class PlayerOverviewPanel extends DistribullyPanel implements IObserver {
 		return playerPanel;
 	}
 	
-	private DistribullyPanel getLobbyPanel(Player player) {
+	private DistribullyPanel getLobbyPanel() {
 		DistribullyPanel playerPanel = new DistribullyPanel();
 		return playerPanel;
 	}

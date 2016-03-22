@@ -31,7 +31,7 @@ public class SelectRulesPanel extends DistribullyPanel implements IObserver {
 	}
 	
 	public void render() {
-		this.removeAll();
+		this.removeAll(); //Remove all elements
 		this.setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
 		
 		this.setMinimumSize(size);

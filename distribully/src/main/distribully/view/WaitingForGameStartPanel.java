@@ -37,7 +37,7 @@ public class WaitingForGameStartPanel extends DistribullyPanel implements IObser
 	}
 	
 	public void render() {
-		this.removeAll();
+		this.removeAll(); //Remove all components
 		DistribullyPanel headerPanel = new DistribullyPanel();
 		Dimension s = new Dimension(this.size.width,40);
 		headerPanel.setMinimumSize(s);
