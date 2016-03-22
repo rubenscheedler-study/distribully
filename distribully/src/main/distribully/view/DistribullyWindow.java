@@ -87,15 +87,6 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		this.repaint();
 	}
 	
-	public void setMainPanel(JPanel content) {
-		this.remove(scrollPane);
-		this.mainPanel = content;
-		this.add(mainPanel);
-		logger.info("updated main panel");
-		this.revalidate();
-		this.repaint();
-	}
-	
 	public DistribullyModel getModel() {
 		return this.model;
 	}
@@ -105,10 +96,10 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		if (gameState instanceof GameState) {
 			this.remove(scrollPane);
 			determinePanelToShow();	
+			
+			logger.info("gameState update window|gameState"+gameState.toString()+"|comCount:"+this.getComponentCount());
 			scrollPane = new JScrollPane(mainPanel);
-			if (scrollPane.equals(gamePanel)) {
-				scrollPane.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_NEVER);
-			}
+
 			this.add(scrollPane);
 			this.revalidate();
 			this.repaint();
