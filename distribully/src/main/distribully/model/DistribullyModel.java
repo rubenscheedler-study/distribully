@@ -37,7 +37,6 @@ public class DistribullyModel implements IObservable {
 	private HashMap<String,String> inviteStates;
 
 	private String nickname;
-	private Stack stack;
 	private HashMap<Player,Card> topOfStacks;
 	private ArrayList<Card> hand;
 
@@ -49,7 +48,6 @@ public class DistribullyModel implements IObservable {
 	private boolean isReadyToWin;
 	
 	public DistribullyModel() {
-		this.stack = new Stack();
 		this.onlinePlayerList = new ClientList(serverAddress,serverPort);
 		this.gamePlayerList = new ClientList(serverAddress, serverPort);
 		observers = new ArrayList<IObserver>();

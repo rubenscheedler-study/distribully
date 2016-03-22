@@ -51,7 +51,7 @@ public class DistribullyWindow extends JFrame implements IObserver {
 		this.setTitle("Distribully v0.1");
 		model.addObserver(this);
 		//init of menu
-		this.setJMenuBar(new DistribullyMenu(this));
+		this.setJMenuBar(new DistribullyMenu(this.model));
 		new ClientListUpdateHandler(this.model);
 		
 		Dimension contentSize = this.getContentPane().getSize();
