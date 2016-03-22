@@ -6,27 +6,22 @@ import javax.swing.JMenuItem;
 
 import distribully.controller.GameState;
 import distribully.controller.SetUpGameHandler;
+import distribully.model.DistribullyModel;
 import distribully.model.IObservable;
 import distribully.model.IObserver;
 
-public class SetUpGameButton extends JMenuItem implements IObserver{
+public class SetUpGameButton extends JMenuItem{
 
 	private static final long serialVersionUID = -3732106117892923335L;
 
-	DistribullyWindow container;
+	DistribullyModel model;
 	
-	public SetUpGameButton(DistribullyWindow container) {
-		this.container = container;
-		container.getModel().addObserver(this);
+	public SetUpGameButton(DistribullyModel model) {
+		this.model = model;
 		this.setText("Set up game");
 		
-		this.addActionListener(new SetUpGameHandler(container));
+		this.addActionListener(new SetUpGameHandler(model));
 		
-	}
-
-	@Override
-	public void update(IObservable observable, Object changedObject) {
-		this.setEnabled(container.getModel().getGAME_STATE() == GameState.NOT_PLAYING);
 	}
 
 }

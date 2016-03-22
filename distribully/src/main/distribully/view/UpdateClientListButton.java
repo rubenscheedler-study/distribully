@@ -6,21 +6,22 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 
 import distribully.controller.ClientListUpdateHandler;
+import distribully.model.DistribullyModel;
 
 public class UpdateClientListButton extends JMenuItem {
 
 	private static final long serialVersionUID = -5658507871936425835L;
 
-	private DistribullyWindow container;
-	public UpdateClientListButton(DistribullyWindow c) {
-		this.container = c;
+	private DistribullyModel model;
+	public UpdateClientListButton(DistribullyModel model) {
+		this.model = model;
 		
 		this.setText("Refresh Available Player List");
 		this.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new ClientListUpdateHandler(container.getModel());
+				new ClientListUpdateHandler(model);
 				
 			}
 			

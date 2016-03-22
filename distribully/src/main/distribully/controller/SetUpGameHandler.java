@@ -3,14 +3,15 @@ package distribully.controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import distribully.model.DistribullyModel;
 import distribully.view.DistribullyWindow;
 
 public class SetUpGameHandler implements ActionListener {
 
-	private DistribullyWindow frame;
+	private DistribullyModel model;
 
-	public SetUpGameHandler(DistribullyWindow frame) {
-		this.frame = frame;
+	public SetUpGameHandler(DistribullyModel model) {
+		this.model = model;
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -20,26 +21,26 @@ public class SetUpGameHandler implements ActionListener {
 		if (DistribullyController.waitForInviteThread != null) {
 			DistribullyController.waitForInviteThread.closeServer();
 		}
-		frame.getModel().getMe().setAvailable(false);
+		model.getMe().setAvailable(false);
 
 		//set current host name
-		frame.getModel().setCurrentHostName(frame.getModel().getNickname());
+		model.setCurrentHostName(model.getNickname());
 
 
 		//update the available player list
-		new ClientListUpdateHandler(frame.getModel());
+		new ClientListUpdateHandler(model);
 
 		//create a game list on the server
-		frame.getModel().getGamePlayerList().createGameList(frame.getModel().getMe());
+		model.getGamePlayerList().createGameList(model.getMe());
 
 
-		frame.getModel().setGAME_STATE(GameState.INVITING_USERS);
+		model.setGAME_STATE(GameState.INVITING_USERS);
 
 		//start the thread that will handle the distributed game
-		DistribullyController.consumerThread = new GameConsumerThread(frame.getModel());
+		DistribullyController.consumerThread = new GameConsumerThread(model);
 		
 		//start a thread that keeps the player list invite status up to date
-		DistribullyController.updateGameHostThread = new UpdateGameHostThread(frame.getModel());
+		DistribullyController.updateGameHostThread = new UpdateGameHostThread(model);
 	}
 
 }
