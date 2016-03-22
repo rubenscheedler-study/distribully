@@ -160,11 +160,12 @@ public class GameConsumerThread extends Thread{
 				JsonObject joTurn = parser.parse(new String(body)).getAsJsonObject();
 				JsonObject turnState = joTurn.get("turnState").getAsJsonObject();
 				TurnState newState = gson.fromJson(turnState, TurnState.class);
+				String stackOwner1 = "";
 				if (model.getTurnState() == null) {
 					model.setTurnState(newState);
-					String stackOwner1 = model.getTurnState().getNextPlayer();
+					stackOwner1 = model.getTurnState().getNextPlayer();
 				} else {
-					String stackOwner1 = model.getTurnState().getNextPlayer();
+					stackOwner1 = model.getTurnState().getNextPlayer();
 					model.setTurnState(newState);
 				}
 				
@@ -198,11 +199,9 @@ public class GameConsumerThread extends Thread{
 							}
 						}
 						
-						model.setTurnState(newState);
 						model.broadcastStackSuit(stackOwner1,cardSuitIndex);
 					}
-				}
-							
+				}		
 				break;
 			case "MustDraw":
 				JsonObject joMustDraw= parser.parse(new String(body)).getAsJsonObject();
