@@ -48,11 +48,10 @@ public class WaitForInviteThread extends Thread {
 		catch (IOException ioException) {
 			logger.error("Incorrect port");
 			JOptionPane.showMessageDialog(null,
-				    "Could not open port, choose a different port",
+				    "Could not open port, restart and choose a different port",
 				    "Port bind error",
 				    JOptionPane.ERROR_MESSAGE);
-			new AskPortHandler(model); //Ask for a new port
-			this.run();
+			DistribullyController.sendCloseEvent();
 		}
 	}
 	public void closeServer(){
